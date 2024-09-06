@@ -1,0 +1,31 @@
+<div class="branches">
+  <table class="branches-table">
+    <thead>
+    <tr>
+      <th>Unikal nömrəsi</th>
+      <th>Adı</th>
+      <th>Alt adı</th>
+      <th>Ünvanı</th>
+      <th>Statusu</th>
+      <th>Yaranma tarixi</th>
+      <th>Statusu dəyiş</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let branch of branches; trackBy: trackById">
+    <td>{{branch.id}}</td>
+      <td>{{branch.name}}</td>
+      <td>{{branch.address}}</td>
+      <td>{{branch.location}}</td>
+      <td>{{branch.isActive ? 'Aktiv' : 'Deaktiv'}}</td>
+      <td>{{branch.createDate | date}}</td>
+      <td>
+        <button *ngIf="branch.isActive; else notActive" (click)="changeBranchStatus(branch)" class="btn-deactive">Deaktiv et</button>
+        <ng-template #notActive>
+          <button (click)="changeBranchStatus(branch)" class="btn-active">Aktiv et</button>
+        </ng-template>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

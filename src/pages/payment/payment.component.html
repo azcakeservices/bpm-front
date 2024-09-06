@@ -1,0 +1,57 @@
+<form (ngSubmit)="onSubmit()">
+  <label for="startDate" class="form-label">Başlama tarixi</label>
+  <input type="date" id="startDate" [(ngModel)]="startDate" name="startDate" required class="date-input">
+  <label for="endDate" class="form-label">Bitmə tarixi</label>
+  <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" required class="date-input">
+
+  <button type="submit" class="btn">Yüklə</button>
+  <button *ngIf="showDownloadButton" (click)="downloadExcel()" class="btn">Excel olaraq yüklə</button>
+</form>
+
+<div *ngIf="errorMessage" class="error-message">
+  {{errorMessage}}
+</div>
+
+<div class="filters" *ngIf="payments.length > 0">
+  <input type="text" [(ngModel)]="filter.branchName" placeholder="Mağaza üzrə filtr" class="filter-input">
+  <input type="text" [(ngModel)]="filter.productName" placeholder="Məhsul üzrə filtr" class="filter-input">
+  <input type="text" [(ngModel)]="filter.statementDate" placeholder="Tarix üzrə filtr" class="filter-input">
+  <button class="btn" (click)="clearFilters()">Sıfırla</button>
+</div>
+
+<div class="payments" *ngIf="payments.length > 0">
+<table class="payments-table">
+  <thead>
+    <tr>
+      <th>İşyeri Açıklaması</th>
+      <th>Malzeme Kodu</th>
+      <th>Malzeme Açıklaması</th>
+      <th>Malzeme Barkodu</th>
+      <th>Satış Miktarı</th>
+      <th>Satış İade Miktarı</th>
+      <th>Net Satış Miktarı</th>
+      <th>Satış İade Tutarı (KDV Dahil)</th>
+      <th>Net Satış Tutarı (KDV Dahil)</th>
+      <th>Birim 1 Kodu</th>
+      <th>Rapor Tarihi</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let payment of filteredPayments()">
+    <td>{{payment.branchName}}</td>
+    <td>{{payment.productCode}}</td>
+    <td>{{payment.productName}}</td>
+    <td>{{payment.productBarcode}}</td>
+    <td>{{payment.sellsCount}}</td>
+    <td>{{payment.sellsReturnCount}}</td>
+    <td>{{payment.sellsCountNet}}</td>
+    <td>{{payment.sellsReturnCountAst}}</td>
+    <td>{{payment.sellsCountNetAst}}</td>
+    <td>{{payment.birimCode}}</td>
+    <td>{{payment.statementDate}}</td>
+  </tr>
+  </tbody>
+</table>
+</div>
+
+

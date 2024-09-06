@@ -1,0 +1,72 @@
+/* Контейнер для всей формы входа */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Высота на весь экран */
+  background-color: #f2f2f2; /* Лёгкий серый фон для страницы */
+}
+
+/* Сама форма входа */
+.login-form {
+  background-color: white; /* Белый фон для формы */
+  padding: 30px;
+  border-radius: 10px; /* Слегка скругленные углы */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
+  width: 300px; /* Фиксированная ширина формы */
+  text-align: center;
+}
+
+/* Заголовок формы */
+.login-form h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333; /* Темный цвет текста */
+}
+
+/* Стили для группы формы */
+.form-group {
+  margin-bottom: 15px; /* Отступ между элементами */
+  text-align: left; /* Выровнять текст слева */
+}
+
+/* Стили для меток формы */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Стили для полей ввода */
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc; /* Серые рамки */
+  border-radius: 5px; /* Слегка скругленные углы */
+  box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
+}
+
+/* Стили для кнопки */
+.btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff; /* Синий фон */
+  border: none;
+  border-radius: 5px; /* Слегка скругленные углы */
+  color: white; /* Белый текст */
+  font-weight: bold;
+  cursor: pointer; /* Указатель мыши */
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Более тёмный синий при наведении */
+}
+
+/* Стили для сообщения об ошибке */
+.error-message {
+  margin-top: 15px;
+  color: red; /* Красный цвет для ошибок */
+  font-size: 14px;
+}

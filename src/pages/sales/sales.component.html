@@ -1,0 +1,18 @@
+<div class="sales">
+  <table class="sales-table">
+    <thead>
+      <tr>
+        <th>Satış tarixi</th>
+        <th>Mağaza</th>
+        <th>Məbləğ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sale of sales">
+        <td>{{sale.saleDate | date: 'dd-MM-yyyy'}}</td>
+        <td>{{sale.branch.name}} {{sale.branch.location}}</td>
+        <td>{{sale.amount}} AZN</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

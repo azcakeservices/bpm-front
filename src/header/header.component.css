@@ -1,0 +1,163 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-left span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-nav ul li {
+  margin-right: 20px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.welcome-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-message {
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+  margin: 0;
+}
+
+.logout-button {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 20px; /* Добавлен отступ между именем и кнопкой */
+}
+
+.logout-button:hover {
+  background-color: #e60000;
+}
+
+
+/*.user-profile {*/
+/*  display: flex;*/
+/*  flex-direction: column; !* Изменено на вертикальное расположение *!*/
+/*  align-items: flex-end; !* Выровнять элементы по правому краю *!*/
+/*}*/
+
+/*.user-name {*/
+/*  margin-bottom: 5px; !* Добавим отступ между именем пользователя и кнопкой *!*/
+/*}*/
+
+/*.logout-button {*/
+/*  display: inline-block;*/
+/*  padding: 10px 20px;*/
+/*  font-size: 16px;*/
+/*  font-weight: bold;*/
+/*  color: #ffffff;*/
+/*  background-color: #ff4757;*/
+/*  border: none;*/
+/*  border-radius: 5px;*/
+/*  cursor: pointer;*/
+/*  text-decoration: none;*/
+/*  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;*/
+/*}*/
+
+/*.logout-button:hover {*/
+/*  background-color: #e84118;*/
+/*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);*/
+/*}*/
+
+/*.logout-button:active {*/
+/*  transform: translateY(2px);*/
+/*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);*/
+/*}*/
+
+/*.logout-button:focus {*/
+/*  outline: none;*/
+/*  box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.5);*/
+/*}*/
+
+/*.logout-button:disabled {*/
+/*  background-color: #cccccc;*/
+/*  cursor: not-allowed;*/
+/*  box-shadow: none;*/
+/*}*/
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+.home {
+  background-color: #3498db;
+}
+
+.active{
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button.reports {
+  background-color: #2ecc71;
+}
+
+.button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+.button.reports:focus {
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.5);
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+

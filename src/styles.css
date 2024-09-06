@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+@import "ngx-toastr/toastr"; /* You can add global styles to this file, and also import other style files */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+ul{
+  list-style: none;
+}
