@@ -3,6 +3,8 @@ import {IPayment} from "../../interfaces/IPayment";
 import {PaymentService} from "../../services/payment.service";
 import {FormsModule} from "@angular/forms";
 import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import {BranchService} from "../../services/branch.service";
 
 @Component({
   selector: 'app-payment',
@@ -13,6 +15,7 @@ import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
     NgIf,
     NgForOf,
     DatePipe,
+    NgMultiSelectDropDownModule
   ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css'
@@ -21,15 +24,30 @@ export class PaymentComponent {
   payments: IPayment[] = []
   startDate: string = '';
   endDate: string = '';
+  branches: string[] = [];
+  selectedBranches: string[] = [];
+  dropDownSettings: {} = {};
   errorMessage: string = '';
   showDownloadButton: boolean = false;
   filter = {
     branchName: '',
     productName: '',
-    statementDate: ''
+    statementDate: '',
+    barcode: ''
   }
 
-  constructor(private paymentService: PaymentService) {}
+  constructor(private paymentService: PaymentService, private branchService: BranchService) {
+    this.loadBranches()
+    this.dropDownSettings = {
+      singleSelection: false,
+      itemsShowLimit: 70,
+      allowSearchFilter: true,
+      maxHeight: 150,
+      selectAllText: 'Bütün filiallar',
+      unSelectAllText: 'Sıfırla',
+      searchPlaceholderText: 'Filial adı üzrə axtar'
+    }
+  }
 
   onSubmit() {
     if (this.startDate > this.endDate){
@@ -50,11 +68,16 @@ export class PaymentComponent {
     }
   }
 
+  private loadBranches(): void{
+    this.branchService.getBranches().subscribe(response => {
+      this.branches = response.map(x => x.name);
+    })
+  }
+
   private loadPayments(){
-    this.paymentService.getPaymentsByDate(this.startDate, this.endDate).subscribe(response => {
-      console.log(response)
+    this.paymentService.getPaymentsWithFilters(this.startDate, this.endDate, this.selectedBranches).subscribe(response => {
       this.payments = response;
-      this.showDownloadButton = true;
+      this.showDownloadButton = true
     })
   }
 
@@ -62,7 +85,8 @@ export class PaymentComponent {
     return this.payments.filter(payment => {
       return this.matchFilter(payment.branchName, this.filter.branchName) &&
         this.matchFilter(payment.productName, this.filter.productName) &&
-        this.matchDateFilter(payment.statementDate, this.filter.statementDate);
+        this.matchDateFilter(payment.statementDate, this.filter.statementDate) &&
+        this.matchFilter(payment.productBarcode, this.filter.barcode);
     })
   }
 
@@ -81,12 +105,13 @@ export class PaymentComponent {
     this.filter = {
       branchName: '',
       productName: '',
-      statementDate: ''
+      statementDate: '',
+      barcode: ''
     };
   }
 
   downloadExcel(){
-    this.paymentService.generateExcel(this.startDate, this.endDate).subscribe(response => {
+    this.paymentService.generateExcel(this.startDate, this.endDate, this.selectedBranches).subscribe(response => {
       const base64Data = response.body.base64;
       const fileName = response.body.fileName;
       this.downloadFile(base64Data, fileName)
