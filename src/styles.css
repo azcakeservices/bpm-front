@@ -15,3 +15,13 @@
 ul{
   list-style: none;
 }
+
+
+.multiselect-dropdown .dropdown-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.multiselect-dropdown .dropdown-btn .selected-item-container .selected-item{
+  max-width: 100% !important;
+}

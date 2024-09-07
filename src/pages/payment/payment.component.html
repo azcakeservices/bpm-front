@@ -3,6 +3,14 @@
   <input type="date" id="startDate" [(ngModel)]="startDate" name="startDate" required class="date-input">
   <label for="endDate" class="form-label">Bitmə tarixi</label>
   <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" required class="date-input">
+  <ng-multiselect-dropdown
+    class="multiselect-dropdown"
+    [placeholder]="'Filiallar seçin'"
+    [data]="branches"
+    [(ngModel)]="selectedBranches"
+    [ngModelOptions]="{standalone: true}"
+    [settings]="dropDownSettings"
+  ></ng-multiselect-dropdown>
 
   <button type="submit" class="btn">Yüklə</button>
   <button *ngIf="showDownloadButton" (click)="downloadExcel()" class="btn">Excel olaraq yüklə</button>
@@ -15,7 +23,8 @@
 <div class="filters" *ngIf="payments.length > 0">
   <input type="text" [(ngModel)]="filter.branchName" placeholder="Mağaza üzrə filtr" class="filter-input">
   <input type="text" [(ngModel)]="filter.productName" placeholder="Məhsul üzrə filtr" class="filter-input">
-  <input type="text" [(ngModel)]="filter.statementDate" placeholder="Tarix üzrə filtr" class="filter-input">
+  <input type="date" [(ngModel)]="filter.statementDate" placeholder="Tarix üzrə filtr" class="filter-input">
+  <input type="text" [(ngModel)]="filter.barcode" placeholder="Barcode üzrə filtr" class="filter-input">
   <button class="btn" (click)="clearFilters()">Sıfırla</button>
 </div>
 

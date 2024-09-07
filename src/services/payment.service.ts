@@ -15,11 +15,22 @@ export class PaymentService {
     this.api = config.apiUrlProduction.paymentService
   }
 
-  getPaymentsByDate(startDate: string, endDate: string){
-    return this.http.get<IPayment[]>(`${this.api}/getbydate?from=${startDate}&to=${endDate}`)
+  generateExcel(startDate: string, endDate: string, branchList: string[]){
+    const body =
+    {
+      from: startDate,
+      to: endDate,
+      branchList: branchList}
+
+    return this.http.post<any>(`${this.api}/generateexcel`, body, {observe: 'response'})
   }
 
-  generateExcel(startDate: string, endDate: string){
-    return this.http.get<any>(`${this.api}/generateexcel?from=${startDate}&to=${endDate}`, {observe: 'response'})
+  getPaymentsWithFilters(startDate: string, endDate: string, branchList: string[]){
+    const body = {
+      from: startDate,
+      to: endDate,
+      branchList: branchList
+    }
+    return this.http.post<IPayment[]>(`${this.api}/getwithfilters`, body)
   }
 }
