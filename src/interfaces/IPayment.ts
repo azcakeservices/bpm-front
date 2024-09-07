@@ -2,7 +2,7 @@ export interface IPayment {
   branchName: string,
   productCode: number,
   productName: string,
-  productBarcode: number,
+  productBarcode: string,
   sellsCount: number,
   sellsReturnCount: number,
   sellsCountNet: number,
