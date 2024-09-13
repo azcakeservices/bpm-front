@@ -18,6 +18,10 @@ export class BranchService {
     return this.http.get<IBranch[]>(`${this.api}/getall`);
   }
 
+  getActiveBranches(): Observable<IBranch[]> {
+    return this.http.get<IBranch[]>(`${this.api}/GetActive`);
+  }
+
   changeBranchStatus(name: string, location: string, address: string): Observable<void>{
 
     return this.http.post<void>(`${this.api}/ChangeStatus`,

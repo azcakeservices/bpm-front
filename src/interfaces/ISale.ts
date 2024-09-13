@@ -1,11 +1,8 @@
 export interface ISale {
-  id: number,
-  saleDate: Date,
-  amount: number,
-  branchId: number,
-  branch: {
-    name: string,
-    location: string,
-    address: string
-  }
+  amount: string,
+  branchName : string,
+  createDate : string
+  id : string,
+  isActive : boolean,
+  saleDate : string
 }

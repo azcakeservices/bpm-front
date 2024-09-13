@@ -69,7 +69,7 @@ export class PaymentComponent {
   }
 
   private loadBranches(): void{
-    this.branchService.getBranches().subscribe(response => {
+    this.branchService.getActiveBranches().subscribe(response => {
       this.branches = response.map(x => x.name);
     })
   }

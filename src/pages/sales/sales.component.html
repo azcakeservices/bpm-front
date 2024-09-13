@@ -1,18 +1,56 @@
-<div class="sales">
+<form (ngSubmit)="onSubmit()">
+  <label for="startDate" class="form-label">Başlama tarixi</label>
+  <input type="date" id="startDate" [(ngModel)]="startDate" name="startDate" required class="date-input">
+  <label for="endDate" class="form-label">Bitmə tarixi</label>
+  <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" required class="date-input">
+  <ng-multiselect-dropdown
+    class="multiselect-dropdown"
+    [placeholder]="'Satış növünü seçin'"
+    [data]="dataTypes"
+    [(ngModel)]="selectedType"
+    [ngModelOptions]="{standalone: true}"
+    [settings]="dropDownSettings"
+  ></ng-multiselect-dropdown>
+
+
+
+  <button type="submit" class="btn">Yüklə</button>
+  <button *ngIf="showDownloadButton" (click)="downloadExcel()" class="btn">Excel olaraq yüklə</button>
+</form>
+
+<div *ngIf="errorMessage" class="error-message">
+  {{errorMessage}}
+</div>
+
+<div *ngIf="sales.length > 0">
   <table class="sales-table">
     <thead>
-      <tr>
-        <th>Satış tarixi</th>
-        <th>Mağaza</th>
-        <th>Məbləğ</th>
-      </tr>
+    <tr>
+      <th>Raport Tarixi</th>
+      <th *ngFor="let branch of branches">{{ branch }}</th>
+    </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let sale of sales">
-        <td>{{sale.saleDate | date: 'dd-MM-yyyy'}}</td>
-        <td>{{sale.branch.name}} {{sale.branch.location}}</td>
-        <td>{{sale.amount}} AZN</td>
-      </tr>
+    <tr *ngFor="let date of uniqueDates">
+      <td>{{ date }}</td>
+      <td *ngFor="let branch of branches">
+        {{ getAmountForBranchAndDate(branch, date) || '-' }}
+      </td>
+    </tr>
     </tbody>
   </table>
+<!--  <table class="sales-table">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--      <th>Raport Tarixi</th>-->
+<!--      <th *ngFor="let sale of sales">{{sale.branchName}}</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr *ngFor="let sale of sales">-->
+<!--      <td>{{sale.saleDate}}</td>-->
+<!--      <td>{{sale.amount}}</td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--  </table>-->
 </div>
