@@ -1,8 +1,8 @@
 <form (ngSubmit)="onSubmit()">
   <label for="startDate" class="form-label">Satış tarixini seçin</label>
   <input type="date" id="startDate" [(ngModel)]="saleDate" name="startDate" required class="date-input">
-  <button type="submit" class="btn">Yüklə</button>
-  <button *ngIf="showDownloadButton" (click)="downloadExcel()" class="btn">Excel olaraq yüklə</button>
+<!--  <button type="submit" class="btn">Yüklə</button>-->
+  <button type="submit" class="btn">Excel olaraq yüklə</button>
 </form>
 
 <div *ngIf="errorMessage" class="error-message">
