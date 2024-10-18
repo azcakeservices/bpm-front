@@ -6,10 +6,12 @@ import {SalesComponent} from "../pages/sales/sales.component";
 import {AuthGuard} from "../guard/auth.guard";
 import {PaymentComponent} from "../pages/payment/payment.component";
 import {DetailedSalesComponent} from "../pages/detailed-sales/detailed-sales.component";
+import {SaleComponent} from "../pages/sale/sale.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'sale', component: SaleComponent, canActivate: [AuthGuard] },
   { path: 'sales', component: SalesComponent, canActivate: [AuthGuard] },
   { path: 'branches', component: BranchesComponent, canActivate: [AuthGuard]},
   { path: 'payments', component: PaymentComponent, canActivate: [AuthGuard]},
