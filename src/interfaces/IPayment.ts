@@ -8,6 +8,7 @@ export interface IPayment {
   sellsCountNet: number,
   sellsReturnCountAst: number,
   sellsCountNetAst: number,
+  purchaseCountNetAst: number,
   birimCode: string,
   statementDate: string
 }
