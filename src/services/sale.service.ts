@@ -3,14 +3,17 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ISale} from "../interfaces/ISale";
 import {ConfigService} from "./config.service";
+import {ISaleResponse} from "../interfaces/ISaleResponse";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SaleService {
   private readonly api: string = ''
+  private readonly saleApi: string = ''
   constructor(private http: HttpClient, private config: ConfigService){
     this.api = this.config.apiUrlProduction.saleService
+    this.saleApi = this.config.apiUrlProduction.paymentReceiver
   }
 
   getSales(dateFrom: string, dateTo: string, saleType: string): Observable<ISale[]>{
@@ -37,6 +40,10 @@ export class SaleService {
 
     console.log(`Sale type: ${sale}, Date range:`, dateRange);
     return this.http.post<ISale[]>(`${this.api}/${sale}/get`, dateRange);
+  }
+
+  getSaleByDate(date: string):Observable<ISaleResponse>{
+    return this.http.get<ISaleResponse>(`${this.saleApi}/get-sales?date=${date}`);
   }
 
   generateExcel(startDate: string, endDate: string, saleType: string){
