@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {DetailedSalesService} from "../../services/detailed-sales.service";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-detailed-sales',
@@ -16,17 +17,22 @@ import {DetailedSalesService} from "../../services/detailed-sales.service";
 export class DetailedSalesComponent {
   saleDate: string = '';
   errorMessage: string = '';
-  constructor(private detailedSalesService: DetailedSalesService) {}
+
+  constructor(
+    private detailedSalesService: DetailedSalesService,
+    private loaderService: LoaderService
+  ) {}
+
   onSubmit(){
-    console.log('Submitting...');
     this.downloadExcel()
   }
   downloadExcel(){
-    console.log('Download Excel');
+    this.loaderService.show()
     this.detailedSalesService.generateExcel(this.saleDate).subscribe(response => {
       const base64 = response.body.base64;
       const fileName = response.body.fileName;
       this.downloadFile(base64, fileName);
+      this.loaderService.hide()
     })
   }
 

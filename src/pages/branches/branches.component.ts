@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {IBranch} from "../../interfaces/IBranch";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import { BranchService} from "../../services/branch.service";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-branches',
@@ -14,22 +15,28 @@ import { BranchService} from "../../services/branch.service";
   templateUrl: './branches.component.html',
   styleUrl: './branches.component.css'
 })
-export class BranchesComponent {
+export class BranchesComponent implements OnInit{
   branches: IBranch[] = [];
 
-  constructor(private branchService: BranchService) {}
+  constructor(
+    private branchService: BranchService,
+    private loaderService: LoaderService
+  ) {}
 
   ngOnInit(): void {
     this.loadBranches();
   }
 
   loadBranches(): void {
+    this.loaderService.show()
     this.branchService.getBranches().subscribe({
         next: (data: IBranch[]) => {
-          this.branches = data
+          this.branches = data;
+          this.loaderService.hide()
         },
         error: error => {
           console.log(error);
+          this.loaderService.hide()
         }
       }
     )

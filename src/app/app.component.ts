@@ -3,6 +3,7 @@ import {Router, RouterModule, RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "../header/header.component";
 import {FooterComponent} from "../footer/footer.component";
 import {NgIf} from "@angular/common";
+import {LoaderComponent} from "../components/loader/loader.component";
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import {NgIf} from "@angular/common";
     HeaderComponent,
     FooterComponent,
     NgIf,
-    RouterModule
+    RouterModule,
+    LoaderComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
