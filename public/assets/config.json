@@ -3,14 +3,13 @@
     "branchService": "https://localhost:44378/api/Branches",
     "saleService": "https://localhost:44378/api/Sales",
     "authService": "https://localhost:7135/api/auth",
-    "paymentService": "https://localhost:44378/api/payments",
-    "paymentReceiver": "https://localhost:7142/api/Sales"
+    "paymentService": "https://localhost:44378/api/payments"
   },
   "apiUrlsProduction": {
     "branchService": "http://10.0.100.100:1010/api/Branches",
     "saleService": "http://10.0.100.100:1010/api/Sales",
     "authService": "http://10.0.100.100:7138/api/Auth",
     "paymentService": "http://10.0.100.100:1010/api/Payments",
-    "paymentReceiver": ""
+    "paymentReceiver": "http://10.0.100.100:1030/api/Sales"
   }
 }
