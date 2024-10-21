@@ -41,7 +41,6 @@ export class SaleComponent {
     this.errorMessage = ''
     this.loadService.show()
     this.saleService.getSaleByDate(this.date).subscribe(response => {
-      console.log(response)
       this.sales = response;
       this.filterSales();
       this.loadService.hide();
