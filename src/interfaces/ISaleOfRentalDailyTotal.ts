@@ -1,11 +1,12 @@
-export interface ISaleResponse {
+
+export interface ISaleOfRentalDailyTotal {
   id: number,
   code: number,
   subCode: number,
   message: string,
   data: [{
     id: number,
-    dailySales: [{
+    sales: [{
       id: number,
       contractCode: string,
       contractName: string,

@@ -95,15 +95,15 @@ export class SalesComponent {
     return sale ? sale.amount : null;
   }
 
-  downloadExcel(){
-    this.loaderService.show()
-    this.saleService.generateExcel(this.startDate, this.endDate, 'DailyBread').subscribe(response => {
-      const base64 = response.body.base64;
-      const fileName = response.body.fileName;
-      this.downloadFile(base64, fileName);
-      this.loaderService.hide()
-    })
-  }
+  // downloadExcel(){
+  //   this.loaderService.show()
+  //   this.saleService.generateExcel(this.startDate, this.endDate, 'DailyBread').subscribe(response => {
+  //     const base64 = response.body.base64;
+  //     const fileName = response.body.fileName;
+  //     this.downloadFile(base64, fileName);
+  //     this.loaderService.hide()
+  //   })
+  // }
 
   private downloadFile(base64Data: string, fileName: string){
     const linkSource = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${base64Data}`;

@@ -5,6 +5,7 @@
     <button type="submit" class="btn submit-btn">Yüklə</button>
   </div>
 </form>
+<button class="button download-btn" *ngIf="sales" (click)="downloadExcel()">Excel olaraq yüklə</button>
 
 <div *ngIf="errorMessage" class="error-message">
   {{ errorMessage }}
