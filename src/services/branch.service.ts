@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {IBranch} from "../interfaces/IBranch";
 import {ConfigService} from "./config.service";
+import {IBranchResponse} from "../interfaces/IBranchResponse";
 
 
 @Injectable({
@@ -14,8 +15,8 @@ export class BranchService {
     this.api = this.config.apiUrlProduction.branchService
   }
 
-  getBranches(): Observable<IBranch[]> {
-    return this.http.get<IBranch[]>(`${this.api}/getall`);
+  getBranches(): Observable<IBranchResponse> {
+    return this.http.get<IBranchResponse>(`${this.api}/GetAll`);
   }
 
   getActiveBranches(): Observable<IBranch[]> {
