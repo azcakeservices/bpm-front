@@ -1,4 +1,4 @@
-import {Component, numberAttribute, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {BranchService} from "../../services/branch.service";
 import {LoaderService} from "../../services/loader.service";
