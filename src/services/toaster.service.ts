@@ -13,7 +13,7 @@ export class ToasterCustomService {
   }
 
   error (message: string){
-    this.toastr.error(message, 'Error', {closeButton: true})
+    this.toastr.error(message, 'Xəta', {closeButton: true})
   }
 
   warning (message: string){
