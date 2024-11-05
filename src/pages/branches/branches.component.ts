@@ -56,7 +56,6 @@ export class BranchesComponent implements OnInit{
         },
         error: error => {
           this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi!')
-          console.log(error);
           this.loaderService.hide()
         }
     })
