@@ -80,7 +80,7 @@ export class DetailedSalesComponent implements OnInit {
         this.loaderService.hide()
         this.branches = this.branchResponseToBranch()
       },
-      error: error => {
+      error: () => {
         this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi!')
         this.loaderService.hide()
       }
@@ -104,9 +104,9 @@ export class DetailedSalesComponent implements OnInit {
       this.toastrService.error('Tarix mütləq seçilməlidir!')
       return;
     }
-    if(this.selectedBranch){
-      this.getBranchCodeByDate(this.selectedBranchCode);
-    }
+    // if(this.selectedBranch){
+    //   this.getBranchCodeByDate(this.selectedBranchCode);
+    // }
     this.loaderService.show();
     this.toastrService.info('Detallı satışlar yüklənir, bir qədər gözləyin');
     this.detailedSalesService.getDetailedSale(this.date, this.selectedBranch).subscribe(response => {
@@ -119,9 +119,9 @@ export class DetailedSalesComponent implements OnInit {
 
   }
 
-  private getBranchCodeByDate(branchName: string){
-    const branch = this.branches.find(b => (b as any)?.branchName === branchName);
-  }
+  // private getBranchCodeByDate(branchName: string){
+  //   const branch = this.branches.find(b => (b as any)?.branchName === branchName);
+  // }
 
   downloadExcel(){
     this.loaderService.show();
@@ -131,7 +131,7 @@ export class DetailedSalesComponent implements OnInit {
       this.downloadFile(base64, fileName);
       this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`)
       this.loaderService.hide()
-    }, error => {
+    }, () => {
       this.toastrService.error('Xəta baş verdi, bir daha cəhd edin')
       this.loaderService.hide()
     })
