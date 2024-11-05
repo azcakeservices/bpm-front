@@ -166,18 +166,6 @@
   flex-grow: 1;
 }
 
-.form-label {
-  font-size: 14px;
-}
-
-.form-input {
-  flex-grow: 1;
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
 .submit-btn {
   background-color: #007bff;
   color: white;
