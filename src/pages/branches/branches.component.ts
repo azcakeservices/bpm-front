@@ -54,7 +54,7 @@ export class BranchesComponent implements OnInit{
           this.loaderService.hide()
           this.branches = this.branchResponseToBranch()
         },
-        error: error => {
+        error: () => {
           this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi!')
           this.loaderService.hide()
         }
