@@ -39,6 +39,10 @@
   background-color: #ddd;
 }
 
+.form-label {
+  font-size: 14px;
+}
+
 .date-input {
   border: 2px solid #4CAF50;
   padding: 10px;
@@ -59,21 +63,6 @@
   font-size: 14px;
   display: inline-block;
   width: 100px;
-}
-
-.btn {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin: 5px 2px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
 }
 
 .btn:hover {
