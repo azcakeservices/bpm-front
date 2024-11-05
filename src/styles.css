@@ -25,3 +25,37 @@ ul{
 .multiselect-dropdown .dropdown-btn .selected-item-container .selected-item{
   max-width: 100% !important;
 }
+
+.btn {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 5px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.btn:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.error-message{
+  color: #ff0000;
+  font-weight: bold;
+  margin-top: 10px;
+  background-color: #ffe5e5;
+  padding: 10px;
+  border: 1px solid #ff0000;
+  border-radius: 5px;
+}
