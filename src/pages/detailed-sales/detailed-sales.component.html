@@ -1,9 +1,53 @@
-<form (ngSubmit)="onSubmit()">
-  <label for="startDate" class="form-label">Satış tarixini seçin</label>
-  <input type="date" id="startDate" [(ngModel)]="saleDate" name="startDate" required class="date-input">
-<!--  <button type="submit" class="btn">Yüklə</button>-->
-  <button type="submit" class="btn">Excel olaraq yüklə</button>
+<form (submit)="onSubmit()" *ngIf="branches.length > 0">
+<!--  <ng-multiselect-dropdown-->
+<!--                           class="multiselect-dropdown"-->
+<!--                           [placeholder]="'Filial üzrə axtarış et'"-->
+<!--                           [data]="dropDownBranches()"-->
+<!--                           [(ngModel)]="selectedBranch"-->
+<!--                           [ngModelOptions]="{standalone: true}"-->
+<!--                           [settings]="dropDownSettings"-->
+<!--  ></ng-multiselect-dropdown>-->
+  <label for="date" class="form-label">Tarix</label>
+  <input type="date" id="date" [(ngModel)]="date" name="date" required class="date-input">
+
+  <button type="submit" class="btn">Yüklə</button>
 </form>
+<button class="button download-btn" *ngIf="sales" (click)="downloadExcel()">Excel olaraq yüklə</button>
+
+<div class="table-container" *ngIf="sales?.data">
+  <table class="sales-table">
+    <thead>
+    <tr>
+      <th>Mağaza</th>
+      <th>Mehsul adı</th>
+      <th>Barkodu</th>
+      <th>Bir məhsulun qiyməti</th>
+      <th>Toplam satış sayı</th>
+      <th>Toplam qiyməti</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let sale of sales!.data[0]!.dailySales">
+      <td class="sticky-column">{{sale.branchName}}</td>
+      <td>{{sale.productName}}</td>
+      <td>{{sale.barcode}}</td>
+      <td>{{sale.price}}</td>
+      <td>{{sale.quantity}}</td>
+      <td>{{sale.total}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--<div class="filters" *ngIf="sales?.data">-->
+<!--  <input type="text" [(ngModel)]="filter.branchName" placeholder="Mağaza üzrə filtr" class="filter-input">-->
+<!--  <input type="text" [(ngModel)]="filter.productName" placeholder="Məhsul üzrə filtr" class="filter-input">-->
+<!--  <input type="date" [(ngModel)]="filter.statementDate" placeholder="Tarix üzrə filtr" class="filter-input">-->
+<!--  <input type="text" [(ngModel)]="filter.barcode" placeholder="Barcode üzrə filtr" class="filter-input">-->
+<!--  <button class="btn" (click)="clearFilters()">Sıfırla</button>-->
+<!--</div>-->
+
+<!--<button *ngIf="sales" class="btn">Excel olaraq yüklə</button>-->
 
 <div *ngIf="errorMessage" class="error-message">
   {{errorMessage}}

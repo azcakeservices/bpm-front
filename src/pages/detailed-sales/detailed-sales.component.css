@@ -1,41 +1,91 @@
-.error-message{
-  color: #ff0000;
-  font-weight: bold;
-  margin-top: 10px;
-  background-color: #ffe5e5;
+.filters {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.filter-input {
   padding: 10px;
-  border: 1px solid #ff0000;
-  border-radius: 5px;
-}
-.btn {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin: 5px 2px;
-  cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  border: 1px solid #ddd;
+  font-size: 14px;
 }
 
-.btn:hover {
-  background-color: #45a049;
+.filter-input:focus {
+  border-color: #4CAF50;
+  outline: none;
 }
 
-.btn:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
+.table-wrapper {
+  margin-bottom: 20px;
 }
 
-.form-label {
-  font-weight: bold;
-  color: #4CAF50;
+.table-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.table-container {
+  max-height: 700px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  position: relative;
+}
+
+.sales-table {
+  width: auto;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.sales-table th, .sales-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  background: #007bff;
+  color: white;
+  white-space: nowrap;
+}
+
+.sales-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.sales-table td:first-child, .sales-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+}
+
+.sales-table th:first-child{
+  z-index: 4;
+}
+
+.date-input {
+  border: 2px solid #4CAF50;
+  padding: 10px;
+  border-radius: 4px;
   margin-right: 10px;
   font-size: 14px;
-  display: inline-block;
-  width: 120px;
+}
+
+.date-input:focus {
+  border-color: #45a049;
+  outline: none;
+}
+
+.download-btn{
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
