@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {LoaderService} from "../../services/loader.service";
 import {SaleService} from "../../services/sale.service";
@@ -7,6 +7,7 @@ import {ISaleResponse} from "../../interfaces/ISaleResponse";
 import {IDailySale} from "../../interfaces/IDailySale";
 import {ISaleData} from "../../interfaces/ISaleData";
 import {ToasterCustomService} from "../../services/toaster.service";
+import * as dateUtils from '../../app/shared/utils/date-utils';
 
 @Component({
   selector: 'app-sale',
@@ -20,7 +21,7 @@ import {ToasterCustomService} from "../../services/toaster.service";
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css'
 })
-export class SaleComponent {
+export class SaleComponent implements OnInit{
   date: string = '';
   sales : ISaleResponse | null = null;
   errorMessage: string = '';
@@ -34,10 +35,24 @@ export class SaleComponent {
     private toastrService: ToasterCustomService
   ) {}
 
+  ngOnInit() {
+    this.loadService.show();
+    console.log('OnInit')
+
+    this.saleService.getSaleByDate(dateUtils.getTodayAsString()).subscribe(response => {
+      this.sales = response;
+      this.filterSales();
+      this.toastrService.success('Bugünün satışları yükləndi')
+      this.loadService.hide();
+    })
+
+
+  }
+
   onSubmit(){
     this.sales = null;
     this.filteredSales1 = this.filteredSales2 = this.filteredSales3 = []
-    if (this.date > this.getTodayAsString() || !this.date){
+    if (this.date > dateUtils.getTodayAsString() || !this.date){
       this.errorMessage = 'Tarixi düzgün seçin!'
       return;
     }
@@ -55,11 +70,6 @@ export class SaleComponent {
       this.toastrService.error(error)
       this.loadService.hide();
     })
-  }
-
-  private getTodayAsString(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
   }
 
   private filterSales(){

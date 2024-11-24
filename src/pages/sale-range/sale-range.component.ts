@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SaleService } from '../../services/sale.service';
 import { ISaleOfRentalDailyTotal } from '../../interfaces/ISaleOfRentalDailyTotal';
@@ -6,6 +6,7 @@ import { LoaderService } from '../../services/loader.service';
 import { IDailySale } from '../../interfaces/IDailySale';
 import {DecimalPipe, NgForOf, NgIf} from "@angular/common";
 import {ToasterCustomService} from "../../services/toaster.service";
+import * as dateUtils from "../../app/shared/utils/date-utils";
 
 @Component({
   selector: 'app-sale-range',
@@ -19,7 +20,7 @@ import {ToasterCustomService} from "../../services/toaster.service";
   templateUrl: './sale-range.component.html',
   styleUrl: './sale-range.component.css',
 })
-export class SaleRangeComponent {
+export class SaleRangeComponent implements OnInit {
   startDate = '';
   endDate = '';
   sales: ISaleOfRentalDailyTotal | null = null;
@@ -38,16 +39,28 @@ export class SaleRangeComponent {
     private toastrService: ToasterCustomService
   ) {}
 
+  ngOnInit() {
+    this.loaderService.show();
+    this.toastrService.info('Satışlar yüklənir')
+    this.saleService.getRangeSales(dateUtils.getTodayAsString(), dateUtils.getTodayAsString()).subscribe(response => {
+      this.sales = response;
+      this.filterSales();
+      this.prepareData();
+      this.toastrService.success('Satışlar yükləndi')
+      this.loaderService.hide();
+    })
+  }
+
   onSubmit() {
     if (!this.startDate || !this.endDate){
       this.toastrService.error('Tarix aralığını seçin!');
       return;
     }
-    else if(this.startDate > this.getTodayAsString()) {
+    else if(this.startDate > dateUtils.getTodayAsString()) {
       this.toastrService.error('Raportun başlama tarixi bugündən artıq ola bilməz!');
       return;
     }
-    else if (this.endDate > this.getTodayAsString()){
+    else if (this.endDate > dateUtils.getTodayAsString()){
       this.toastrService.error('Raportun bitmə tarixi bugündən artıq ola bilməz!');
       return;
     }
@@ -72,11 +85,6 @@ export class SaleRangeComponent {
         this.loaderService.hide();
       }
     );
-  }
-
-  private getTodayAsString(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
   }
 
   private filterSales() {

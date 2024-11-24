@@ -7,6 +7,7 @@ import { ToasterCustomService } from "../../services/toaster.service";
 import { BranchService } from "../../services/branch.service";
 import { IBranchResponse } from "../../interfaces/IBranchResponse";
 import { ISaleResponse } from "../../interfaces/ISaleResponse";
+import * as dateUtils from '../../app/shared/utils/date-utils';
 
 @Component({
   selector: 'app-detailed-sales',
@@ -44,6 +45,11 @@ export class DetailedSalesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBranches();
+    this.detailedSalesService.getDetailedSale(dateUtils.getTodayAsString()).subscribe(response => {
+      this.sales = response;
+      this.filteredSales = this.sales.data[0]?.dailySales || [];
+      this.loaderService.hide();
+    })
   }
 
   loadBranches(): void {
@@ -55,7 +61,7 @@ export class DetailedSalesComponent implements OnInit {
         this.loaderService.hide();
       },
       error: () => {
-        this.toastrService.error('Ошибка при загрузке магазинов.');
+        this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi!');
         this.loaderService.hide();
       }
     });
@@ -63,7 +69,7 @@ export class DetailedSalesComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.date) {
-      this.toastrService.error('Дата должна быть выбрана!');
+      this.toastrService.error('Tarix mütləq seçilməlidir!');
       return;
     }
     this.loaderService.show();
@@ -74,7 +80,7 @@ export class DetailedSalesComponent implements OnInit {
         this.loaderService.hide();
       },
       error: () => {
-        this.toastrService.error('Ошибка при загрузке данных.');
+        this.toastrService.error('Detallı satışlar yüklənir, bir qədər gözləyin');
         this.loaderService.hide();
       }
     });
@@ -95,7 +101,7 @@ export class DetailedSalesComponent implements OnInit {
     }) || [];
   }
 
-    downloadExcel(){
+  downloadExcel(){
     this.loaderService.show();
     this.detailedSalesService.downloadExcel(this.sales!).subscribe(response => {
       const base64 = response.body.base64;
