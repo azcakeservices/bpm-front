@@ -1,45 +1,61 @@
-<form (submit)="onSubmit()" *ngIf="branches.length > 0">
+<form (submit)="onSubmit()" >
   <label for="date" class="form-label">Tarix</label>
   <input type="date" id="date" [(ngModel)]="date" name="date" required class="date-input">
   <button type="submit" class="btn">Yüklə</button>
+  <button class="btn" *ngIf="sales" (click)="downloadExcel()">Excel olaraq yüklə</button>
 </form>
-<button class="button download-btn" *ngIf="sales" (click)="downloadExcel()">Excel olaraq yüklə</button>
+
+<div>
+  <h2>Filterlər</h2>
+  <div style="max-width: 300px !important;" *ngIf="sales?.data">
+    <ng-multiselect-dropdown
+      class="multiselect-dropdown"
+      [placeholder]="'Filialı seç'"
+      [data]="branches"
+      [settings]="dropdownSettings"
+      [(ngModel)]="filters.branchName"
+      (ngModelChange)="applyFilters()"
+    >
+    </ng-multiselect-dropdown>
+  </div>
+</div>
 
 <div class="table-container" *ngIf="sales?.data">
-  <div class="filters">
-    <label>
-      Mağaza
-      <select [(ngModel)]="filters.branchName" (change)="applyFilters()">
-        <option value="">Hamısı</option>
-        <option *ngFor="let branch of getUniqueValues('branchName')" [value]="branch">
-          {{ branch }}
-        </option>
-      </select>
-    </label>
-    <label>
-      Məhsul
-      <select [(ngModel)]="filters.productName" (change)="applyFilters()">
-        <option value="">Hamısı</option>
-        <option *ngFor="let product of getUniqueValues('productName')" [value]="product">
-          {{ product }}
-        </option>
-      </select>
-    </label>
-    <label>
-      Məhsul kodu
-      <select [(ngModel)]="filters.barcode" (change)="applyFilters()">
-        <option value="">Hamısı</option>
-        <option *ngFor="let barcode of getUniqueValues('barcode')" [value]="barcode">
-          {{ barcode }}
-        </option>
-      </select>
-    </label>
-  </div>
+<!--  <div class="filters">-->
+<!--    <label>-->
+<!--      Mağaza-->
+<!--      <select [(ngModel)]="filters.branchName" (change)="applyFilters()">-->
+<!--        <option value="">Hamısı</option>-->
+<!--        <option *ngFor="let branch of getUniqueValues('branchName')" [value]="branch">-->
+<!--          {{ branch }}-->
+<!--        </option>-->
+<!--      </select>-->
+<!--    </label>-->
+<!--    <label>-->
+<!--      Məhsul-->
+<!--      <select [(ngModel)]="filters.productName" (change)="applyFilters()">-->
+<!--        <option value="">Hamısı</option>-->
+<!--        <option *ngFor="let product of getUniqueValues('productName')" [value]="product">-->
+<!--          {{ product }}-->
+<!--        </option>-->
+<!--      </select>-->
+<!--    </label>-->
+<!--    <label>-->
+<!--      Məhsul kodu-->
+<!--      <select [(ngModel)]="filters.barcode" (change)="applyFilters()">-->
+<!--        <option value="">Hamısı</option>-->
+<!--        <option *ngFor="let barcode of getUniqueValues('barcode')" [value]="barcode">-->
+<!--          {{ barcode }}-->
+<!--        </option>-->
+<!--      </select>-->
+<!--    </label>-->
+<!--  </div>-->
 
   <table class="sales-table">
     <thead>
     <tr>
       <th>Mağaza</th>
+      <th>Tarix</th>
       <th>Məhsul adı</th>
       <th>Barkodu</th>
       <th>Bir məhsulun qiyməti</th>
@@ -50,6 +66,7 @@
     <tbody>
     <tr *ngFor="let sale of filteredSales">
       <td class="sticky-column">{{ sale.branchName }}</td>
+      <td>{{ sale.saleDate  }}</td>
       <td>{{ sale.productName }}</td>
       <td>{{ sale.barcode }}</td>
       <td>{{ sale.price | number: '1.2-2' }}</td>
@@ -70,14 +87,14 @@
 
 
 <!--<form (submit)="onSubmit()" *ngIf="branches.length > 0">-->
-<!--&lt;!&ndash;  <ng-multiselect-dropdown&ndash;&gt;-->
-<!--&lt;!&ndash;                           class="multiselect-dropdown"&ndash;&gt;-->
-<!--&lt;!&ndash;                           [placeholder]="'Filial üzrə axtarış et'"&ndash;&gt;-->
-<!--&lt;!&ndash;                           [data]="dropDownBranches()"&ndash;&gt;-->
-<!--&lt;!&ndash;                           [(ngModel)]="selectedBranch"&ndash;&gt;-->
-<!--&lt;!&ndash;                           [ngModelOptions]="{standalone: true}"&ndash;&gt;-->
-<!--&lt;!&ndash;                           [settings]="dropDownSettings"&ndash;&gt;-->
-<!--&lt;!&ndash;  ></ng-multiselect-dropdown>&ndash;&gt;-->
+<!--  <ng-multiselect-dropdown-->
+<!--                           class="multiselect-dropdown"-->
+<!--                           [placeholder]="'Filial üzrə axtarış et'"-->
+<!--                           [data]="dropDownBranches()"-->
+<!--                           [(ngModel)]="selectedBranch"-->
+<!--                           [ngModelOptions]="{standalone: true}"-->
+<!--                           [settings]="dropDownSettings"-->
+<!--  ></ng-multiselect-dropdown>-->
 <!--  <label for="date" class="form-label">Tarix</label>-->
 <!--  <input type="date" id="date" [(ngModel)]="date" name="date" required class="date-input">-->
 

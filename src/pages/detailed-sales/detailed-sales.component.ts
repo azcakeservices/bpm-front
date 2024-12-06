@@ -8,6 +8,7 @@ import { BranchService } from "../../services/branch.service";
 import { IBranchResponse } from "../../interfaces/IBranchResponse";
 import { ISaleResponse } from "../../interfaces/ISaleResponse";
 import * as dateUtils from '../../app/shared/utils/date-utils';
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 
 @Component({
   selector: 'app-detailed-sales',
@@ -17,6 +18,7 @@ import * as dateUtils from '../../app/shared/utils/date-utils';
     NgIf,
     NgForOf,
     DecimalPipe,
+    NgMultiSelectDropDownModule,
   ],
   templateUrl: './detailed-sales.component.html',
   styleUrls: ['./detailed-sales.component.css'],
@@ -29,6 +31,7 @@ export class DetailedSalesComponent implements OnInit {
   sales: ISaleResponse | null = null;
   filteredSales: any[] = [];
   errorMessage: string = '';
+  dropdownSettings = {};
 
   filters = {
     branchName: '',
@@ -41,13 +44,24 @@ export class DetailedSalesComponent implements OnInit {
     private loaderService: LoaderService,
     private toastrService: ToasterCustomService,
     private branchService: BranchService
-  ) {}
+  ) {
+    this.dropdownSettings = {
+      singleSelection: false,
+      itemsShowLimit: 3,
+      allowSearchFilter: true,
+      maxHeight: 150,
+      unSelectAllText: 'Sıfırla',
+      searchPlaceholderText: 'Filial adı üzrə axtar',
+      selectAllText: 'Bütün filiallar',
+    }
+  }
 
   ngOnInit(): void {
     this.loadBranches();
     this.detailedSalesService.getDetailedSale(dateUtils.getTodayAsString()).subscribe(response => {
       this.sales = response;
       this.filteredSales = this.sales.data[0]?.dailySales || [];
+      this.branches = this.getUniqueValues('branchName')
       this.loaderService.hide();
     })
   }
@@ -57,7 +71,7 @@ export class DetailedSalesComponent implements OnInit {
     this.branchService.getBranches().subscribe({
       next: (data: IBranchResponse) => {
         this.branchesResponse = data;
-        this.branches = this.branchesResponse.data.flatMap(branch => branch.branches);
+        // this.branches = this.branchesResponse.data.flatMap(branch => branch.branches);
         this.loaderService.hide();
       },
       error: () => {
@@ -65,6 +79,7 @@ export class DetailedSalesComponent implements OnInit {
         this.loaderService.hide();
       }
     });
+    console.log(this.branches)
   }
 
   onSubmit(): void {
