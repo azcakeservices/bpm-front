@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from "@angular/forms";
-import { DecimalPipe, NgForOf, NgIf } from "@angular/common";
+import { DatePipe, DecimalPipe, NgForOf, NgIf } from "@angular/common";
 import { DetailedSalesService } from "../../services/detailed-sales.service";
 import { LoaderService } from "../../services/loader.service";
 import { ToasterCustomService } from "../../services/toaster.service";
@@ -9,6 +9,7 @@ import { IBranchResponse } from "../../interfaces/IBranchResponse";
 import { ISaleResponse } from "../../interfaces/ISaleResponse";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import * as dateUtils from '../../app/shared/utils/date-utils'
+import {IDailySale} from "../../interfaces/IDailySale";
 
 @Component({
   selector: 'app-detailed-sales',
@@ -18,7 +19,8 @@ import * as dateUtils from '../../app/shared/utils/date-utils'
     NgIf,
     NgForOf,
     DecimalPipe,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    DatePipe
   ],
   templateUrl: './detailed-sales.component.html',
   styleUrls: ['./detailed-sales.component.css'],
@@ -173,5 +175,9 @@ export class DetailedSalesComponent implements OnInit {
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
+  }
+
+  getTotal(dailySales: IDailySale[]): number {
+    return dailySales.reduce((sum, sale) => sum + sale.total!, 0);
   }
 }
