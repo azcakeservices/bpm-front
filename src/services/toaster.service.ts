@@ -9,7 +9,7 @@ export class ToasterCustomService {
   constructor(private toastr: ToastrService) { }
 
   success (message: string){
-    this.toastr.success(message, 'Success', {closeButton: true})
+    this.toastr.success(message, 'Uğurlu', {closeButton: true})
   }
 
   error (message: string){
@@ -17,10 +17,10 @@ export class ToasterCustomService {
   }
 
   warning (message: string){
-    this.toastr.warning(message, 'Warning', {closeButton: true})
+    this.toastr.warning(message, 'Diqqət', {closeButton: true})
   }
 
   info (message: string){
-    this.toastr.info(message, 'Info', {closeButton: true})
+    this.toastr.info(message, 'Mılumat', {closeButton: true})
   }
 }
