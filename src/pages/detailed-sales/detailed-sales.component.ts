@@ -7,8 +7,8 @@ import { ToasterCustomService } from "../../services/toaster.service";
 import { BranchService } from "../../services/branch.service";
 import { IBranchResponse } from "../../interfaces/IBranchResponse";
 import { ISaleResponse } from "../../interfaces/ISaleResponse";
-import * as dateUtils from '../../app/shared/utils/date-utils';
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import * as dateUtils from '../../app/shared/utils/date-utils'
 
 @Component({
   selector: 'app-detailed-sales',
@@ -18,7 +18,7 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
     NgIf,
     NgForOf,
     DecimalPipe,
-    NgMultiSelectDropDownModule,
+    NgMultiSelectDropDownModule
   ],
   templateUrl: './detailed-sales.component.html',
   styleUrls: ['./detailed-sales.component.css'],
@@ -28,15 +28,20 @@ export class DetailedSalesComponent implements OnInit {
   selectedBranch: string = '';
   branchesResponse: IBranchResponse | null = null;
   branches: any[] = [];
+  products: any[] = [];
+  barcodes: any[] = [];
+  contracts: any[] = [];
+
   sales: ISaleResponse | null = null;
   filteredSales: any[] = [];
   errorMessage: string = '';
-  dropdownSettings = {};
+  dropdownSettings: {} = {};
 
   filters = {
     branchName: '',
     productName: '',
-    barcode: ''
+    barcode: '',
+    contracts: ''
   };
 
   constructor(
@@ -46,22 +51,26 @@ export class DetailedSalesComponent implements OnInit {
     private branchService: BranchService
   ) {
     this.dropdownSettings = {
-      singleSelection: false,
-      itemsShowLimit: 3,
+      singleSelect: false,
+      itemsShowLimit: 1,
       allowSearchFilter: true,
+      allowClear: true,
       maxHeight: 150,
       unSelectAllText: 'Sıfırla',
-      searchPlaceholderText: 'Filial adı üzrə axtar',
-      selectAllText: 'Bütün filiallar',
+      selectAllText: 'Hamısını seç',
+      searchText: 'asdasd'
     }
   }
 
   ngOnInit(): void {
-    this.loadBranches();
+    // this.loadBranches();
     this.detailedSalesService.getDetailedSale(dateUtils.getTodayAsString()).subscribe(response => {
       this.sales = response;
       this.filteredSales = this.sales.data[0]?.dailySales || [];
-      this.branches = this.getUniqueValues('branchName')
+      this.branches = this.getUniqueValues('branchName');
+      this.products = this.getUniqueValues('productName')
+      this.barcodes = this.getUniqueValues('barcode');
+      this.contracts = this.getUniqueValues('contractName');
       this.loaderService.hide();
     })
   }
@@ -71,20 +80,19 @@ export class DetailedSalesComponent implements OnInit {
     this.branchService.getBranches().subscribe({
       next: (data: IBranchResponse) => {
         this.branchesResponse = data;
-        // this.branches = this.branchesResponse.data.flatMap(branch => branch.branches);
+        this.branches = this.branchesResponse.data.flatMap(branch => branch.branches);
         this.loaderService.hide();
       },
       error: () => {
-        this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi!');
+        this.toastrService.error('Ошибка при загрузке магазинов.');
         this.loaderService.hide();
       }
     });
-    console.log(this.branches)
   }
 
   onSubmit(): void {
     if (!this.date) {
-      this.toastrService.error('Tarix mütləq seçilməlidir!');
+      this.toastrService.error('Дата должна быть выбрана!');
       return;
     }
     this.loaderService.show();
@@ -93,9 +101,13 @@ export class DetailedSalesComponent implements OnInit {
         this.sales = response;
         this.filteredSales = this.sales.data[0]?.dailySales || [];
         this.loaderService.hide();
+        this.branches = this.getUniqueValues('branchName');
+        this.products = this.getUniqueValues('productName');
+        this.barcodes = this.getUniqueValues('barcode');
+        this.contracts = this.getUniqueValues('contractName');
       },
       error: () => {
-        this.toastrService.error('Detallı satışlar yüklənir, bir qədər gözləyin');
+        this.toastrService.error('Xəta baş verdi, bir daha cəhd edin. Xəta təkrarlanarsa İT ilə əlaqə saxlayın.');
         this.loaderService.hide();
       }
     });
@@ -108,13 +120,38 @@ export class DetailedSalesComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredSales = this.sales?.data[0]?.dailySales.filter(sale => {
-      return (
-        (!this.filters.branchName || sale.branchName === this.filters.branchName) &&
-        (!this.filters.productName || sale.productName === this.filters.productName) &&
-        (!this.filters.barcode || sale.barcode === this.filters.barcode)
-      );
+      const { branchName, productName, barcode, contracts } = this.filters;
+
+      if (
+        (!branchName || branchName.length === 0) &&
+        (!productName || productName.length === 0) &&
+        (!barcode || barcode.length === 0) &&
+        (!contracts || contracts.length === 0)
+      ) {
+        return true;
+      }
+
+      const matchesBranch = !branchName || branchName.length === 0 || branchName.includes(sale.branchName);
+      const matchesProduct = !productName || productName.length === 0 || productName.includes(sale.productName);
+      const matchesBarcode = !barcode || barcode.length === 0 || barcode.includes(sale.barcode);
+      const matchesContracts = !contracts || contracts.length === 0 || contracts.includes(sale.contractName);
+
+      return matchesBranch && matchesProduct && matchesBarcode && matchesContracts;
     }) || [];
+
+    this.updateFilterOptions();
   }
+
+
+  private updateFilterOptions(): void {
+    this.branches = this.getUniqueValues('branchName');
+    this.products = this.getUniqueValues('productName');
+    this.barcodes = this.getUniqueValues('barcode');
+    this.contracts = this.getUniqueValues('contractName');
+  }
+
+
+
 
   downloadExcel(){
     this.loaderService.show();
@@ -138,154 +175,3 @@ export class DetailedSalesComponent implements OnInit {
     downloadLink.click();
   }
 }
-
-
-
-
-// import {Component, OnInit} from '@angular/core';
-// import {FormsModule} from "@angular/forms";
-// import {NgForOf, NgIf} from "@angular/common";
-// import {DetailedSalesService} from "../../services/detailed-sales.service";
-// import {LoaderService} from "../../services/loader.service";
-// import {ToasterCustomService} from "../../services/toaster.service";
-// import {BranchService} from "../../services/branch.service";
-// import {IBranchResponse} from "../../interfaces/IBranchResponse";
-// import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
-// import {ISaleResponse} from "../../interfaces/ISaleResponse";
-//
-// @Component({
-//   selector: 'app-detailed-sales',
-//   standalone: true,
-//   imports: [
-//     FormsModule,
-//     NgIf,
-//     NgMultiSelectDropDownModule,
-//     NgForOf
-//   ],
-//   templateUrl: './detailed-sales.component.html',
-//   styleUrl: './detailed-sales.component.css'
-// })
-// export class DetailedSalesComponent implements OnInit {
-//   selectedBranch: string = '';
-//   selectedBranchCode: string = '';
-//   dropDownSettings: {} = {};
-//   date: string = '';
-//   branchesResponse: IBranchResponse | null = null;
-//   branches: [{
-//     companyCode: string;
-//     companyFullName: string;
-//     branchTypeCode: string;
-//     branchCode: string;
-//     branchName: string;
-//     codeNameType: string;
-//     taxesObjectCode: string;
-//     countryISO2: string;
-//     address: string;
-//     latitude: string;
-//     longitude: string;
-//     status: boolean
-//   }][] = [];
-//   sales: ISaleResponse | null = null;
-//   errorMessage: string = '';
-//   filter = {
-//     branchName: '',
-//     productName: '',
-//     statementDate: '',
-//     barcode: ''
-//   }
-//
-//   constructor(
-//     private detailedSalesService: DetailedSalesService,
-//     private loaderService: LoaderService,
-//     private toastrService: ToasterCustomService,
-//     private branchService: BranchService,
-//   ) {
-//     this.dropDownSettings = {
-//       singleSelection: true,
-//       itemsShowLimit: 200,
-//       allowSearchFilter: true,
-//       maxHeight: 300,
-//       unSelectAllText: 'Sıfırla',
-//       searchPlaceholderText: 'Filial adı üzrə axtar'
-//     }
-//   }
-//
-//   ngOnInit(): void {
-//     this.loadBranches()
-//   }
-//
-//   private loadBranches(): void {
-//     this.loaderService.show()
-//     this.toastrService.info('Mağazalar yüklənir')
-//     this.branchService.getBranches().subscribe({
-//       next: (data: IBranchResponse) => {
-//         this.toastrService.success('Mağazalar yükləndi')
-//         this.branchesResponse = data;
-//         this.loaderService.hide()
-//         this.branches = this.branchResponseToBranch()
-//       },
-//       error: () => {
-//         this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi!')
-//         this.loaderService.hide()
-//       }
-//     })
-//   }
-//
-//   branchResponseToBranch(){
-//     return this.branchesResponse!.data.map((branch) => {
-//       return branch.branches
-//     })
-//   }
-//
-//   dropDownBranches():string[]{
-//     return this.branches[0].map((branch) => {
-//       return branch.branchName
-//     })
-//   }
-//
-//   onSubmit(){
-//     if (!this.date){
-//       this.toastrService.error('Tarix mütləq seçilməlidir!')
-//       return;
-//     }
-//     // if(this.selectedBranch){
-//     //   this.getBranchCodeByDate(this.selectedBranchCode);
-//     // }
-//     this.loaderService.show();
-//     this.toastrService.info('Detallı satışlar yüklənir, bir qədər gözləyin');
-//     this.detailedSalesService.getDetailedSale(this.date, this.selectedBranch).subscribe(response => {
-//       this.sales = response;
-//       console.log(this.sales)
-//       this.loaderService.hide()
-//     }, error => {
-//       this.toastrService.error(error)
-//     })
-//
-//   }
-//
-//   // private getBranchCodeByDate(branchName: string){
-//   //   const branch = this.branches.find(b => (b as any)?.branchName === branchName);
-//   // }
-//
-//   downloadExcel(){
-//     this.loaderService.show();
-//     this.detailedSalesService.downloadExcel(this.sales!).subscribe(response => {
-//       const base64 = response.body.base64;
-//       const fileName = response.body.fileName;
-//       this.downloadFile(base64, fileName);
-//       this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`)
-//       this.loaderService.hide()
-//     }, () => {
-//       this.toastrService.error('Xəta baş verdi, bir daha cəhd edin')
-//       this.loaderService.hide()
-//     })
-//   }
-//
-//   private downloadFile(base64: string, fileName: string){
-//     const linkSource = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${base64}`;
-//     const downloadLink = document.createElement('a');
-//     downloadLink.href = linkSource;
-//     downloadLink.download = fileName;
-//     downloadLink.click();
-//   }
-// }
