@@ -65,52 +65,6 @@ header {
   background-color: #e60000;
 }
 
-
-/*.user-profile {*/
-/*  display: flex;*/
-/*  flex-direction: column; !* Изменено на вертикальное расположение *!*/
-/*  align-items: flex-end; !* Выровнять элементы по правому краю *!*/
-/*}*/
-
-/*.user-name {*/
-/*  margin-bottom: 5px; !* Добавим отступ между именем пользователя и кнопкой *!*/
-/*}*/
-
-/*.logout-button {*/
-/*  display: inline-block;*/
-/*  padding: 10px 20px;*/
-/*  font-size: 16px;*/
-/*  font-weight: bold;*/
-/*  color: #ffffff;*/
-/*  background-color: #ff4757;*/
-/*  border: none;*/
-/*  border-radius: 5px;*/
-/*  cursor: pointer;*/
-/*  text-decoration: none;*/
-/*  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;*/
-/*}*/
-
-/*.logout-button:hover {*/
-/*  background-color: #e84118;*/
-/*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);*/
-/*}*/
-
-/*.logout-button:active {*/
-/*  transform: translateY(2px);*/
-/*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);*/
-/*}*/
-
-/*.logout-button:focus {*/
-/*  outline: none;*/
-/*  box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.5);*/
-/*}*/
-
-/*.logout-button:disabled {*/
-/*  background-color: #cccccc;*/
-/*  cursor: not-allowed;*/
-/*  box-shadow: none;*/
-/*}*/
-
 .button {
   padding: 10px 20px;
   font-size: 16px;

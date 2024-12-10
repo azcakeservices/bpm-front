@@ -1,7 +1,9 @@
-import {Component} from '@angular/core';
-import {IBranch} from "../../interfaces/IBranch";
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
-import { BranchService} from "../../services/branch.service";
+import {Component, OnInit} from '@angular/core';
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
+import {BranchService} from "../../services/branch.service";
+import {LoaderService} from "../../services/loader.service";
+import {IBranchResponse} from "../../interfaces/IBranchResponse";
+import {ToasterCustomService} from "../../services/toaster.service";
 
 @Component({
   selector: 'app-branches',
@@ -9,47 +11,60 @@ import { BranchService} from "../../services/branch.service";
   imports: [
     NgForOf,
     NgIf,
-    DatePipe
+    DatePipe,
+    NgClass
   ],
   templateUrl: './branches.component.html',
   styleUrl: './branches.component.css'
 })
-export class BranchesComponent {
-  branches: IBranch[] = [];
+export class BranchesComponent implements OnInit{
+  branchesResponse: IBranchResponse | null = null;
+  branches: [{
+    companyCode: string;
+    companyFullName: string;
+    branchTypeCode: string;
+    branchCode: string;
+    branchName: string;
+    codeNameType: string;
+    taxesObjectCode: string;
+    countryISO2: string;
+    address: string;
+    latitude: string;
+    longitude: string;
+    status: boolean
+  }][] = [];
 
-  constructor(private branchService: BranchService) {}
+  constructor(
+    private branchService: BranchService,
+    private loaderService: LoaderService,
+    private toastrService: ToasterCustomService
+  ) {}
 
   ngOnInit(): void {
     this.loadBranches();
   }
 
   loadBranches(): void {
+    this.loaderService.show()
+    this.toastrService.info('Mağazalar yüklənir')
     this.branchService.getBranches().subscribe({
-        next: (data: IBranch[]) => {
-          this.branches = data
+        next: (data: IBranchResponse) => {
+          this.toastrService.success('Mağazalar yükləndi')
+          this.branchesResponse = data;
+          this.loaderService.hide()
+          this.branches = this.branchResponseToBranch()
         },
-        error: error => {
-          console.log(error);
+        error: () => {
+          this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi!')
+          this.loaderService.hide()
         }
-      }
-    )
+    })
+
   }
 
-  changeBranchStatus(branch: IBranch) {
-    this.branchService.changeBranchStatus(branch.name, branch.location, branch.address).subscribe({
-    next: () => {
-      const updateBranch = this.branches.find(b => b.name === branch.name && b.location === branch.location);
-      if (updateBranch) {
-        updateBranch.isActive = !updateBranch.isActive;
-      }
-    },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
-
-  trackById(index: number, item: any): number {
-    return item.id;
+  branchResponseToBranch(){
+    return this.branchesResponse!.data.map((branch) => {
+      return branch.branches;
+    })
   }
 }

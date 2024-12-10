@@ -3,6 +3,15 @@
   border-collapse: collapse;
   text-align: center;
   font-family: Arial, sans-serif;
+  table-layout: auto;
+}
+
+.table-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 500px;
+  width: 100%;
+  border: 1px solid #ddd;
 }
 
 .payments-table th {
@@ -12,14 +21,14 @@
   text-transform: uppercase;
   font-weight: bold;
   border-bottom: 2px solid #ddd;
-  white-space: nowrap; /* Оставляем заголовки без переноса */
+  white-space: nowrap;
 }
 
 .payments-table td {
   padding: 12px;
   border-bottom: 1px solid #ddd;
   text-align: center;
-  white-space: nowrap; /* Без переноса для содержания */
+  white-space: nowrap;
 }
 
 .payments-table tr:nth-child(odd) {
@@ -28,6 +37,10 @@
 
 .payments-table tr:hover {
   background-color: #ddd;
+}
+
+.form-label {
+  font-size: 14px;
 }
 
 .date-input {
@@ -50,21 +63,6 @@
   font-size: 14px;
   display: inline-block;
   width: 100px;
-}
-
-.btn {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin: 5px 2px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
 }
 
 .btn:hover {
@@ -102,4 +100,30 @@
 .filter-input:focus {
   border-color: #4CAF50;
   outline: none;
+}
+
+.sticky-column {
+  position: sticky;
+  left: 0;
+  background-color: #f2f2f2 !important;
+  z-index: 3 !important;
+  border-right: 1px solid #ddd;
+}
+
+.sticky-column-header {
+  position: sticky;
+  left: 0;
+  top: 0;
+  background-color: #3498db !important;
+  z-index: 4 !important;
+  border-right: 1px solid #ddd;
+}
+
+.sticky-column-header_additional{
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 3 !important;
+  border-right: 1px solid #ddd;
+  background-color: #2ecc71 !important;
 }

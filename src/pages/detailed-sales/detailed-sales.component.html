@@ -1,0 +1,106 @@
+<form (submit)="onSubmit()" >
+  <label for="date" class="form-label" style="margin-right: 10px;">Tarix</label>
+  <input type="date" id="date" [(ngModel)]="date" name="date" required class="date-input">
+  <button type="submit" class="btn">Yüklə</button>
+  <button class="btn" *ngIf="filteredSales.length > 0" (click)="downloadExcel()">Excel olaraq yüklə</button>
+</form>
+
+<div style="padding: 20px" *ngIf="filteredSales.length > 0">
+  <h2>Filterlər</h2>
+  <div class="filters">
+    <div class="filters__item">
+      <ng-multiselect-dropdown
+        class="multiselect-dropdown"
+        [placeholder]="'Filialı seç'"
+        [data]="branches"
+        [settings]="dropdownSettings"
+        [(ngModel)]="filters.branchName"
+        (ngModelChange)="applyFilters()"
+      >
+      </ng-multiselect-dropdown>
+    </div>
+
+    <div class="filters__item">
+      <ng-multiselect-dropdown
+        class="multiselect-dropdown"
+        [placeholder]="'Məhsulu seç'"
+        [data]="products"
+        [settings]="dropdownSettings"
+        [(ngModel)]="filters.productName"
+        (ngModelChange)="applyFilters()"
+      >
+      </ng-multiselect-dropdown>
+    </div>
+
+    <div class="filters__item">
+      <ng-multiselect-dropdown
+        class="multiselect-dropdown"
+        [placeholder]="'Barkod seç'"
+        [data]="barcodes"
+        [settings]="dropdownSettings"
+        [(ngModel)]="filters.barcode"
+        (ngModelChange)="applyFilters()"
+      >
+      </ng-multiselect-dropdown>
+    </div>
+
+    <div class="filters__item">
+      <ng-multiselect-dropdown
+        class="multiselect-dropdown"
+        [placeholder]="'Carini seç'"
+        [data]="contracts"
+        [settings]="dropdownSettings"
+        [(ngModel)]="filters.contracts"
+        (ngModelChange)="applyFilters()"
+      >
+      </ng-multiselect-dropdown>
+    </div>
+  </div>
+</div>
+
+<div class="table-container" *ngIf="filteredSales.length > 0; else noSales">
+  <table class="sales-table">
+    <thead>
+    <tr>
+      <th>Cəmi məbləğ:</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>{{ getTotal(filteredSales) | number: '1.2-2' }}</th>
+    </tr>
+    <br>
+    <tr>
+      <th>Mağaza</th>
+      <th>Tarix</th>
+      <th>Məhsul adı</th>
+      <th>Barkodu</th>
+      <th>Bir məhsulun qiyməti</th>
+      <th>Toplam satış sayı</th>
+      <th>Toplam məbləği</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let sale of filteredSales">
+      <td class="sticky-column">{{ sale.branchName }}</td>
+      <td>{{ sale.saleDate | date: 'dd.MM.yyyy' }}</td>
+      <td>{{ sale.productName }}</td>
+      <td>{{ sale.barcode }}</td>
+      <td>{{ sale.price | number: '1.2-2' }}</td>
+      <td>{{ sale.quantity }}</td>
+      <td>{{ sale.total | number: '1.2-2' }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noSales>
+  <div class="no_sales">
+    Cari gün üçün satışlar yüklənməyib
+  </div>
+</ng-template>
+
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>

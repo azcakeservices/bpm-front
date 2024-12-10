@@ -15,42 +15,28 @@
 
 
   <button type="submit" class="btn">Yüklə</button>
-  <button *ngIf="showDownloadButton" (click)="downloadExcel()" class="btn">Excel olaraq yüklə</button>
+<!--  <button *ngIf="showDownloadButton" (click)="downloadExcel()" class="btn">Excel olaraq yüklə</button>-->
 </form>
 
 <div *ngIf="errorMessage" class="error-message">
   {{errorMessage}}
 </div>
 
-<div *ngIf="sales.length > 0">
+<div class="table-container" *ngIf="sales.length > 0">
   <table class="sales-table">
     <thead>
     <tr>
-      <th>Raport Tarixi</th>
+      <th class="sticky-column sticky-column-header">Raport Tarixi</th>
       <th *ngFor="let branch of branches">{{ branch }}</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let date of uniqueDates">
-      <td>{{ date }}</td>
+      <td class="sticky-column">{{ date }}</td>
       <td *ngFor="let branch of branches">
         {{ getAmountForBranchAndDate(branch, date) || '-' }}
       </td>
     </tr>
     </tbody>
   </table>
-<!--  <table class="sales-table">-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--      <th>Raport Tarixi</th>-->
-<!--      <th *ngFor="let sale of sales">{{sale.branchName}}</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr *ngFor="let sale of sales">-->
-<!--      <td>{{sale.saleDate}}</td>-->
-<!--      <td>{{sale.amount}}</td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--  </table>-->
 </div>

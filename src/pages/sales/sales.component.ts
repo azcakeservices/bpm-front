@@ -5,6 +5,7 @@ import {FormsModule} from "@angular/forms";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {SaleService} from "../../services/sale.service";
 import {ISale} from "../../interfaces/ISale";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-sales',
@@ -33,7 +34,10 @@ export class SalesComponent {
   groupedData: { [key: string]: any } = {};
   errorMessage: string = '';
 
-  constructor(private saleService: SaleService) {
+  constructor(
+    private saleService: SaleService,
+    private loaderService: LoaderService
+  ) {
     this.dropDownSettings = {
       singleSelection: true,
       itemsShowLimit: 70,
@@ -63,11 +67,13 @@ export class SalesComponent {
   }
 
   loadPayments(){
+    this.loaderService.show()
     this.saleService.getSales(this.startDate, this.endDate, this.selectedType[0]).subscribe(response => {
       this.sales = response;
       this.showDownloadButton = true;
       this.branches = [...response.map(sale => sale.branchName)]
       this.groupSalesByDate();
+      this.loaderService.hide()
     })
   }
 
@@ -89,13 +95,15 @@ export class SalesComponent {
     return sale ? sale.amount : null;
   }
 
-  downloadExcel(){
-    this.saleService.generateExcel(this.startDate, this.endDate, 'DailyBread').subscribe(response => {
-      const base64 = response.body.base64;
-      const fileName = response.body.fileName;
-      this.downloadFile(base64, fileName);
-    })
-  }
+  // downloadExcel(){
+  //   this.loaderService.show()
+  //   this.saleService.generateExcel(this.startDate, this.endDate, 'DailyBread').subscribe(response => {
+  //     const base64 = response.body.base64;
+  //     const fileName = response.body.fileName;
+  //     this.downloadFile(base64, fileName);
+  //     this.loaderService.hide()
+  //   })
+  // }
 
   private downloadFile(base64Data: string, fileName: string){
     const linkSource = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${base64Data}`;

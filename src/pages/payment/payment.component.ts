@@ -5,6 +5,7 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {BranchService} from "../../services/branch.service";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-payment',
@@ -36,7 +37,10 @@ export class PaymentComponent {
     barcode: ''
   }
 
-  constructor(private paymentService: PaymentService, private branchService: BranchService) {
+  constructor(
+    private paymentService: PaymentService,
+    private branchService: BranchService,
+    private loaderService: LoaderService) {
     this.loadBranches()
     this.dropDownSettings = {
       singleSelection: false,
@@ -75,9 +79,11 @@ export class PaymentComponent {
   }
 
   private loadPayments(){
+    this.loaderService.show()
     this.paymentService.getPaymentsWithFilters(this.startDate, this.endDate, this.selectedBranches).subscribe(response => {
       this.payments = response;
       this.showDownloadButton = true
+      this.loaderService.hide()
     })
   }
 
