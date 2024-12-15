@@ -27,12 +27,16 @@ import {IDailySale} from "../../interfaces/IDailySale";
 })
 export class DetailedSalesComponent implements OnInit {
   date: string = '';
-  selectedBranch: string = '';
+  emptySales: string = 'Cari gün üçün satışlar yüklənməyib!';
+  allBranches = [{
+    branchName: '',
+    branchCode: ''
+  }];
   branchesResponse: IBranchResponse | null = null;
-  branches: any[] = [];
-  products: any[] = [];
-  barcodes: any[] = [];
-  contracts: any[] = [];
+  filteredBranches: any[] = [];
+  filteredProducts: any[] = [];
+  filteredBarcodes: any[] = [];
+  filteredContracts: any[] = [];
 
   sales: ISaleResponse | null = null;
   filteredSales: any[] = [];
@@ -45,6 +49,8 @@ export class DetailedSalesComponent implements OnInit {
     barcode: '',
     contracts: ''
   };
+
+  selectedBranchCode = '';
 
   constructor(
     private detailedSalesService: DetailedSalesService,
@@ -65,14 +71,14 @@ export class DetailedSalesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.loadBranches();
+    this.loadBranches();
     this.detailedSalesService.getDetailedSale(dateUtils.getTodayAsString()).subscribe(response => {
       this.sales = response;
       this.filteredSales = this.sales.data[0]?.dailySales || [];
-      this.branches = this.getUniqueValues('branchName');
-      this.products = this.getUniqueValues('productName')
-      this.barcodes = this.getUniqueValues('barcode');
-      this.contracts = this.getUniqueValues('contractName');
+      this.filteredBranches = this.getUniqueValues('branchName');
+      this.filteredProducts = this.getUniqueValues('productName')
+      this.filteredBarcodes = this.getUniqueValues('barcode');
+      this.filteredContracts = this.getUniqueValues('contractName');
       this.loaderService.hide();
     })
   }
@@ -82,11 +88,15 @@ export class DetailedSalesComponent implements OnInit {
     this.branchService.getBranches().subscribe({
       next: (data: IBranchResponse) => {
         this.branchesResponse = data;
-        this.branches = this.branchesResponse.data.flatMap(branch => branch.branches);
+        this.filteredBranches = this.branchesResponse.data.flatMap(branch => branch.branches);
+        this.allBranches = data.data[0].branches.map(b => ({
+          branchName: b.branchName,
+          branchCode: b.branchCode
+        }));
         this.loaderService.hide();
       },
       error: () => {
-        this.toastrService.error('Ошибка при загрузке магазинов.');
+        this.toastrService.error('Mağazalar yüklənən zaman xəta baş verdi.');
         this.loaderService.hide();
       }
     });
@@ -98,15 +108,16 @@ export class DetailedSalesComponent implements OnInit {
       return;
     }
     this.loaderService.show();
-    this.detailedSalesService.getDetailedSale(this.date, this.selectedBranch).subscribe({
+    this.resetFilters();
+    this.detailedSalesService.getDetailedSale(this.date, this.selectedBranchCode).subscribe({
       next: (response) => {
         this.sales = response;
         this.filteredSales = this.sales.data[0]?.dailySales || [];
         this.loaderService.hide();
-        this.branches = this.getUniqueValues('branchName');
-        this.products = this.getUniqueValues('productName');
-        this.barcodes = this.getUniqueValues('barcode');
-        this.contracts = this.getUniqueValues('contractName');
+        this.filteredBranches = this.getUniqueValues('branchName');
+        this.filteredProducts = this.getUniqueValues('productName');
+        this.filteredBarcodes = this.getUniqueValues('barcode');
+        this.filteredContracts = this.getUniqueValues('contractName');
       },
       error: () => {
         this.toastrService.error('Xəta baş verdi, bir daha cəhd edin. Xəta təkrarlanarsa İT ilə əlaqə saxlayın.');
@@ -146,10 +157,10 @@ export class DetailedSalesComponent implements OnInit {
 
 
   private updateFilterOptions(): void {
-    this.branches = this.getUniqueValues('branchName');
-    this.products = this.getUniqueValues('productName');
-    this.barcodes = this.getUniqueValues('barcode');
-    this.contracts = this.getUniqueValues('contractName');
+    this.filteredBranches = this.getUniqueValues('branchName');
+    this.filteredProducts = this.getUniqueValues('productName');
+    this.filteredBarcodes = this.getUniqueValues('barcode');
+    this.filteredContracts = this.getUniqueValues('contractName');
   }
 
 
@@ -179,5 +190,14 @@ export class DetailedSalesComponent implements OnInit {
 
   getTotal(dailySales: IDailySale[]): number {
     return dailySales.reduce((sum, sale) => sum + sale.total!, 0);
+  }
+
+  private resetFilters(){
+    this.sales = null;
+    this.filteredSales = [];
+    this.filteredBranches = [];
+    this.filteredProducts = [];
+    this.filteredBarcodes = [];
+    this.filteredContracts = [];
   }
 }
