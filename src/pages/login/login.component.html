@@ -26,8 +26,8 @@
       </div>
       <button type="submit" class="btn btn-primary">Daxil ol</button>
     </form>
-<!--    <div *ngIf="loginFailed" class="error-message">-->
-<!--      Şifrə və ya istifadəçi adı düzgün daxil edilməyib-->
-<!--    </div>-->
+    <div *ngIf="errorMessage" class="error-message">
+      Istifadəçi adı və ya şifrə düzgün daxil edilməyib, yenidən cəhd edin!
+    </div>
   </div>
 </div>
