@@ -8,7 +8,7 @@
   "apiUrlsProduction": {
     "branchService": "http://10.0.100.100:1030/api/Branches",
     "saleService": "http://10.0.100.100:1010/api/Sales",
-    "authService": "http://10.0.100.100:7138/api/Auth",
+    "authService": "http://10.0.100.100:5000/gateway/api/Auth/login",
     "paymentService": "http://10.0.100.100:1010/api/Payments",
     "paymentReceiver": "http://10.0.100.100:1030/api/Sales"
   }
