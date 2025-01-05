@@ -27,11 +27,9 @@ export class HeaderComponent implements OnInit{
   ngOnInit(){
 
     const user = localStorage.getItem('user');
-    console.log(user)
     if (user) {
       const userData = JSON.parse(user);
       this.userName = userData['displayName'] ?? '';
-      console.log('userData', userData)
       this.department = this.getValueByKey('department')
     }
     this.updateDateTime()
@@ -44,7 +42,6 @@ export class HeaderComponent implements OnInit{
     const user = localStorage.getItem('user');
     if (user) {
       const userData = JSON.parse(user);
-      console.log(userData[key])
       return userData[key]
     }
   }
