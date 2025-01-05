@@ -19,7 +19,6 @@ export class SaleService {
 
   getSales(dateFrom: string, dateTo: string, saleType: string): Observable<ISale[]>{
     let sale: string = '';
-    console.log(saleType)
     switch (saleType) {
       case 'Təndir':
         sale = 'DailyBread';
@@ -39,7 +38,6 @@ export class SaleService {
       dateTo
     };
 
-    console.log(`Sale type: ${sale}, Date range:`, dateRange);
     return this.http.post<ISale[]>(`${this.api}/${sale}/get`, dateRange);
   }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router, RouterModule, RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "../header/header.component";
 import {FooterComponent} from "../footer/footer.component";
@@ -19,7 +19,7 @@ import {LoaderComponent} from "../components/loader/loader.component";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent{
 
   constructor(private router: Router) {}
 

@@ -6,6 +6,7 @@ import {AuthGuard} from "../guard/auth.guard";
 import {SaleComponent} from "../pages/sale/sale.component";
 import {SaleRangeComponent} from "../pages/sale-range/sale-range.component";
 import {DetailedSalesComponent} from "../pages/detailed-sales/detailed-sales.component";
+import {AdminPanelComponent} from "../pages/admin-panel/admin-panel.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -14,8 +15,7 @@ export const routes: Routes = [
   { path: 'sale-range', component: SaleRangeComponent, canActivate: [AuthGuard] },
   { path: 'branches', component: BranchesComponent, canActivate: [AuthGuard]},
   { path: 'detailed-sales', component: DetailedSalesComponent, canActivate: [AuthGuard]},
+  { path: 'admin', component: AdminPanelComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login'}
-  // { path: 'payments', component: PaymentComponent, canActivate: [AuthGuard]},
-  // { path: 'sales', component: SalesComponent, canActivate: [AuthGuard] },
 ];

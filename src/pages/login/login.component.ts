@@ -26,9 +26,11 @@ export class LoginComponent {
   login(){
     this.authService.login(this.username, this.password).subscribe(
       response => {
-        if (response.message === 'Success'){
-        localStorage.setItem('authToken', response.token);
-        localStorage.setItem('user', response.displayName)
+        console.log(response)
+        if (response.status === 'Success'){
+          localStorage.setItem('authToken', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user))
+          localStorage.setItem('roles', JSON.stringify(response.roles))
         this.router.navigate(['/branches'])
       }
     },

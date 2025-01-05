@@ -37,7 +37,6 @@ export class SaleComponent implements OnInit{
 
   ngOnInit() {
     this.loadService.show();
-    console.log('OnInit')
 
     this.saleService.getSaleByDate(dateUtils.getTodayAsString()).subscribe(response => {
       this.sales = response;
@@ -60,7 +59,6 @@ export class SaleComponent implements OnInit{
     this.loadService.show()
     this.toastrService.info('Satışlar yüklənir, zəhmət olmasa bir qədər gözləyin');
     this.saleService.getSaleByDate(this.date).subscribe(response => {
-      console.log(response)
       this.sales = response;
       this.filterSales();
       this.toastrService.success('Satışlar yükləndi')

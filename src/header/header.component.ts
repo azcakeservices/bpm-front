@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 
@@ -13,9 +13,10 @@ import {FormsModule} from "@angular/forms";
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit{
   currentDate: string = ''
   userName: string = ''
+  department: string = ''
   constructor(private router: Router) {}
   signOut(){
     localStorage.removeItem('authToken');
@@ -24,11 +25,25 @@ export class HeaderComponent {
   }
 
   ngOnInit(){
-    this.userName = localStorage.getItem('user') ?? ''
+
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      this.userName = userData['displayName'] ?? '';
+      this.department = this.getValueByKey('department')
+    }
     this.updateDateTime()
     setInterval(() => {
       this.updateDateTime()
     }, 1000)
+  }
+
+  getValueByKey(key: string){
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData[key]
+    }
   }
 
   updateDateTime(){
