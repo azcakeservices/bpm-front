@@ -14,8 +14,7 @@ export class AuthService {
   }
 
   login(username: string, password:string): Observable<any>{
-    return this.http.post<any>(`${this.api}/login`, {username, password});
-    // return this.http.post<any>('https://localhost:44305/api/Auth/login', {username, password});
+    return this.http.post<any>(`${this.api}`, {username, password});
   }
 
 }
