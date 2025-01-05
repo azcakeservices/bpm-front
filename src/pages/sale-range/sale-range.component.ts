@@ -126,7 +126,6 @@ export class SaleRangeComponent implements OnInit {
         this.salesDataByCategory[key] = { branches, salesData };
       });
 
-      console.log('Sales Data by Category:', this.salesDataByCategory);
     }
   }
 
