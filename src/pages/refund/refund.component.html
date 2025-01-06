@@ -1,0 +1,69 @@
+<form (submit)="onSubmit()" class="form-container">
+  <label for="startDate" class="form-label">Başlama tarixi</label>
+  <input type="date" id="startDate" [(ngModel)]="startDate" name="startDate" required class="form-input">
+  <label for="endDate" class="form-label">Bitmə tarixi</label>
+  <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" required class="form-input">
+  <button type="submit" class="btn">Yüklə</button>
+</form>
+
+<div class="main" *ngIf="refunds; else noRefund">
+  <h2>İadələr</h2>
+
+  <div *ngFor="let company of ['GM', 'PROM']" class="table-wrapper">
+    <h3 class="table-title">Şirkət: {{ company }}</h3>
+    <div class="table-container">
+      <table class="refund-table">
+        <thead>
+        <tr>
+          <th>Fillial nömrəsi</th>
+          <th>Fillial adı</th>
+          <th>Müqavilə nömrəsi</th>
+          <th>Müqavilə adı</th>
+          <th>Tarix</th>
+          <th>Qeydiyyat nömrəsi</th>
+          <th>Sənəd nömrəsi</th>
+          <th>Z nömrəsi</th>
+          <th>Z vergi nömrəsi</th>
+          <th>Məhsul nömrəsi</th>
+          <th>Məhsul adı</th>
+          <th>Barkodu</th>
+          <th>Sayı</th>
+          <th>Vahid</th>
+          <th>İadə məbləği</th>
+          <th>Cəm</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let ref of getSortedRefunds(company)">
+          <td>{{ ref.branchCode }}</td>
+          <td>{{ ref.branchName }}</td>
+          <td>{{ ref.contractCode }}</td>
+          <td>{{ ref.contractName }}</td>
+          <td>{{ ref.chechDate.replace('T', ' ') }}</td>
+          <td>{{ ref.cashRegisterCode }}</td>
+          <td>{{ ref.documentNumber }}</td>
+          <td>{{ ref.zNumber }}</td>
+          <td>{{ ref.zNumberTax }}</td>
+          <td>{{ ref.productCode }}</td>
+          <td>{{ ref.productName }}</td>
+          <td>{{ ref.barcode }}</td>
+          <td>{{ ref.quantity }}</td>
+          <td>{{ ref.measureTyeCode }}</td>
+          <td>{{ ref.refundPrice }}</td>
+          <td>{{ ref.lineTotal }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="summary">
+        <p>İadə məbləği: {{ getTotalRefundPrice(company) | number }}</p>
+        <p>Cəm: {{ getTotalLineTotal(company) | number }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noRefund>
+  <div style="text-align: center; font-size: 24px; color: red; font-weight: bold;">
+    İadələrin yüklənməsi üçün tarix aralığını qeyd edin
+  </div>
+</ng-template>
