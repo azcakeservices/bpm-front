@@ -1,0 +1,263 @@
+.main {
+  padding: 0 20px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.form-label {
+  font-size: 14px;
+}
+
+.form-input {
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.download-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #45a049;
+}
+
+.error-message {
+  color: #e74c3c;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  margin-bottom: 20px;
+}
+
+.table-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.table-container {
+  max-height: 650px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  position: relative;
+}
+
+.refund-table {
+  width: auto;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.refund-table th, .refund-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  background: #007bff;
+  color: white;
+  white-space: nowrap;
+}
+
+.refund-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.refund-table td:first-child, .refund-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+}
+
+.refund-table th:first-child{
+  z-index: 4;
+}
+
+.scrollable-body tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.scrollable-body tr:hover {
+  background: #f1f1f1;
+  transition: background-color 0.3s ease;
+}
+
+.table-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+.total-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.total-value {
+  font-weight: bold;
+  color: #fff;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.form-label {
+  font-size: 14px;
+}
+
+.form-input {
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+tfoot {
+  background: #f1f1f1;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+tfoot td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.total-label {
+  text-align: right;
+  padding-right: 10px;
+  font-weight: bold;
+}
+
+.summary {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2ecc71;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+.summary p {
+  margin: 0;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+}
