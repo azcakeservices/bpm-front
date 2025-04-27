@@ -22,7 +22,7 @@ export class DetailedSalesService {
   }
 
   downloadExcel(sale: ISaleResponse):Observable<any>{
-    return this.http.post<any>(`http://10.0.100.100:1030/api/FilesGenerator/GenerateDetailedSale`, sale, {observe: 'response'})
+    return this.http.post<any>(`http://10.0.100.100:5050/gateway/api/FilesGenerator/GenerateDetailedSale`, sale, {observe: 'response'})
   }
 
 }
