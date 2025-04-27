@@ -136,19 +136,6 @@ h2 {
   transition: background-color 0.3s ease;
 }
 
-.table-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border-top: 1px solid #ddd;
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
-}
-
 .total-label {
   font-weight: bold;
   margin-right: 10px;
