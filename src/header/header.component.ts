@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouterLink, RouterLinkActive} from "@angular/router";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {AuthService} from "../services/auth.service";
 import {NgForOf, NgIf} from "@angular/common";
@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit {
     { label: 'Admin', link: '/admin', roles: ['Admin']}
   ];
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService) {}
 
   ngOnInit() {
     const user = localStorage.getItem('user');
