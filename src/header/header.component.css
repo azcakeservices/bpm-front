@@ -1,9 +1,13 @@
-header {
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #f8f9fa;
+  padding: 12px 24px;
+  background-color: #3498db;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 1000;
+  position: relative;
 }
 
 .header-left {
@@ -11,107 +15,96 @@ header {
   flex-direction: column;
 }
 
-.header-left span {
-  font-size: 20px;
+.app-title {
+  font-size: 22px;
   font-weight: bold;
 }
 
-.main-nav ul {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.main-nav ul li {
-  margin-right: 20px;
+.clock {
+  font-size: 14px;
+  margin-top: 4px;
+  color: #e3e3e3;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-}
-
-.welcome-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  gap: 12px;
 }
 
 .welcome-message {
-  font-size: 18px;
-  color: #333;
-  font-weight: bold;
+  font-size: 16px;
   margin: 0;
+}
+
+.hamburger {
+  background: none;
+  font-size: 24px;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
 .logout-button {
   background-color: #ff4d4d;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-left: 20px; /* Добавлен отступ между именем и кнопкой */
 }
 
 .logout-button:hover {
   background-color: #e60000;
 }
 
+/* Боковое меню (без изменений, просто выше z-index) */
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #f0f0f0;
+  padding: 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s ease;
+  z-index: 2000;
+}
+
+.side-nav.open {
+  left: 0;
+}
+
+.side-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.side-nav ul li {
+  margin-bottom: 15px;
+}
+
 .button {
-  padding: 10px 20px;
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
   font-size: 16px;
   font-weight: bold;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
-}
-
-.home {
-  background-color: #3498db;
-}
-
-.active{
-  background-color: #4CAF50;
   color: white;
-}
-
-.button.reports {
-  background-color: #2ecc71;
+  background-color: #3498db;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .button:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #2980b9;
 }
 
-.button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+.active {
+  background-color: #4CAF50 !important;
 }
-
-.button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
-}
-
-.button.reports:focus {
-  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.5);
-}
-
-.button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-

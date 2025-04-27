@@ -63,6 +63,6 @@ export class SaleService {
   }
 
   downloadRangeExcel(sale: ISaleOfRentalDailyTotal){
-    return this.http.post<any>('http://10.0.100.100:1030/api/SalesReport/GenerateRangeSales', sale, {observe: 'response'})
+    return this.http.post<any>('http://10.0.100.100:5050/gateway/api/SalesReport/GenerateRangeSales', sale, {observe: 'response'})
   }
 }

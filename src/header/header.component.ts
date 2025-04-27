@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouterLink, RouterLinkActive} from "@angular/router";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 import {FormsModule} from "@angular/forms";
+import {AuthService} from "../services/auth.service";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-header',
@@ -8,46 +10,70 @@ import {FormsModule} from "@angular/forms";
   imports: [
     RouterLink,
     FormsModule,
-    RouterLinkActive
+    RouterLinkActive,
+    NgForOf,
+    NgIf
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit{
-  currentDate: string = ''
-  userName: string = ''
-  department: string = ''
-  constructor(private router: Router) {}
-  signOut(){
-    localStorage.removeItem('authToken');
-    this.router.navigate(['/login'])
+export class HeaderComponent implements OnInit {
+  currentDate!: string;
+  menuOpen: boolean = false;
+  userName: string = '';
+  department: string = '';
 
-  }
+  menuItems = [
+    { label: 'Ana səhifə', link: '/home', roles: []},
+    { label: 'Filiallar', link: '/branches', roles: ['Admin', 'BranchViewer']},
+    { label: 'Satışlar', link: '/sale', roles: ['Admin', 'SaleViewer']},
+    { label: 'Aralığ satışlar', link: '/sale-range', roles: ['Admin', 'RangeSaleViewer']},
+    { label: 'Gündəlik Detallı Satışlar', link: '/detailed-sales', roles: ['Admin', 'DetailedSaleViewer']},
+    { label: 'İadələr', link: '/refund', roles: ['Admin', 'RefundViewer']},
+    { label: 'Admin', link: '/admin', roles: ['Admin']}
+  ];
 
-  ngOnInit(){
+  constructor(private auth: AuthService) {}
 
+  ngOnInit() {
     const user = localStorage.getItem('user');
-    if (user) {
+
+    if (user){
       const userData = JSON.parse(user);
       this.userName = userData['displayName'] ?? '';
-      this.department = this.getValueByKey('department')
+      this.department = this.getValueByKey('department');
     }
-    this.updateDateTime()
-    setInterval(() => {
-      this.updateDateTime()
-    }, 1000)
+
+    this.updateDateTime();
+    setInterval(() => this.updateDateTime(), 1000);
   }
 
-  getValueByKey(key: string){
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  getValueByKey(key: string) {
     const user = localStorage.getItem('user');
-    if (user) {
+    if (user){
       const userData = JSON.parse(user);
-      return userData[key]
+      return userData[key];
     }
   }
 
-  updateDateTime(){
-    const now = new Date()
-    this.currentDate = now.toLocaleString()
+  updateDateTime() {
+    const now = new Date();
+    this.currentDate = now.toLocaleString();
+  }
+
+  signOut(){
+    this.auth.logout();
+  }
+
+  hasAccess(roles: string[]): boolean {
+    return roles.length === 0 || this.auth.hasAnyRole(roles);
+  }
+
+  get visibleMenuItems() {
+    return this.menuItems.filter(item => this.hasAccess(item.roles));
   }
 }

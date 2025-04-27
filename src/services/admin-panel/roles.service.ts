@@ -13,7 +13,6 @@ export class RolesService{
   }
 
   getAllRoles(): Observable<any>{
-    console.log(localStorage.getItem('authToken'))
     return this.http.get<any>(`${this.api}`)
   }
 }

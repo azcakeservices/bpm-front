@@ -22,10 +22,14 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
+                "input": "src",
+                "output": "/",
+                "glob": "web.config"
+              },
+              {
                 "glob": "**/*",
                 "input": "public"
-              },
-              "src/web.config"
+              }
             ],
             "styles": [
               "src/styles.css"
@@ -80,6 +84,11 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
+              {
+                "input": "src",
+                "output": "/",
+                "glob": "web.config"
+              },
               {
                 "glob": "**/*",
                 "input": "public"

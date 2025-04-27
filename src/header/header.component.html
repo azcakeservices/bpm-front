@@ -1,23 +1,24 @@
-<header>
+<header class="app-header">
   <div class="header-left">
-    <span>AzCake BPM</span>
-    <p>{{currentDate}}</p>
-  </div>
-  <nav class="main-nav">
-    <ul>
-      <li><a routerLink="/home" routerLinkActive="active" class="button home">Ana səhifə</a></li>
-      <li><a routerLink="/branches" routerLinkActive="active" class="button home">Filiallar</a></li>
-      <li><a routerLink="/sale" routerLinkActive="active" class="button home">Satışlar</a></li>
-      <li><a routerLink="/sale-range" routerLinkActive="active" class="button home">Aralığ satışlar</a></li>
-      <li><a routerLink="/detailed-sales" routerLinkActive="active" class="button home">Gündəlik Detallı Satışlar</a></li>
-      <li><a routerLink="/refund" routerLinkActive="active" class="button home">İadələr</a></li>
-<!--      <li><a routerLink="/admin" routerLinkActive="active" class="button home">Admin panel</a></li>-->
-    </ul>
-  </nav>
-  <div class="header-right">
-    <div class="welcome-container">
-      <p class="welcome-message">Xoş gəlmişsiniz {{getValueByKey('displayName')}}!</p>
-      <button class="logout-button" (click)="signOut()">Çıx</button>
+    <span class="app-title">AzCake BPM</span>
+    <div class="clock">
+      🕒 {{ currentDate }}
     </div>
   </div>
+
+  <div class="header-right">
+    <p class="welcome-message">Salam, {{ userName }}!</p>
+    <button class="hamburger" (click)="toggleMenu()">☰</button>
+    <button class="logout-button" (click)="signOut()">Çıx</button>
+  </div>
 </header>
+
+<nav class="side-nav" [class.open]="menuOpen">
+  <ul>
+    <li *ngFor="let item of visibleMenuItems">
+      <a [routerLink]="item.link" routerLinkActive="active" class="button" (click)="toggleMenu()">
+        {{ item.label }}
+      </a>
+    </li>
+  </ul>
+</nav>
