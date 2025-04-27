@@ -14,6 +14,6 @@ export class RefundService {
   }
 
   getDateRangeRefunds(startDate: string, endDate: string): Observable<IRefundResponse>{
-    return this.http.get<IRefundResponse>(`${this.api}?startDate=${startDate}&endDate=${endDate}`);
+    return this.http.get<IRefundResponse>(`${this.api}/dateRangeRefunds?startDate=${startDate}&endDate=${endDate}`);
   }
 }
