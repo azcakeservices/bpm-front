@@ -7,9 +7,9 @@ import { ToasterCustomService } from "../../services/toaster.service";
 import { BranchService } from "../../services/branch.service";
 import { IBranchResponse } from "../../interfaces/IBranchResponse";
 import { ISaleResponse } from "../../interfaces/ISaleResponse";
-import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
-import * as dateUtils from '../../app/shared/utils/date-utils'
-import {IDailySale} from "../../interfaces/IDailySale";
+import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
+import * as dateUtils from '../../app/shared/utils/date-utils';
+import { IDailySale } from "../../interfaces/IDailySale";
 
 @Component({
   selector: 'app-detailed-sales',
@@ -28,10 +28,7 @@ import {IDailySale} from "../../interfaces/IDailySale";
 export class DetailedSalesComponent implements OnInit {
   date: string = '';
   emptySales: string = 'Cari gün üçün satışlar yüklənməyib!';
-  allBranches = [{
-    branchName: '',
-    branchCode: ''
-  }];
+  allBranches = [{ branchName: '', branchCode: '' }];
   branchesResponse: IBranchResponse | null = null;
   filteredBranches: any[] = [];
   filteredProducts: any[] = [];
@@ -39,7 +36,7 @@ export class DetailedSalesComponent implements OnInit {
   filteredContracts: any[] = [];
 
   sales: ISaleResponse | null = null;
-  filteredSales: any[] = [];
+  filteredSales: IDailySale[] = [];
   errorMessage: string = '';
   dropdownSettings: {} = {};
 
@@ -51,6 +48,10 @@ export class DetailedSalesComponent implements OnInit {
   };
 
   selectedBranchCode = '';
+
+  // 🔥 Добавляем сортировку
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(
     private detailedSalesService: DetailedSalesService,
@@ -67,7 +68,7 @@ export class DetailedSalesComponent implements OnInit {
       unSelectAllText: 'Sıfırla',
       selectAllText: 'Hamısını seç',
       searchText: 'asdasd'
-    }
+    };
   }
 
   ngOnInit(): void {
@@ -76,11 +77,11 @@ export class DetailedSalesComponent implements OnInit {
       this.sales = response;
       this.filteredSales = this.sales.data[0]?.dailySales || [];
       this.filteredBranches = this.getUniqueValues('branchName');
-      this.filteredProducts = this.getUniqueValues('productName')
+      this.filteredProducts = this.getUniqueValues('productName');
       this.filteredBarcodes = this.getUniqueValues('barcode');
       this.filteredContracts = this.getUniqueValues('contractName');
       this.loaderService.hide();
-    })
+    });
   }
 
   loadBranches(): void {
@@ -120,7 +121,7 @@ export class DetailedSalesComponent implements OnInit {
         this.filteredContracts = this.getUniqueValues('contractName');
       },
       error: () => {
-        this.toastrService.error('Xəta baş verdi, bir daha cəhd edin. Xəta təkrarlanarsa İT ilə əlaqə saxlayın.');
+        this.toastrService.error('Xəta baş verdi, bir daha cəhd edin. Xəта təkrarlanarsa İТ ilə əlaqə saxlayın.');
         this.loaderService.hide();
       }
     });
@@ -128,33 +129,26 @@ export class DetailedSalesComponent implements OnInit {
 
   getUniqueValues(column: string): string[] {
     if (!this.filteredSales) return [];
-    return Array.from(new Set(this.filteredSales.map(sale => sale[column])));
+    return Array.from(
+      new Set(
+        this.filteredSales.map(sale => sale[column as keyof IDailySale] as string)
+      )
+    );
   }
+
 
   applyFilters(): void {
     this.filteredSales = this.sales?.data[0]?.dailySales.filter(sale => {
       const { branchName, productName, barcode, contracts } = this.filters;
-
-      if (
-        (!branchName || branchName.length === 0) &&
-        (!productName || productName.length === 0) &&
-        (!barcode || barcode.length === 0) &&
-        (!contracts || contracts.length === 0)
-      ) {
-        return true;
-      }
-
       const matchesBranch = !branchName || branchName.length === 0 || branchName.includes(sale.branchName);
       const matchesProduct = !productName || productName.length === 0 || productName.includes(sale.productName);
       const matchesBarcode = !barcode || barcode.length === 0 || barcode.includes(sale.barcode);
       const matchesContracts = !contracts || contracts.length === 0 || contracts.includes(sale.contractName);
-
       return matchesBranch && matchesProduct && matchesBarcode && matchesContracts;
     }) || [];
 
     this.updateFilterOptions();
   }
-
 
   private updateFilterOptions(): void {
     this.filteredBranches = this.getUniqueValues('branchName');
@@ -163,24 +157,46 @@ export class DetailedSalesComponent implements OnInit {
     this.filteredContracts = this.getUniqueValues('contractName');
   }
 
+  // downloadExcel() {
+  //   this.loaderService.show();
+  //   this.sales!.data[0].dailySales = this.filteredSales;
+  //   this.detailedSalesService.downloadExcel(this.sales!).subscribe(response => {
+  //     const base64 = response.body.base64;
+  //     const fileName = response.body.fileName;
+  //     this.downloadFile(base64, fileName);
+  //     this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`);
+  //     this.loaderService.hide();
+  //   }, () => {
+  //     this.toastrService.error('Xəta baş verdi, bir daha cəhd edin');
+  //     this.loaderService.hide();
+  //   });
+  // }
 
-
-
-  downloadExcel(){
+  downloadExcel() {
     this.loaderService.show();
-    this.detailedSalesService.downloadExcel(this.sales!).subscribe(response => {
+
+    const updatedSales = {
+      ...this.sales!,
+      data: this.sales!.data.map(d => ({
+        ...d,
+        dailySales: this.filteredSales
+      })) as any
+    };
+
+    this.detailedSalesService.downloadExcel(updatedSales).subscribe(response => {
       const base64 = response.body.base64;
       const fileName = response.body.fileName;
       this.downloadFile(base64, fileName);
-      this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`)
-      this.loaderService.hide()
+      this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`);
+      this.loaderService.hide();
     }, () => {
-      this.toastrService.error('Xəta baş verdi, bir daha cəhd edin')
-      this.loaderService.hide()
-    })
+      this.toastrService.error('Xəta baş verdi, bir daha cəhd edin');
+      this.loaderService.hide();
+    });
   }
 
-  private downloadFile(base64: string, fileName: string){
+
+  private downloadFile(base64: string, fileName: string) {
     const linkSource = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${base64}`;
     const downloadLink = document.createElement('a');
     downloadLink.href = linkSource;
@@ -189,15 +205,50 @@ export class DetailedSalesComponent implements OnInit {
   }
 
   getTotal(dailySales: IDailySale[]): number {
-    return dailySales.reduce((sum, sale) => sum + sale.total!, 0);
+    return dailySales.reduce((sum, sale) => sum + (sale.total || 0), 0);
   }
 
-  private resetFilters(){
+  private resetFilters() {
     this.sales = null;
     this.filteredSales = [];
     this.filteredBranches = [];
     this.filteredProducts = [];
     this.filteredBarcodes = [];
     this.filteredContracts = [];
+  }
+
+  sortData(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+
+    this.filteredSales.sort((a, b) => {
+      const valueA = a[column as keyof IDailySale];
+      const valueB = b[column as keyof IDailySale];
+
+      if (valueA == null) return 1;
+      if (valueB == null) return -1;
+
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        const result = valueA.localeCompare(valueB);
+        return this.sortDirection === 'asc' ? result : -result;
+      }
+
+      const numA = parseFloat(valueA as any);
+      const numB = parseFloat(valueB as any);
+      const result = numA - numB;
+      return this.sortDirection === 'asc' ? result : -result;
+    });
+  }
+
+
+  getSortIndicator(column: string): string {
+    if (this.sortColumn === column) {
+      return this.sortDirection === 'asc' ? '▲' : '▼';
+    }
+    return '';
   }
 }

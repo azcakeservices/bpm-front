@@ -59,6 +59,22 @@ form {
   position: sticky;
   top: 0;
   z-index: 2;
+  cursor: pointer; /* 🔥 курсор при наведении */
+  user-select: none;
+}
+
+.sales-table th:hover {
+  background: #0056b3; /* 🔥 подсветка при наведении */
+}
+
+.sales-table th.active-sort {
+  background: #004494; /* 🔥 активная колонка */
+}
+
+.sales-table th .sort-indicator {
+  margin-left: 4px;
+  font-size: 0.8rem;
+  color: #fff;
 }
 
 .sales-table td:first-child, .sales-table th:first-child {
@@ -67,7 +83,7 @@ form {
   z-index: 3;
 }
 
-.sales-table th:first-child{
+.sales-table th:first-child {
   z-index: 4;
 }
 
@@ -84,7 +100,7 @@ form {
   outline: none;
 }
 
-.download-btn{
+.download-btn {
   background-color: #4CAF50;
   color: white;
   border: none;
