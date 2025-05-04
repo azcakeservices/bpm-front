@@ -19,7 +19,7 @@ export const routes: Routes = [
     path: 'payments',
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'daily', pathMatch: 'full' }, // ← добавил редирект
+      { path: '', redirectTo: 'daily', pathMatch: 'full' },
       { path: 'daily', component: SaleComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'SaleViewer'] } },
       { path: 'range', component: SaleRangeComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'RangeSaleViewer'] } },
       { path: 'detailed', component: DetailedSalesComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'DetailedSaleViewer'] } }

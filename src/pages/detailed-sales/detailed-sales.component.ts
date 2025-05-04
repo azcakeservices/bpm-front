@@ -49,7 +49,6 @@ export class DetailedSalesComponent implements OnInit {
 
   selectedBranchCode = '';
 
-  // 🔥 Добавляем сортировку
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
@@ -156,21 +155,6 @@ export class DetailedSalesComponent implements OnInit {
     this.filteredBarcodes = this.getUniqueValues('barcode');
     this.filteredContracts = this.getUniqueValues('contractName');
   }
-
-  // downloadExcel() {
-  //   this.loaderService.show();
-  //   this.sales!.data[0].dailySales = this.filteredSales;
-  //   this.detailedSalesService.downloadExcel(this.sales!).subscribe(response => {
-  //     const base64 = response.body.base64;
-  //     const fileName = response.body.fileName;
-  //     this.downloadFile(base64, fileName);
-  //     this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`);
-  //     this.loaderService.hide();
-  //   }, () => {
-  //     this.toastrService.error('Xəta baş verdi, bir daha cəhd edin');
-  //     this.loaderService.hide();
-  //   });
-  // }
 
   downloadExcel() {
     this.loaderService.show();

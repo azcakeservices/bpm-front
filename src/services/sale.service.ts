@@ -13,7 +13,6 @@ export class SaleService {
   private readonly api: string = ''
   private readonly saleApi: string = ''
   constructor(private http: HttpClient, private config: ConfigService){
-    // this.api = this.config.apiUrlProduction.saleService
     this.saleApi = this.config.apiUrlProduction.paymentReceiver
   }
 
@@ -48,15 +47,6 @@ export class SaleService {
   getRangeSales(dateFrom: string, dateTo: string):Observable<ISaleOfRentalDailyTotal>{
     return this.http.get<ISaleOfRentalDailyTotal>(`${this.saleApi}/dateRangeSales?parameters=${dateFrom}&parameters=${dateTo}`)
   }
-
-  // generateExcel(startDate: string, endDate: string, saleType: string){
-  //   const body = {
-  //     from: startDate,
-  //     to: endDate,
-  //   }
-  //
-  //   return this.http.post<any>(`${this.api}/${saleType}/generateExcel`, body, {observe: 'response'})
-  // }
 
   downloadExcel(sale: ISaleResponse){
     return this.http.post<any>(`${this.saleApi}/GetAsExcel`, sale, {observe: 'response'})

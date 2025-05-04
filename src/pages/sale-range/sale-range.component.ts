@@ -111,7 +111,6 @@ export class SaleRangeComponent implements OnInit {
         const branches = Array.from(new Set(filteredSales!.map(sale => sale.branchName)));
         const salesData: Record<string, number[]> = {};
 
-        // Группируем продажи по дате
         filteredSales!.forEach(sale => {
           const date = this.formatDateToYyyyMmDd(sale.saleDate);
           if (!salesData[date]) {
