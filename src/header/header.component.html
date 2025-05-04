@@ -15,10 +15,33 @@
 
 <nav class="side-nav" [class.open]="menuOpen">
   <ul>
-    <li *ngFor="let item of visibleMenuItems">
-      <a [routerLink]="item.link" routerLinkActive="active" class="button" (click)="toggleMenu()">
+    <li *ngFor="let item of visibleMenuItems" class="menu-item">
+      <a *ngIf="item?.link"
+         [routerLink]="item.link"
+         routerLinkActive="active"
+         class="button"
+         (click)="toggleMenu()">
         {{ item.label }}
       </a>
+
+      <div *ngIf="!item?.link" class="menu-category">
+        <div (click)="toggleCategory(item.label)" class="category-title">
+          {{ item.label }}
+          <span class="arrow">{{ isCategoryOpened(item.label) ? '▼' : '▶' }}</span>
+        </div>
+        <ul *ngIf="isCategoryOpened(item.label)" class="submenu">
+          <li *ngFor="let child of item.children">
+            <a [routerLink]="child.link"
+               routerLinkActive="active"
+               class="button"
+               (click)="toggleMenu()">
+              {{ child.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
     </li>
   </ul>
 </nav>
+
+
