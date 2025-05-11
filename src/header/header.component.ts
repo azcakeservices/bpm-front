@@ -39,9 +39,9 @@ export class HeaderComponent implements OnInit {
       label: 'Satışlar',
       roles: [],
       children: [
-        { label: 'Gündəlik Satışlar', link: '/payments/daily', roles: ['Admin', 'SaleViewer'] },
-        { label: 'Aralığ satışlar', link: '/payments/range', roles: ['Admin', 'RangeSaleViewer'] },
-        { label: 'Gündəlik Detallı Satışlar', link: '/payments/detailed', roles: ['Admin', 'DetailedSaleViewer'] }
+        { label: 'Gündəlik', link: '/payments/daily', roles: ['Admin', 'SaleViewer'] },
+        { label: 'Aralıq', link: '/payments/range', roles: ['Admin', 'RangeSaleViewer'] },
+        { label: 'Detallı', link: '/payments/detailed', roles: ['Admin', 'DetailedSaleViewer'] }
       ]
     },
     { label: 'İadələr', link: '/refund', roles: ['Admin', 'RefundViewer'] },
