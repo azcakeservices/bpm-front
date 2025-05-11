@@ -1,72 +1,155 @@
-/* Контейнер для всей формы входа */
-.login-container {
+:host {
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh; /* Высота на весь экран */
-  background-color: #f2f2f2; /* Лёгкий серый фон для страницы */
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  font-family: 'Segoe UI', sans-serif;
+  z-index: 0;
 }
 
-/* Сама форма входа */
+:host::before,
+:host::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(80px);
+  animation: floatBlobs 30s linear infinite;
+  z-index: 0;
+}
+
+:host::before {
+  width: 500px;
+  height: 500px;
+  background: #00ffe0;
+  top: -100px;
+  left: -100px;
+}
+
+:host::after {
+  width: 400px;
+  height: 400px;
+  background: #ff00c8;
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 15s;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  z-index: 1;
+}
+
 .login-form {
-  background-color: white; /* Белый фон для формы */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
   padding: 30px;
-  border-radius: 10px; /* Слегка скругленные углы */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
-  width: 300px; /* Фиксированная ширина формы */
+  color: #fff;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.form-control::placeholder {
+  color: #ccc;
+}
+
+.form-control:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background-color: #00c9a7;
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #00a58e;
+}
+
+.error-message {
+  margin-top: 1rem;
+  padding: 10px;
+  background-color: rgba(255, 0, 0, 0.2);
+  border-radius: 6px;
+  color: #ffb3b3;
   text-align: center;
 }
 
-/* Заголовок формы */
-.login-form h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #333; /* Темный цвет текста */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Стили для группы формы */
-.form-group {
-  margin-bottom: 15px; /* Отступ между элементами */
-  text-align: left; /* Выровнять текст слева */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }
 
-/* Стили для меток формы */
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
-}
-
-/* Стили для полей ввода */
-.form-control {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc; /* Серые рамки */
-  border-radius: 5px; /* Слегка скругленные углы */
-  box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
-}
-
-/* Стили для кнопки */
-.btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff; /* Синий фон */
-  border: none;
-  border-radius: 5px; /* Слегка скругленные углы */
-  color: white; /* Белый текст */
-  font-weight: bold;
-  cursor: pointer; /* Указатель мыши */
-}
-
-.btn:hover {
-  background-color: #0056b3; /* Более тёмный синий при наведении */
-}
-
-/* Стили для сообщения об ошибке */
-.error-message {
-  margin-top: 15px;
-  color: red; /* Красный цвет для ошибок */
-  font-size: 14px;
+@keyframes floatBlobs {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(50px, -50px) scale(1.2);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
 }

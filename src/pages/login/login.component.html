@@ -1,9 +1,9 @@
 <div class="login-container">
   <div class="login-form">
-    <h2>Giriş</h2>
+    <h2>🛡️ Giriş Paneli</h2>
     <form (ngSubmit)="login()">
       <div class="form-group">
-        <label for="username">İstifadəçi adı</label>
+        <label for="username">👤 İstifadəçi adı</label>
         <input
           type="text"
           id="username"
@@ -11,10 +11,11 @@
           name="username"
           required
           class="form-control"
+          placeholder="İstifadəçi adınızı daxil edin"
         />
       </div>
       <div class="form-group">
-        <label for="password">Şifrə</label>
+        <label for="password">🔒 Şifrə</label>
         <input
           type="password"
           id="password"
@@ -22,12 +23,13 @@
           name="password"
           required
           class="form-control"
+          placeholder="Şifrənizi daxil edin"
         />
       </div>
-      <button type="submit" class="btn btn-primary">Daxil ol</button>
+      <button type="submit" class="btn-login">🚀 Daxil ol</button>
     </form>
     <div *ngIf="errorMessage" class="error-message">
-      Istifadəçi adı və ya şifrə düzgün daxil edilməyib, yenidən cəhd edin!
+      ⚠️ İstifadəçi adı və ya şifrə düzgün daxil edilməyib, yenidən cəhd edin!
     </div>
   </div>
 </div>
