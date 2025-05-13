@@ -1,17 +1,31 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px); /* учёт высоты header */
+  margin-top: 60px;
+  padding: 20px;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
 .notfound-container {
   text-align: center;
-  margin-top: 100px;
   padding: 30px;
   border: 2px dashed #90a4ae;
   border-radius: 12px;
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #f1f1f1;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
 }
 
 .notfound-container h1 {
-  color: #455a64;
+  color: #ffffff;
   font-size: 2.5rem;
   margin-bottom: 10px;
 }
@@ -19,17 +33,32 @@
 .notfound-container p {
   font-size: 1.2rem;
   margin-bottom: 20px;
+  color: #cccccc;
 }
 
 .notfound-container .btn {
   padding: 10px 20px;
-  background-color: #607d8b;
-  color: white;
+  background-color: #00c9a7;
+  color: #000;
   text-decoration: none;
   border-radius: 6px;
+  font-weight: bold;
   transition: background-color 0.3s;
+  display: inline-block;
 }
 
 .notfound-container .btn:hover {
-  background-color: #455a64;
+  background-color: #00a58e;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }

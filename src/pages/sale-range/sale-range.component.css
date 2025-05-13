@@ -1,12 +1,26 @@
+:host {
+  display: block;
+  margin-top: 60px;
+  padding: 20px;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: calc(100vh - 60px);
+}
+
+/* --------- FORM --------- */
 .form-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  background: #f7f7f7;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
 .form-group {
@@ -14,168 +28,171 @@
   align-items: center;
   gap: 10px;
   flex-grow: 1;
+  flex-wrap: wrap;
 }
 
 .form-label {
   font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .form-input {
   flex-grow: 1;
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.submit-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.submit-btn:hover {
-  background-color: #0056b3;
-}
-
-.download-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.download-btn:hover {
-  background-color: #45a049;
-}
-
-.error-message {
-  color: #e74c3c;
-  background: #f8d7da;
-  border: 1px solid #f5c6cb;
   padding: 10px;
+  font-size: 14px;
+  border: none;
   border-radius: 4px;
-  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
+.form-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* --------- BUTTONS --------- */
+.submit-btn,
+.download-btn {
+  background-color: #00c9a7;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.submit-btn:hover,
+.download-btn:hover {
+  background-color: #00a58e;
+}
+
+/* --------- MESSAGES --------- */
+.error-message {
+  color: #ffb3b3;
+  background: rgba(255, 0, 0, 0.15);
+  border: 1px solid #ff4d4f;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* --------- TABLE WRAPPER --------- */
 .table-wrapper {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-.table-title {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #333;
+.table-wrapper h2 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+  margin-top: 20px;
+  color: #00c9a7;
+  font-weight: bold;
+  padding-left: 4px;
 }
 
+/* --------- TABLE CONTAINER --------- */
 .table-container {
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  position: relative;
+  min-height: 180px;
+  max-height: calc(100vh - 240px);
+  overflow: auto;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  /*padding: 10px;*/
+  margin-top: 10px;
 }
 
+/* --------- TABLE --------- */
 .sales-table {
   width: auto;
-  min-width: 100%;
+  min-width: 1000px;
   border-collapse: collapse;
   table-layout: fixed;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 0;
 }
 
-.sales-table th, .sales-table td {
+.sales-table th,
+.sales-table td {
   padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-  background: #007bff;
-  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   white-space: nowrap;
+  background-color: #121212;
 }
 
 .sales-table th {
   position: sticky;
   top: 0;
   z-index: 2;
+  text-align: left;
+  font-weight: 600;
+  background-color: #1a1a1a;
 }
 
-.sales-table td:first-child, .sales-table th:first-child {
+/* --------- STICKY COLUMN --------- */
+.sticky-column {
   position: sticky;
   left: 0;
-  z-index: 3;
+  z-index: 6;
+  background-color: #1e1e2f;
+  background-clip: padding-box;
+  font-weight: 600;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.sales-table th:first-child{
-  z-index: 4;
+.sales-table th.sticky-column,
+.sales-table td.sticky-column {
+  z-index: 8;
+  background-color: #2c2c3a !important;
+  background-clip: padding-box;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.6);
 }
 
+/* --------- HOVER + STRIPES --------- */
 .scrollable-body tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .scrollable-body tr:hover {
-  background: #f1f1f1;
+  background-color: rgba(255, 255, 255, 0.08);
   transition: background-color 0.3s ease;
 }
 
+/* --------- TABLE FOOTER --------- */
 .table-footer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border-top: 1px solid #ddd;
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
+  padding: 12px 20px;
+  background: rgba(0, 123, 255, 0.2);
+  color: #ffffff;
+  border-radius: 0 0 10px 10px;
+  font-weight: bold;
+  overflow-x: auto;
 }
 
 .total-label {
-  font-weight: bold;
   margin-right: 10px;
 }
 
-.total-value {
-  font-weight: bold;
-  color: #fff;
-}
-
-.form-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: #f7f7f7;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-grow: 1;
-}
-
-.submit-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.submit-btn:hover {
-  background-color: #0056b3;
+/* --------- ANIMATION --------- */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }

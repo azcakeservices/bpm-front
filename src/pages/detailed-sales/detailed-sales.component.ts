@@ -34,6 +34,7 @@ export class DetailedSalesComponent implements OnInit {
   filteredProducts: any[] = [];
   filteredBarcodes: any[] = [];
   filteredContracts: any[] = [];
+  currentSort: string = '';
 
   sales: ISaleResponse | null = null;
   filteredSales: IDailySale[] = [];

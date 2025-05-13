@@ -2,10 +2,11 @@
   display: block;
   background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
   background-size: 400% 400%;
-  min-height: 100vh;
   padding: 40px;
   font-family: 'Segoe UI', sans-serif;
   color: #ffffff;
+  min-height: calc(100vh - 60px);
+  margin-top: 60px;
 }
 
 .branches {

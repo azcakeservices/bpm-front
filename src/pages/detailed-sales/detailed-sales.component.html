@@ -1,84 +1,80 @@
-<form (submit)="onSubmit()">
-  <label for="date" class="form-label" style="margin-right: 10px;">Tarix</label>
+<form (submit)="onSubmit()" class="form-container">
+  <label for="date" class="form-label">Tarix</label>
   <input type="date" id="date" [(ngModel)]="date" name="date" required class="date-input">
-  <label for="sales-select" class="form-label">Seçilmiş filial üzrə axtarış et: </label>
-  <select id="sales-select" [(ngModel)]="selectedBranchCode" name="sales-select" class="form-control" style="margin: 0 20px 0 0; padding: 10px; border-radius: 5px; border: 2px solid #4CAF50">
-    <option value="" selected>Filialı seç</option>
-    <option *ngFor="let sale of allBranches" [value]="sale.branchCode">
-      {{ sale.branchName }}
-    </option>
+
+  <label for="sales-select" class="form-label">Seçilmiş filial üzrə axtarış et:</label>
+  <select id="sales-select" [(ngModel)]="selectedBranchCode" name="sales-select" class="form-select">
+    <option value="">Filialı seç</option>
+    <option *ngFor="let sale of allBranches" [value]="sale.branchCode">{{ sale.branchName }}</option>
   </select>
+
   <button type="submit" class="btn">Yüklə</button>
   <button class="btn" *ngIf="filteredSales.length > 0" (click)="downloadExcel()">Excel olaraq yüklə</button>
 </form>
 
-<div style="padding: 20px" *ngIf="filteredSales.length > 0">
+<div class="filters-wrapper" *ngIf="filteredSales.length > 0">
   <h2>Filterlər</h2>
   <div class="filters">
     <div class="filters__item">
-      <ng-multiselect-dropdown class="multiselect-dropdown" [placeholder]="'Filialı seç'" [data]="filteredBranches" [settings]="dropdownSettings" [(ngModel)]="filters.branchName" (ngModelChange)="applyFilters()">
+      <ng-multiselect-dropdown [placeholder]="'Filialı seç'" [data]="filteredBranches"
+                               [settings]="dropdownSettings" [(ngModel)]="filters.branchName" (ngModelChange)="applyFilters()" >
       </ng-multiselect-dropdown>
     </div>
 
     <div class="filters__item">
-      <ng-multiselect-dropdown class="multiselect-dropdown" [placeholder]="'Məhsulu seç'" [data]="filteredProducts" [settings]="dropdownSettings" [(ngModel)]="filters.productName" (ngModelChange)="applyFilters()">
+      <ng-multiselect-dropdown [placeholder]="'Məhsulu seç'" [data]="filteredProducts"
+                               [settings]="dropdownSettings" [(ngModel)]="filters.productName" (ngModelChange)="applyFilters()">
       </ng-multiselect-dropdown>
     </div>
 
     <div class="filters__item">
-      <ng-multiselect-dropdown class="multiselect-dropdown" [placeholder]="'Barkod seç'" [data]="filteredBarcodes" [settings]="dropdownSettings" [(ngModel)]="filters.barcode" (ngModelChange)="applyFilters()">
+      <ng-multiselect-dropdown [placeholder]="'Barkodu seç'" [data]="filteredBarcodes"
+                               [settings]="dropdownSettings" [(ngModel)]="filters.barcode" (ngModelChange)="applyFilters()">
       </ng-multiselect-dropdown>
     </div>
 
     <div class="filters__item">
-      <ng-multiselect-dropdown class="multiselect-dropdown" [placeholder]="'Carini seç'" [data]="filteredContracts" [settings]="dropdownSettings" [(ngModel)]="filters.contracts" (ngModelChange)="applyFilters()">
+      <ng-multiselect-dropdown [placeholder]="'Carini seç'" [data]="filteredContracts"
+                               [settings]="dropdownSettings" [(ngModel)]="filters.contracts" (ngModelChange)="applyFilters()">
       </ng-multiselect-dropdown>
     </div>
   </div>
 </div>
 
-<div class="table-container" *ngIf="filteredSales.length > 0; else noSales">
-  <table class="sales-table">
-    <thead>
-    <tr>
-      <th colspan="7">Cəmi məbləğ: {{ getTotal(filteredSales) | number: '1.2-2' }}</th>
-    </tr>
-    <tr>
-      <th (click)="sortData('branchName')">
-        Mağaza {{ getSortIndicator('branchName') }}
-      </th>
-      <th (click)="sortData('saleDate')">
-        Tarix {{ getSortIndicator('saleDate') }}
-      </th>
-      <th (click)="sortData('productName')">
-        Məhsul adı {{ getSortIndicator('productName') }}
-      </th>
-      <th (click)="sortData('barcode')">
-        Barkodu {{ getSortIndicator('barcode') }}
-      </th>
-      <th (click)="sortData('price')">
-        Bir məhsulun qiyməti {{ getSortIndicator('price') }}
-      </th>
-      <th (click)="sortData('quantity')">
-        Toplam satış sayı {{ getSortIndicator('quantity') }}
-      </th>
-      <th (click)="sortData('total')">
-        Toplam məbləği {{ getSortIndicator('total') }}
-      </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let sale of filteredSales">
-      <td class="sticky-column">{{ sale.branchName }}</td>
-      <td>{{ sale.saleDate | date: 'dd.MM.yyyy' }}</td>
-      <td>{{ sale.productName }}</td>
-      <td>{{ sale.barcode }}</td>
-      <td>{{ sale.price | number: '1.2-2' }}</td>
-      <td>{{ sale.quantity }}</td>
-      <td>{{ sale.total | number: '1.2-2' }}</td>
-    </tr>
-    </tbody>
-  </table>
+<div class="table-container">
+  <div class="table-wrapper-scrollable">
+    <table class="sales-table sales-table-header">
+      <thead>
+      <tr>
+        <th (click)="sortData('branchName')">Mağaza {{ getSortIndicator('branchName') }}</th>
+        <th (click)="sortData('saleDate')">Tarix {{ getSortIndicator('saleDate') }}</th>
+        <th (click)="sortData('productName')">Məhsul adı {{ getSortIndicator('productName') }}</th>
+        <th (click)="sortData('barcode')">Barkodu {{ getSortIndicator('barcode') }}</th>
+        <th (click)="sortData('price')">Bir məhsulun qiyməti {{ getSortIndicator('price') }}</th>
+        <th (click)="sortData('quantity')">Toplam satış sayı {{ getSortIndicator('quantity') }}</th>
+        <th (click)="sortData('total')">Toplam məbləği {{ getSortIndicator('total') }}</th>
+      </tr>
+      </thead>
+    </table>
+
+    <div class="scrollable-body-wrapper">
+      <table class="sales-table sales-table-body">
+        <tbody>
+        <tr *ngFor="let sale of filteredSales">
+          <td>{{ sale.branchName }}</td>
+          <td>{{ sale.saleDate | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ sale.productName }}</td>
+          <td>{{ sale.barcode }}</td>
+          <td>{{ sale.price | number: '1.2-2' }}</td>
+          <td>{{ sale.quantity }}</td>
+          <td>{{ sale.total | number: '1.2-2' }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="table-summary">Cəmi məbləğ: {{ getTotal(filteredSales) | number: '1.2-2' }}</div>
 </div>
 
 <ng-template #noSales>

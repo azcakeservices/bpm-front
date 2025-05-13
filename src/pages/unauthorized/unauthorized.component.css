@@ -1,17 +1,29 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  font-family: 'Segoe UI', sans-serif;
+  color: #ffffff;
+}
+
 .unauthorized-container {
   text-align: center;
-  margin-top: 100px;
-  padding: 30px;
+  padding: 40px;
   border: 2px dashed #ff4d4f;
-  border-radius: 12px;
+  border-radius: 16px;
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #fff3f3;
+  background-color: rgba(255, 77, 79, 0.05);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
 }
 
 .unauthorized-container h1 {
-  color: #d32f2f;
+  color: #ff4d4f;
   font-size: 2rem;
   margin-bottom: 10px;
 }
@@ -19,17 +31,31 @@
 .unauthorized-container p {
   font-size: 1.1rem;
   margin-bottom: 20px;
+  color: #f8d7da;
 }
 
 .unauthorized-container .btn {
   padding: 10px 20px;
-  background-color: #d32f2f;
+  background-color: #ff4d4f;
   color: white;
   text-decoration: none;
   border-radius: 6px;
   transition: background-color 0.3s;
+  font-weight: bold;
 }
 
 .unauthorized-container .btn:hover {
-  background-color: #b71c1c;
+  background-color: #d32f2f;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }

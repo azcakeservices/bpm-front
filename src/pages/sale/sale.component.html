@@ -11,8 +11,8 @@
   {{ errorMessage }}
 </div>
 
-<div class="table-wrapper" *ngIf="filteredSales1.length">
-  <h2 class="table-title">Kulinariya</h2>
+<div class="table-wrapper" *ngFor="let sales of [filteredSales1, filteredSales2, filteredSales3]; let i = index">
+  <h2 class="table-title">{{ ['Kulinariya', 'Şirniyyat', 'Təndir'][i] }}</h2>
   <div class="table-container">
     <table class="sales-table">
       <thead>
@@ -27,7 +27,7 @@
       </tr>
       </thead>
       <tbody class="scrollable-body">
-      <tr *ngFor="let dailySale of filteredSales1">
+      <tr *ngFor="let dailySale of sales">
         <td>{{ dailySale.branchName }}</td>
         <td>{{ dailySale.productCode }}</td>
         <td>{{ dailySale.productName }}</td>
@@ -37,84 +37,10 @@
         <td>{{ dailySale.total | number: '1.2-2' }}</td>
       </tr>
       </tbody>
-      <tfoot>
-      <tr>
-        <td colspan="6" class="total-label">Cəmi məbləğ:</td>
-        <td class="total-value">{{ getTotal(filteredSales1) | number: '1.2-2' }}</td>
-      </tr>
-      </tfoot>
     </table>
   </div>
-</div>
-
-<div class="table-wrapper" *ngIf="filteredSales2.length">
-  <h2 class="table-title">Şirniyyat</h2>
-  <div class="table-container">
-    <table class="sales-table">
-      <thead>
-      <tr>
-        <th>Filial</th>
-        <th>Məhsul kodu</th>
-        <th>Məhsul adı</th>
-        <th>Barkodu</th>
-        <th>Say</th>
-        <th>Qiymət</th>
-        <th>Toplam</th>
-      </tr>
-      </thead>
-      <tbody class="scrollable-body">
-      <tr *ngFor="let dailySale of filteredSales2">
-        <td>{{ dailySale.branchName }}</td>
-        <td>{{ dailySale.productCode }}</td>
-        <td>{{ dailySale.productName }}</td>
-        <td>{{ dailySale.barcode }}</td>
-        <td>{{ dailySale.quantity }}</td>
-        <td>{{ dailySale.price | number: '1.2-2' }}</td>
-        <td>{{ dailySale.total | number: '1.2-2' }}</td>
-      </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-        <td colspan="6" class="total-label">Cəmi məbləğ:</td>
-        <td class="total-value">{{ getTotal(filteredSales2) | number: '1.2-2' }}</td>
-      </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
-
-<div class="table-wrapper" *ngIf="filteredSales3.length">
-  <h2 class="table-title">Təndir</h2>
-  <div class="table-container">
-    <table class="sales-table">
-      <thead>
-      <tr>
-        <th>Filial</th>
-        <th>Məhsul kodu</th>
-        <th>Məhsul adı</th>
-        <th>Barkodu</th>
-        <th>Say</th>
-        <th>Qiymət</th>
-        <th>Toplam</th>
-      </tr>
-      </thead>
-      <tbody class="scrollable-body">
-      <tr *ngFor="let dailySale of filteredSales3">
-        <td>{{ dailySale.branchName }}</td>
-        <td>{{ dailySale.productCode }}</td>
-        <td>{{ dailySale.productName }}</td>
-        <td>{{ dailySale.barcode }}</td>
-        <td>{{ dailySale.quantity }}</td>
-        <td>{{ dailySale.price | number: '1.2-2' }}</td>
-        <td>{{ dailySale.total | number: '1.2-2' }}</td>
-      </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-        <td colspan="6" class="total-label">Cəmi məbləğ:</td>
-        <td class="total-value">{{ getTotal(filteredSales3) | number: '1.2-2' }}</td>
-      </tr>
-      </tfoot>
-    </table>
+  <div class="table-total">
+    <span class="total-label">Cəmi məbləğ:</span>
+    <span class="total-value">{{ getTotal(sales) | number: '1.2-2' }}</span>
   </div>
 </div>
