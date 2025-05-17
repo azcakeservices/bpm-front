@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {Router, RouterModule, RouterOutlet} from '@angular/router';
 import {HeaderComponent} from "../header/header.component";
-import {FooterComponent} from "../footer/footer.component";
 import {NgIf} from "@angular/common";
 import {LoaderComponent} from "../components/loader/loader.component";
 
@@ -11,7 +10,6 @@ import {LoaderComponent} from "../components/loader/loader.component";
   imports: [
     RouterOutlet,
     HeaderComponent,
-    FooterComponent,
     NgIf,
     RouterModule,
     LoaderComponent
