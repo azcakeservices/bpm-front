@@ -1,18 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
+// import { NgClass, NgForOf, NgIf} from "@angular/common";
+
 import {BranchService} from "../../services/branch.service";
 import {LoaderService} from "../../services/loader.service";
 import {IBranchResponse} from "../../interfaces/IBranchResponse";
 import {ToasterCustomService} from "../../services/toaster.service";
+import {NgClass, NgFor} from "@angular/common";
 
 @Component({
   selector: 'app-branches',
   standalone: true,
   imports: [
-    NgForOf,
-    NgIf,
-    DatePipe,
-    NgClass
+    NgClass, NgFor
   ],
   templateUrl: './branches.component.html',
   styleUrl: './branches.component.css'
