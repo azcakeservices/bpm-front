@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SaleService } from '../../services/sale.service';
 import { ISaleOfRentalDailyTotal } from '../../interfaces/ISaleOfRentalDailyTotal';
 import { LoaderService } from '../../services/loader.service';
-import { IDailySale } from '../../interfaces/IDailySale';
-import {DecimalPipe, NgForOf, NgIf} from "@angular/common";
-import {ToasterCustomService} from "../../services/toaster.service";
+import { DecimalPipe, NgForOf, NgIf } from "@angular/common";
+import { ToasterCustomService } from "../../services/toaster.service";
 import * as dateUtils from "../../app/shared/utils/date-utils";
+import { IPreparedRangeSale } from "../../interfaces/IPreparedRangeSale";
 
 @Component({
   selector: 'app-sale-range',
@@ -24,14 +24,8 @@ export class SaleRangeComponent implements OnInit {
   startDate = '';
   endDate = '';
   sales: ISaleOfRentalDailyTotal | null = null;
-  filteredSales1: IDailySale[] = [];
-  branches: string[] = [];
   errorMessage: string = '';
-
-  salesDataByCategory: Record<string, {
-    branches: string[];
-    salesData: Record<string, number[]>;
-  }> = {};
+  protected preparedSale: IPreparedRangeSale[] = [];
 
   constructor(
     private saleService: SaleService,
@@ -41,14 +35,14 @@ export class SaleRangeComponent implements OnInit {
 
   ngOnInit() {
     this.loaderService.show();
-    this.toastrService.info('Satışlar yüklənir')
-    this.saleService.getRangeSales(dateUtils.getTodayAsString(), dateUtils.getTodayAsString()).subscribe(response => {
-      this.sales = response;
-      this.filterSales();
-      this.prepareData();
-      this.toastrService.success('Satışlar yükləndi')
-      this.loaderService.hide();
-    })
+    this.toastrService.info('Satışlar yüklənir');
+    this.saleService.getRangeSales(dateUtils.getTodayAsString(), dateUtils.getTodayAsString())
+      .subscribe(response => {
+        this.sales = response;
+        this.prepareSales(response);
+        this.toastrService.success('Satışlar yükləndi');
+        this.loaderService.hide();
+      });
   }
 
   onSubmit() {
@@ -56,76 +50,97 @@ export class SaleRangeComponent implements OnInit {
       this.toastrService.error('Tarix aralığını seçin!');
       return;
     }
-    else if(this.startDate > dateUtils.getTodayAsString()) {
+    if (this.startDate > dateUtils.getTodayAsString()) {
       this.toastrService.error('Raportun başlama tarixi bugündən artıq ola bilməz!');
       return;
     }
-    else if (this.endDate > dateUtils.getTodayAsString()){
+    if (this.endDate > dateUtils.getTodayAsString()) {
       this.toastrService.error('Raportun bitmə tarixi bugündən artıq ola bilməz!');
       return;
     }
-    else if (this.startDate > this.endDate){
-      this.toastrService.error('Başlama tarixi bitmə tarixindən böyük ola bilməz!')
+    if (this.startDate > this.endDate) {
+      this.toastrService.error('Başlama tarixi bitmə tarixindən böyük ola bilməz!');
       return;
     }
+
     this.loaderService.show();
     this.toastrService.info('Satışlar yüklənir, zəhmət olmasa bir qədər gözləyin');
-    this.sales = null
+    this.sales = null;
     this.saleService.getRangeSales(this.startDate, this.endDate).subscribe(
-      (response) => {
+      response => {
+        console.log(response)
         this.sales = response;
-        this.filterSales();
-        this.prepareData();
-        this.toastrService.success('Satışlar yükləndi')
+        this.prepareSales(response);
+        this.toastrService.success('Satışlar yükləndi');
         this.loaderService.hide();
       },
-      (error) => {
+      error => {
         this.errorMessage = 'Xəta baş verdi';
-        this.toastrService.error(error)
+        this.toastrService.error(error);
         this.loaderService.hide();
       }
     );
   }
 
-  private filterSales() {
-    if (this.sales) {
-      this.filteredSales1 = this.sales.data
-        .flatMap((saleData) => saleData.sales)
-        .filter((dailySale) => dailySale.contractName === 'Azcake Kulinariya');
+  private prepareSales(response: ISaleOfRentalDailyTotal) {
+    this.preparedSale = [];
+
+    const categories = [
+      { key: 'Kulinariya', contractName: 'Azcake Kulinariya' },
+      { key: 'Şirniyyat', contractName: 'ARENDA AZCAKE SHIRNIYYAT' },
+      { key: 'Təndir', contractName: 'ARENDA AZCAKE TENDIR' }
+    ];
+
+    for (const { key, contractName } of categories) {
+      const filtered = response.data
+        .flatMap(s => s.sales)
+        .filter(s => s.contractName === contractName);
+
+      const dateMap = new Map<string, Map<string, number>>();
+
+      for (const sale of filtered) {
+        const date = this.formatDateToYyyyMmDd(sale.saleDate);
+        const branch = sale.branchName;
+        const total = sale.total ?? 0;
+
+        if (!dateMap.has(date)) {
+          dateMap.set(date, new Map());
+        }
+
+        const branchMap = dateMap.get(date)!;
+        branchMap.set(branch, (branchMap.get(branch) ?? 0) + total);
+      }
+
+      for (const [date, branchMap] of dateMap.entries()) {
+        const sales = Array.from(branchMap.entries()).map(([branchName, total]) => ({
+          branchName,
+          total
+        }));
+
+        this.preparedSale.push({
+          date,
+          category: key,
+          sales
+        });
+      }
     }
+
+    this.preparedSale.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
-  prepareData() {
-    if (this.sales && this.sales.data.length > 0) {
-      const categories = [
-        { key: 'Kulinariya', contractName: 'Azcake Kulinariya' },
-        { key: 'Şirniyyat', contractName: 'ARENDA AZCAKE SHIRNIYYAT' },
-        { key: 'Təndir', contractName: 'ARENDA AZCAKE TENDIR' }
-      ];
+  getSaleByCategory(category: string): IPreparedRangeSale[] {
+    return this.preparedSale.filter(s => s.category === category);
+  }
 
-      categories.forEach(({ key, contractName }) => {
-        const filteredSales = this.sales?.data
-          .flatMap(saleData => saleData.sales)
-          .filter(sale => sale.contractName === contractName);
+  getBranchesByCategory(category: string): string[] {
+    const branches = this.getSaleByCategory(category)
+      .flatMap(s => s.sales.map(sale => sale.branchName));
+    return Array.from(new Set(branches)).sort();
+  }
 
-        const branches = Array.from(new Set(filteredSales!.map(sale => sale.branchName)));
-        const salesData: Record<string, number[]> = {};
-
-        filteredSales!.forEach(sale => {
-          const date = this.formatDateToYyyyMmDd(sale.saleDate);
-          if (!salesData[date]) {
-            salesData[date] = Array(branches.length).fill(0);
-          }
-          const branchIndex = branches.indexOf(sale.branchName);
-          if (branchIndex !== -1) {
-            salesData[date][branchIndex] += sale.total || 0;
-          }
-        });
-
-        this.salesDataByCategory[key] = { branches, salesData };
-      });
-
-    }
+  getTotalByBranch(sales: { branchName: string; total: number }[], branch: string): number {
+    const found = sales.find(s => s.branchName === branch);
+    return found ? found.total : 0;
   }
 
   formatDateToYyyyMmDd(dateString: string): string {
@@ -136,37 +151,30 @@ export class SaleRangeComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  getTotalForAllCategories(): number {
-    let total = 0;
-
-    Object.values(this.salesDataByCategory).forEach(categoryData => {
-      Object.values(categoryData.salesData).forEach(salesForDate => {
-        total += salesForDate.reduce((sum, value) => sum + value, 0);
-      });
-    });
-
-    return total;
-  }
-
-  protected readonly Object = Object;
-
-  downloadExcel(){
+  downloadExcel() {
     this.loaderService.show();
     this.saleService.downloadRangeExcel(this.sales!)
       .subscribe(response => {
         const base64 = response.body.base64;
         const fileName = response.body.fileName;
         this.downloadFile(base64, fileName);
-        this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`)
+        this.toastrService.success(`Fayl Yüklənmələr qovluğuna əlavə edildi: ${fileName}`);
         this.loaderService.hide();
-      })
+      });
   }
 
-  private downloadFile(base64: string, fileName: string){
+  private downloadFile(base64: string, fileName: string) {
     const linkSource = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${base64}`;
     const downloadLink = document.createElement('a');
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
   }
+
+  getTotalForAllCategories(): number {
+    return this.preparedSale
+      .flatMap(item => item.sales)
+      .reduce((sum, sale) => sum + (sale.total || 0), 0);
+  }
+
 }

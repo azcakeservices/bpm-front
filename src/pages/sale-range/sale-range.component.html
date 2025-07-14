@@ -2,11 +2,14 @@
   <div class="form-group">
     <label for="startDate" class="form-label">Başlama tarixi</label>
     <input type="date" id="startDate" [(ngModel)]="startDate" name="startDate" required class="form-input">
+
     <label for="endDate" class="form-label">Bitmə tarixi</label>
     <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" required class="form-input">
+
     <button type="submit" class="submit-btn">Yüklə</button>
   </div>
 </form>
+
 <button class="button download-btn" *ngIf="sales" (click)="downloadExcel()">Excel olaraq yüklə</button>
 
 <div *ngIf="errorMessage" class="error-message">
@@ -14,21 +17,23 @@
 </div>
 
 <div *ngFor="let category of ['Şirniyyat', 'Təndir', 'Kulinariya']">
-  <div class="table-wrapper" *ngIf="salesDataByCategory[category]">
-    <h2 >{{ category }}</h2>
+  <h2>{{ category }}</h2>
+  <div class="table-wrapper">
     <div class="table-container">
       <table class="sales-table">
         <thead>
         <tr>
           <th class="sticky-column">Satış tarixi</th>
-          <th *ngFor="let branch of salesDataByCategory[category].branches">{{ branch }}</th>
+          <th *ngFor="let branch of getBranchesByCategory(category)">
+            {{ branch }}
+          </th>
         </tr>
         </thead>
         <tbody class="scrollable-body">
-        <tr *ngFor="let date of Object.keys(salesDataByCategory[category].salesData)">
-          <td class="sticky-column">{{ date }}</td>
-          <td *ngFor="let total of salesDataByCategory[category].salesData[date]">
-            {{ total | number: '1.2-2' }}
+        <tr *ngFor="let item of getSaleByCategory(category)">
+          <td class="sticky-column">{{ item.date }}</td>
+          <td *ngFor="let branch of getBranchesByCategory(category)">
+            {{ getTotalByBranch(item.sales, branch) | number: '1.2-2' }}
           </td>
         </tr>
         </tbody>
@@ -36,7 +41,8 @@
     </div>
   </div>
 </div>
-<div class="table-footer" *ngIf="Object.keys(salesDataByCategory).length > 0">
+
+<div class="table-footer" *ngIf="preparedSale.length > 0">
   <span class="total-label">Cəmi məbləğ:</span>
   <span class="total-value">{{ getTotalForAllCategories() | number: '1.2-2' }}</span>
 </div>
