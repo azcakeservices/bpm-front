@@ -5,6 +5,7 @@
     "refundService": "http://10.0.100.100:5050/gateway/api/Refunds",
     "paymentReceiver": "http://10.0.100.100:5050/gateway/api/Sales",
     "roleService": "http://10.0.100.100:5050/gateway/api/Roles",
-    "userService": "http://10.0.100.100:5050/gateway/api/Users"
+    "userService": "http://10.0.100.100:5050/gateway/api/Users",
+    "employeeFormService": "http://10.0.100.100:5050/gateway/api/Employees"
   }
 }
