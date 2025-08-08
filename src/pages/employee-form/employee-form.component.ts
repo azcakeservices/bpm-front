@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {LoaderService} from "../../services/loader.service";
+import {ToasterCustomService} from "../../services/toaster.service";
+import {EmployeeFormService} from "../../services/employee-form.service";
 
 @Component({
   selector: 'app-employee-form',
@@ -7,6 +10,17 @@ import { Component } from '@angular/core';
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css'
 })
-export class EmployeeFormComponent {
+export class EmployeeFormComponent implements OnInit {
+
+  constructor(
+    private loaderService: LoaderService,
+    private toastrService: ToasterCustomService,
+    private employeeService: EmployeeFormService
+  ) {}
+
+  ngOnInit(): void {
+        this.employeeService.getEmployeeForms();
+        // console.log(forms)
+    }
 
 }
