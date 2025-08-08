@@ -11,6 +11,7 @@ import {RefundComponent} from "../pages/refund/refund.component";
 import {AdminPanelComponent} from "../pages/admin-panel/admin-panel.component";
 import {UnauthorizedComponent} from "../pages/unauthorized/unauthorized.component";
 import {PageNotFoundComponent} from "../pages/page-not-found/page-not-found.component";
+import {EmployeeFormComponent} from "../pages/employee-form/employee-form.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,6 +24,14 @@ export const routes: Routes = [
       { path: 'daily', component: SaleComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'SaleViewer'] } },
       { path: 'range', component: SaleRangeComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'RangeSaleViewer'] } },
       { path: 'detailed', component: DetailedSalesComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'DetailedSaleViewer'] } }
+    ]
+  },
+  {
+    path: 'hr',
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'employee-form', component: EmployeeFormComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'EmployeeFormViewer']}}
     ]
   },
   { path: 'branches', component: BranchesComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['Admin', 'BranchViewer'] } },
