@@ -1,0 +1,33 @@
+export interface IEmployeeForm {
+  id: string;
+  firstName: string;
+  lastName: string;
+  patronymic: string;
+  dateOfBirth: string;
+  militaryStatus: string;
+  citizenship: string;
+  nationality: string;
+  drivingLicense: string;
+  education: string;
+  religion: string;
+  badHabits: string;
+  maritalStatus: string;
+  guardianshipOrDisabledUnderCare: string;
+  chronicDiseases: string;
+  distinctSkills: string;
+  specialStatus: string;
+  hobbiesOrActivities: string;
+  currentAddress: string;
+  phoneNumber: string;
+  email: string;
+  appliedPosition: string;
+  sourceOfJobInfo: string;
+  hasCriminalRecord: boolean;
+  hiredDate: string;
+  dismissedDate: string;
+  trainings: {}[];
+  workExperiences: {}[];
+  familyMembers: {}[];
+  createdDate: string;
+  createdBy: string;
+}

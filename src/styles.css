@@ -2,7 +2,6 @@
 @import "tailwindcss";
 
 * {
-  padding: 0;
   box-sizing: border-box;
 }
 
@@ -12,4 +11,8 @@ ul {
 
 body {
   font-family: "Segoe UI", sans-serif;
+  display: block;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
 }

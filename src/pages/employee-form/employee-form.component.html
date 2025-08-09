@@ -1,3 +1,266 @@
-<div class="mt-[60px]">
-  <p>Test</p>
+<div class="px-5 md:px-10 lg:px-16 xl:px-24 mt-4">
+  <div class="relative py-6 mt-5 px-5 bg-gray-900 text-gray-100 rounded-xl shadow-xl">
+    <div class="flex justify-between text-center items-center mb-6">
+      <h2 class="text-xl font-semibold text-center w-full">Əməkdaş anketləri</h2>
+      <button
+        class="bg-blue-600 hover:bg-blue-700 absolute right-5 hover:cursor-pointer text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition"
+        (click)="onAddEmployee()"
+      >
+        + Yeni əməkdaş
+      </button>
+    </div>
+
+    <div class="mb-4" *ngIf="employees.length > 0">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Axtarış (Ad, Email, Telefon...)"
+        class="w-full bg-gray-800 text-white px-4 py-2 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
+
+    <div class="relative overflow-x-auto border border-gray-700 rounded-lg pb-4 mb-2">
+      <table *ngIf="employees.length > 0; else noEmployeeForm" class="min-w-[2000px] w-full border-collapse text-sm">
+        <thead class="bg-gray-800 text-gray-400 uppercase tracking-wider">
+        <tr>
+          <th *ngFor="let key of columnKeys" class="px-4 py-2 text-left border border-gray-700 whitespace-nowrap">
+            {{ formatLabel(key) }}
+          </th>
+          <th class="px-4 py-2 text-left border border-gray-700 whitespace-nowrap bg-gray-800 sticky right-0 z-20 min-w-[180px] shadow-[inset_10px_0_10px_rgba(0,0,0,0.35)]">
+            Əməliyyatlar
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let employee of filteredEmployees" class="hover:bg-gray-800 transition">
+          <td *ngFor="let key of columnKeys" class="px-4 py-2 border border-gray-700 whitespace-nowrap">
+            {{ formatValue(employee[key]) }}
+          </td>
+          <td class="px-4 py-2 border border-gray-700 whitespace-nowrap bg-gray-900 sticky right-0 z-20 shadow-[inset_10px_0_10px_rgba(0,0,0,0.35)]">
+            <button
+              class="bg-yellow-600 hover:bg-yellow-700 text-white text-xs px-3 py-1 hover:cursor-pointer rounded mr-2"
+              (click)="editEmployee(employee)"
+            >
+              Düzəliş et
+            </button>
+            <button
+              class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 hover:cursor-pointer rounded"
+              (click)="deleteEmployee(employee.id)"
+            >
+              Sil
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <ng-template #noEmployeeForm>
+        <h2 class="text-center text-red-400 mt-3 text-2xl">Əməkdaş anketi tapılmadı!</h2>
+      </ng-template>
+    </div>
+  </div>
+
+  <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-[1px] flex items-center justify-center z-50">
+    <div class="bg-gray-800 text-white rounded-xl p-6 w-full max-w-xl shadow-lg relative">
+      <div class="mb-4">
+        <div class="flex justify-between items-center text-sm text-gray-300">
+          <span>Sual {{ questionIndex + 1 }} / {{ orderedKeys.length }}</span>
+          <span>{{ formatLabel(currentKey()) }}</span>
+        </div>
+        <div class="w-full bg-gray-700 rounded h-2 mt-2">
+          <div class="bg-blue-600 h-2 rounded transition-all" [style.width.%]="((questionIndex + 1) / orderedKeys.length) * 100"></div>
+        </div>
+      </div>
+
+      <h3 class="text-lg font-semibold mb-4">Yeni əməkdaş məlumatı</h3>
+
+      <form novalidate #form="ngForm" class="space-y-6">
+        <div *ngIf="!isArray(currentKey())">
+          <label [for]="currentKey()" class="block mb-2 text-sm font-medium">
+            {{ formatLabel(currentKey()) }}
+          </label>
+
+          <ng-container [ngSwitch]="fieldKind(currentKey())">
+            <select
+              #questionInput
+              *ngSwitchCase="'boolean'"
+              [id]="currentKey()" [name]="currentKey()"
+              [ngModel]="newEmployee[currentKey()]"
+              (ngModelChange)="newEmployee[currentKey()] = $event"
+              [ngModelOptions]="{ standalone: true }"
+              class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:ring-2 focus:ring-blue-500 text-sm w-full"
+              required
+              (keydown)="onKeyDown($event)"
+            >
+              <option [ngValue]="true">Bəli</option>
+              <option [ngValue]="false">Xeyr</option>
+            </select>
+
+            <input
+              #questionInput
+              *ngSwitchCase="'date'"
+              type="date"
+              [id]="currentKey()" [name]="currentKey()"
+              [ngModel]="newEmployee[currentKey()]"
+              (ngModelChange)="newEmployee[currentKey()] = $event"
+              [ngModelOptions]="{ standalone: true }"
+              class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:ring-2 focus:ring-blue-500 text-sm w-full"
+              required
+              (keydown)="onKeyDown($event)"
+            />
+
+            <input
+              #questionInput
+              *ngSwitchCase="'email'"
+              type="email" autocomplete="email"
+              [id]="currentKey()" [name]="currentKey()"
+              [ngModel]="newEmployee[currentKey()]"
+              (ngModelChange)="newEmployee[currentKey()] = $event"
+              [ngModelOptions]="{ standalone: true }"
+              class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:ring-2 focus:ring-blue-500 text-sm w-full"
+              required
+              (keydown)="onKeyDown($event)"
+            />
+
+            <input
+              #questionInput
+              *ngSwitchCase="'tel'"
+              type="tel" autocomplete="tel"
+              [id]="currentKey()" [name]="currentKey()"
+              [ngModel]="newEmployee[currentKey()]"
+              (ngModelChange)="newEmployee[currentKey()] = $event"
+              [ngModelOptions]="{ standalone: true }"
+              class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:ring-2 focus:ring-blue-500 text-sm w-full"
+              required
+              (keydown)="onKeyDown($event)"
+            />
+
+            <textarea
+              #questionInput
+              *ngSwitchCase="'textarea'"
+              rows="3"
+              [id]="currentKey()" [name]="currentKey()"
+              [ngModel]="newEmployee[currentKey()]"
+              (ngModelChange)="newEmployee[currentKey()] = $event"
+              [ngModelOptions]="{ standalone: true }"
+              class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:ring-2 focus:ring-blue-500 text-sm w-full"
+              required
+              (keydown)="onKeyDown($event)"
+            ></textarea>
+
+            <input
+              #questionInput
+              *ngSwitchDefault
+              type="text"
+              [id]="currentKey()" [name]="currentKey()"
+              [ngModel]="newEmployee[currentKey()]"
+              (ngModelChange)="newEmployee[currentKey()] = $event"
+              [ngModelOptions]="{ standalone: true }"
+              class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:ring-2 focus:ring-blue-500 text-sm w-full"
+              required
+              (keydown)="onKeyDown($event)"
+            />
+          </ng-container>
+        </div>
+
+        <div *ngIf="currentKey() === 'trainings'" class="space-y-4">
+          <div class="flex justify-between items-center">
+            <label class="text-sm font-medium">{{ formatLabel('trainings') }}</label>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded" (click)="addTraining()">+ Daha birini əlavə et</button>
+          </div>
+
+          <div *ngFor="let t of newEmployee.trainings; let i = index" class="border border-gray-700 rounded p-3 space-y-2 bg-gray-700/40">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input [ngModel]="t.title" (ngModelChange)="t.title = $event" [ngModelOptions]="{ standalone: true }" name="training_title_{{i}}" placeholder="Başlıq" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+              <input [ngModel]="t.dateCompleted" (ngModelChange)="t.dateCompleted = $event" [ngModelOptions]="{ standalone: true }" type="date" name="training_date_{{i}}" placeholder="Bitmə tarixi" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+            </div>
+            <div class="flex justify-end">
+              <button type="button" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded" (click)="removeTraining(i)">Sil</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="currentKey() === 'workExperiences'" class="space-y-4">
+          <div class="flex justify-between items-center">
+            <label class="text-sm font-medium">{{ formatLabel('workExperiences') }}</label>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded" (click)="addWorkExperience()">+ Daha birini əlavə et</button>
+          </div>
+
+          <div *ngFor="let w of newEmployee.workExperiences; let i = index" class="border border-gray-700 rounded p-3 space-y-2 bg-gray-700/40">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input [ngModel]="w.companyName" (ngModelChange)="w.companyName = $event" [ngModelOptions]="{ standalone: true }" name="we_company_{{i}}" placeholder="Şirkət adı" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+              <input [ngModel]="w.position" (ngModelChange)="w.position = $event" [ngModelOptions]="{ standalone: true }" name="we_position_{{i}}" placeholder="Vəzifə" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+              <input [ngModel]="w.startDate" (ngModelChange)="w.startDate = $event" [ngModelOptions]="{ standalone: true }" type="date" name="we_start_{{i}}" placeholder="Başlama tarixi" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+              <input [ngModel]="w.endDate" (ngModelChange)="w.endDate = $event" [ngModelOptions]="{ standalone: true }" type="date" name="we_end_{{i}}" placeholder="Bitmə tarixi" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" />
+            </div>
+            <textarea [ngModel]="w.responsibilities" (ngModelChange)="w.responsibilities = $event" [ngModelOptions]="{ standalone: true }" name="we_resp_{{i}}" placeholder="Öhdəliklər" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm w-full" required></textarea>
+            <div class="flex justify-end">
+              <button type="button" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded" (click)="removeWorkExperience(i)">Sil</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="currentKey() === 'familyMembers'" class="space-y-4">
+          <div class="flex justify-between items-center">
+            <label class="text-sm font-medium">{{ formatLabel('familyMembers') }}</label>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded" (click)="addFamilyMember()">+ Daha birini əlavə et</button>
+          </div>
+
+          <div *ngFor="let f of newEmployee.familyMembers; let i = index" class="border border-gray-700 rounded p-3 space-y-2 bg-gray-700/40">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input [ngModel]="f.name" (ngModelChange)="f.name = $event" [ngModelOptions]="{ standalone: true }" name="fm_name_{{i}}" placeholder="Ad, Soyad" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+              <input [ngModel]="f.relationship" (ngModelChange)="f.relationship = $event" [ngModelOptions]="{ standalone: true }" name="fm_rel_{{i}}" placeholder="Münasibət" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+              <input [ngModel]="f.dateOfBirth" (ngModelChange)="f.dateOfBirth = $event" [ngModelOptions]="{ standalone: true }" type="date" name="fm_dob_{{i}}" placeholder="Təvəllüd" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm" required />
+            </div>
+            <div class="flex justify-end">
+              <button type="button" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded" (click)="removeFamilyMember(i)">Sil</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between mt-6">
+          <button
+            type="button"
+            class="px-4 py-2 text-sm bg-gray-600 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            (click)="prevQuestion()"
+            [disabled]="questionIndex === 0"
+          >
+            Geri
+          </button>
+
+          <div class="flex space-x-2">
+            <button
+              type="button"
+              class="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-500 rounded"
+              (click)="closeModal()"
+            >
+              Ləğv et
+            </button>
+
+            <button
+              type="button"
+              class="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="!isCurrentValid()"
+              (click)="nextQuestion()"
+            >
+              {{ questionIndex < orderedKeys.length - 1 ? 'Növbəti' : 'Yadda saxla' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-[2px] flex items-center justify-center z-50" *ngIf="showConfirmDelete">
+    <div class="bg-gray-800 text-white rounded-xl p-6 w-full max-w-md shadow-lg">
+      <h3 class="text-lg font-semibold mb-4">Əməkdaşı silmək istədiyinizə əminsiniz?</h3>
+      <p class="text-sm text-gray-300 mb-6">Bu əməliyyat geri qaytarıla bilməz.</p>
+
+      <div class="flex justify-end space-x-2">
+        <button (click)="onCancel()" class="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-500 rounded">Ləğv et</button>
+        <button (click)="onConfirmDelete()" class="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 rounded">Bəli, sil</button>
+      </div>
+    </div>
+  </div>
 </div>

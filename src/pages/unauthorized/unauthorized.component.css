@@ -2,8 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 60px);
-  margin-top: 60px;
   background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
