@@ -5,7 +5,7 @@ import { AuthInterceptor } from "./guard/auth.interceptor";
 import { provideRouter, withComponentInputBinding } from "@angular/router";
 import { routes } from "./app/app.routes";
 import { ConfigService } from "./services/config.service";
-import { APP_INITIALIZER, importProvidersFrom } from "@angular/core";
+import { importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { ToastrModule } from "ngx-toastr";
 
@@ -23,12 +23,10 @@ bootstrapApplication(AppComponent, {
       positionClass: 'toast-top-right'
     })),
     ConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: intializeApp,
-      deps: [ConfigService],
-      multi: true
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (intializeApp)(inject(ConfigService));
+        return initializerFn();
+      }),
     provideAnimations()
   ]
 }).catch(err => console.log(err));

@@ -5,15 +5,14 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgIf
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgIf
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 
 export class LoginComponent {

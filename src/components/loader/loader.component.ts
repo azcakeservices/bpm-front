@@ -4,14 +4,14 @@ import {LoaderService} from "../../services/loader.service";
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'app-loader',
-  standalone: true,
-  imports: [
-    NgIf,
-    AsyncPipe
-  ],
-  templateUrl: './loader.component.html',
-  styleUrl: './loader.component.css'
+    selector: 'app-loader',
+    imports: [
+        NgIf,
+        AsyncPipe
+    ],
+    templateUrl: './loader.component.html',
+    standalone: true,
+    styleUrl: './loader.component.css'
 })
 export class LoaderComponent {
   isLoading$: Observable<boolean>;

@@ -5,16 +5,15 @@ import { EmployeeFormService } from '../../services/employee-form.service';
 import { IEmployeeForm } from '../../interfaces/employee form/IEmployeeForm';
 import {NgClass, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { switchMap } from 'rxjs';
 
 export type FieldKind = 'text' | 'date' | 'boolean' | 'email' | 'tel' | 'textarea';
 
 @Component({
-  selector: 'app-employee-form',
-  standalone: true,
-  imports: [NgFor, NgIf, FormsModule, NgClass, NgSwitchCase, NgSwitchDefault, NgSwitch],
-  templateUrl: './employee-form.component.html',
-  styleUrls: ['./employee-form.component.css']
+    selector: 'app-employee-form',
+    imports: [NgFor, NgIf, FormsModule, NgClass, NgSwitchCase, NgSwitchDefault, NgSwitch],
+    standalone: true,
+    templateUrl: './employee-form.component.html',
+    styleUrls: ['./employee-form.component.css']
 })
 export class EmployeeFormComponent implements OnInit {
   @ViewChild('questionInput') questionInput!: ElementRef<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;

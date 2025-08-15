@@ -8,13 +8,12 @@ import {ToasterCustomService} from "../../services/toaster.service";
 import {NgClass, NgFor} from "@angular/common";
 
 @Component({
-  selector: 'app-branches',
-  standalone: true,
-  imports: [
-    NgClass, NgFor
-  ],
-  templateUrl: './branches.component.html',
-  styleUrl: './branches.component.css'
+    selector: 'app-branches',
+    imports: [
+        NgClass, NgFor
+    ],
+    templateUrl: './branches.component.html',
+    styleUrl: './branches.component.css'
 })
 export class BranchesComponent implements OnInit{
   branchesResponse: IBranchResponse | null = null;

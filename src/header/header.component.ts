@@ -12,17 +12,17 @@ interface MenuItem {
 }
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [
-    RouterLink,
-    FormsModule,
-    RouterLinkActive,
-    NgForOf,
-    NgIf
-  ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+    selector: 'app-header',
+    imports: [
+        RouterLink,
+        FormsModule,
+        RouterLinkActive,
+        NgForOf,
+        NgIf
+    ],
+    templateUrl: './header.component.html',
+    standalone: true,
+    styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
   currentDate!: string;

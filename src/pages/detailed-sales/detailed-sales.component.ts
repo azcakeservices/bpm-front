@@ -12,18 +12,17 @@ import * as dateUtils from '../../app/shared/utils/date-utils';
 import { IDailySale } from "../../interfaces/IDailySale";
 
 @Component({
-  selector: 'app-detailed-sales',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgIf,
-    NgForOf,
-    DecimalPipe,
-    NgMultiSelectDropDownModule,
-    DatePipe
-  ],
-  templateUrl: './detailed-sales.component.html',
-  styleUrls: ['./detailed-sales.component.css'],
+    selector: 'app-detailed-sales',
+    imports: [
+        FormsModule,
+        NgIf,
+        NgForOf,
+        DecimalPipe,
+        NgMultiSelectDropDownModule,
+        DatePipe
+    ],
+    templateUrl: './detailed-sales.component.html',
+    styleUrls: ['./detailed-sales.component.css']
 })
 export class DetailedSalesComponent implements OnInit {
   date: string = '';

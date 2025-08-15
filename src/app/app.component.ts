@@ -5,17 +5,17 @@ import {NgIf} from "@angular/common";
 import {LoaderComponent} from "../components/loader/loader.component";
 
 @Component({
-  selector: 'app-root',
+    selector: 'app-root',
+    imports: [
+        RouterOutlet,
+        HeaderComponent,
+        NgIf,
+        RouterModule,
+        LoaderComponent
+    ],
   standalone: true,
-  imports: [
-    RouterOutlet,
-    HeaderComponent,
-    NgIf,
-    RouterModule,
-    LoaderComponent
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent{
 

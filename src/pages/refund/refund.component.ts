@@ -7,11 +7,10 @@ import { LoaderService } from '../../services/loader.service';
 import { ToasterCustomService } from '../../services/toaster.service';
 
 @Component({
-  selector: 'app-refund',
-  standalone: true,
-  imports: [FormsModule, NgIf, NgForOf, DecimalPipe],
-  templateUrl: './refund.component.html',
-  styleUrls: ['./refund.component.css'],
+    selector: 'app-refund',
+    imports: [FormsModule, NgIf, NgForOf, DecimalPipe],
+    templateUrl: './refund.component.html',
+    styleUrls: ['./refund.component.css']
 })
 export class RefundComponent {
   startDate: string = '';

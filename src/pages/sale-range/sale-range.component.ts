@@ -9,16 +9,15 @@ import * as dateUtils from "../../app/shared/utils/date-utils";
 import { IPreparedRangeSale } from "../../interfaces/IPreparedRangeSale";
 
 @Component({
-  selector: 'app-sale-range',
-  standalone: true,
-  imports: [
-    FormsModule,
-    DecimalPipe,
-    NgIf,
-    NgForOf,
-  ],
-  templateUrl: './sale-range.component.html',
-  styleUrl: './sale-range.component.css',
+    selector: 'app-sale-range',
+    imports: [
+        FormsModule,
+        DecimalPipe,
+        NgIf,
+        NgForOf,
+    ],
+    templateUrl: './sale-range.component.html',
+    styleUrl: './sale-range.component.css'
 })
 export class SaleRangeComponent implements OnInit {
   startDate = '';

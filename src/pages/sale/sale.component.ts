@@ -10,16 +10,15 @@ import {ToasterCustomService} from "../../services/toaster.service";
 import * as dateUtils from '../../app/shared/utils/date-utils';
 
 @Component({
-  selector: 'app-sale',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgIf,
-    NgForOf,
-    DecimalPipe,
-  ],
-  templateUrl: './sale.component.html',
-  styleUrl: './sale.component.css'
+    selector: 'app-sale',
+    imports: [
+        FormsModule,
+        NgIf,
+        NgForOf,
+        DecimalPipe,
+    ],
+    templateUrl: './sale.component.html',
+    styleUrl: './sale.component.css'
 })
 export class SaleComponent implements OnInit{
   date: string = '';
