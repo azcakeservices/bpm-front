@@ -3,14 +3,14 @@ import { LoaderService } from '../../services/loader.service';
 import { ToasterCustomService } from '../../services/toaster.service';
 import { EmployeeFormService } from '../../services/employee-form.service';
 import { IEmployeeForm } from '../../interfaces/employee form/IEmployeeForm';
-import {NgClass, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
+import { NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 export type FieldKind = 'text' | 'date' | 'boolean' | 'email' | 'tel' | 'textarea';
 
 @Component({
     selector: 'app-employee-form',
-    imports: [NgFor, NgIf, FormsModule, NgClass, NgSwitchCase, NgSwitchDefault, NgSwitch],
+    imports: [NgFor, NgIf, FormsModule, NgSwitchCase, NgSwitchDefault, NgSwitch],
     standalone: true,
     templateUrl: './employee-form.component.html',
     styleUrls: ['./employee-form.component.css']

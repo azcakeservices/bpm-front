@@ -1,17 +1,11 @@
 import {Component} from '@angular/core';
 import {Router, RouterModule, RouterOutlet} from '@angular/router';
-import {HeaderComponent} from "../header/header.component";
-import {NgIf} from "@angular/common";
-import {LoaderComponent} from "../components/loader/loader.component";
 
 @Component({
     selector: 'app-root',
     imports: [
         RouterOutlet,
-        HeaderComponent,
-        NgIf,
         RouterModule,
-        LoaderComponent
     ],
   standalone: true,
     templateUrl: './app.component.html',
