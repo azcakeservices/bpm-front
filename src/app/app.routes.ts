@@ -13,6 +13,8 @@ import { UnauthorizedComponent } from '../pages/unauthorized/unauthorized.compon
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 import { EmployeeFormComponent } from '../pages/employee-form/employee-form.component';
 import { LayoutComponent } from '../components/layout/layout.component';
+import {QuestionComponent} from "../pages/question/question.component";
+import {InputsTypesComponent} from "../pages/inputs-types/inputs-types.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -57,9 +59,11 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        component: AdminPanelComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['Admin'] }
+        children: [
+          { path: '', redirectTo: '', pathMatch: 'full' },
+          { path: 'questions', component: QuestionComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'QuestionViewer'] } },
+          { path: 'input-types', component: InputsTypesComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'InputTypesViewer', 'InputTypesEditor'] } },
+        ],
       }
     ]
   },

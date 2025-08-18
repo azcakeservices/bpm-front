@@ -1,0 +1,120 @@
+<div class="p-2 h-[calc(100vh-65px)] bg-[rgba(255, 255, 255, 0.05)] text-white">
+  <div class="text-center mx-auto px-5 ">
+    <h1 class="font-bold text-4xl">Inputlar</h1>
+  </div>
+
+  <div class="flex justify-end">
+    <button class="px-4 py-2 rounded-md bg-green-500 text-white hover:cursor-pointer hover:bg-green-300 hover:text-black hover:shadow-lg active:translate-1 duration-500" (click)="openCreateModal()">+ Yeni</button>
+    <div>
+      <input type="text">
+    </div>
+  </div>
+
+  <div class="p-5">
+    <table class="w-full border text-center">
+      <thead>
+      <tr class="border">
+        <th class="border">ID</th>
+        <th class="border">Növ</th>
+        <th class="border">Adı</th>
+        <th class="border">Yaranma tarixi</th>
+        <th class="border">Yaradılıb</th>
+        <th class="border">Statusu</th>
+        <th class="border">Əməliyyatlar</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let input of inputs" class="border duration-300 hover:bg-blue-300">
+        <td class="border py-2">{{input.id}}</td>
+        <td class="border">{{input.type}}</td>
+        <td class="border text-center"><input class="text-center" type="text" disabled [id]="input.id" [value]="input.label"></td>
+        <td class="border">{{input.createdDate | date : 'dd.MM.yyyy'}}</td>
+        <td class="border">{{input.createdBy}}</td>
+        <td class="border"
+            [class.bg-green-600]="input.isActive"
+            [class.bg-red-600]="!input.isActive">{{ input.isActive ? 'Aktiv' : 'Deaktiv' }}</td>
+        <td class="border">
+          <div class="flex justify-around">
+<!--            <button type="button" (click)="openEditModal(input.id)" class="inline-flex bg-orange-500 items-center px-3 py-2 border border-gray-300 rounded-lg hover:cursor-pointer hover:bg-orange-700 hover:text-white transition-colors duration-200">-->
+<!--              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"-->
+<!--                   class="w-5 h-5" fill="none" stroke="currentColor"-->
+<!--                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">-->
+<!--                <path d="M12 20h9"/>-->
+<!--                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>-->
+<!--              </svg>-->
+<!--              <span class="text-sm font-medium">Düzəliş et</span>-->
+
+<!--            </button>-->
+
+            <button type="button" (click)="toggleStatus(input.id, input.isActive)" [ngClass]="input.isActive ? 'bg-red-500' : 'bg-green-500'" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg hover:cursor-pointer hover:text-white transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v10" />
+                <path d="M6.9 6.9a7 7 0 1 0 9.9 0" />
+              </svg>
+
+              <span class="text-sm font-medium">
+                {{ input.isActive ? 'Deaktiv et' : 'Aktiv et' }}
+              </span>
+            </button>
+
+
+            <button type="button" (click)="delete(input.id)" class="inline-flex text-white items-center px-3 py-2 border border-gray-300 rounded-lg bg-red-500 text-gray-700 hover:cursor-pointer hover:bg-red-700 transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   class="w-5 h-5" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              </svg>
+              <span class="text-sm font-medium">Sil</span>
+            </button>
+
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+<div *ngIf="isOpen" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-2xl shadow-2xl w-[90%] max-w-md p-6 relative animate-fade-in">
+
+    <button (click)="closeModal()"
+            class="absolute top-3 right-3 text-slate-500 hover:cursor-pointer hover:text-slate-800 dark:hover:text-slate-300">
+      ✕
+    </button>
+
+    <h2 class="text-xl font-semibold mb-4">Dəyişiləcək input adı</h2>
+
+    <div class="text-center">
+      <div>
+        <label>Cari adı: </label>
+        <input class="mb-6 bg-gray-400 text-center text-blue-500" disabled [value]="selectedInput.label"/>
+      </div>
+
+      <div>
+        <label>Yeni adı: </label>
+        <input class="mb-6 bg-gray-400 text-center text-blue-500" [(ngModel)]="inputNewValue"/>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <button (click)="closeModal()"
+              class="px-4 py-2 rounded-xl border border-slate-400 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 hover:cursor-pointer">
+        Ləğv et
+      </button>
+      <button (click)="proceedEdit(selectedInput)"
+              class="px-4 py-2 rounded-xl bg-red-600 text-white hover:cursor-pointer hover:bg-red-700 hover:cursor-pointer">
+        Yaddaşa ver
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-new-input #createModal [inputTypes]="inputTypes"></app-new-input>
