@@ -3,6 +3,7 @@ import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {CommonModule, NgIf} from "@angular/common";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
     selector: 'app-login',
@@ -11,6 +12,7 @@ import {CommonModule, NgIf} from "@angular/common";
         FormsModule,
         NgIf
     ],
+    standalone: true,
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
@@ -20,9 +22,10 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = ''
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private loader: LoaderService) {}
 
   login(){
+    this.loader.show();
     this.authService.login(this.username, this.password).subscribe(
       response => {
         console.log(response)
@@ -30,6 +33,7 @@ export class LoginComponent {
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('user', JSON.stringify(response.user))
           localStorage.setItem('roles', JSON.stringify(response.roles))
+          this.loader.hide();
         this.router.navigate(['/branches'])
       }
     },
