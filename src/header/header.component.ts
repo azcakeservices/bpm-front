@@ -52,7 +52,12 @@ export class HeaderComponent implements OnInit {
       ]
     },
     { label: 'İadələr', link: '/refund', roles: ['Admin', 'RefundViewer'] },
-    { label: 'Admin', link: '/admin', roles: ['Admin'] }
+    {
+      label: 'Admin', roles: [], children: [
+        { label: 'Suallar', link: '/admin/questions', roles: ['Admin', 'QuestionViewer'] },
+        { label: 'Inputlar', link: '/admin/input-types', roles: ['Admin', 'InputTypesViewer', 'InputTypesEditor'] }
+      ]
+    }
   ];
 
   constructor(private auth: AuthService) {}
