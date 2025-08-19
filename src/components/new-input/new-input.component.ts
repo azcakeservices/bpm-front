@@ -23,6 +23,8 @@ export class NewInputComponent {
     { name: 'rəqəm',   type: 'number'},
     { name: 'telefon', type: 'tel'   },
     { name: 'mətn',    type: 'text'  },
+    { name: 'seçim (hə/yox)', type: 'checkbox'},
+    { name: 'siyahı', type: 'select' }
   ];
   @ViewChild('nameInput') nameInput?: ElementRef<HTMLInputElement>;
 
@@ -56,7 +58,7 @@ export class NewInputComponent {
       this.form.markAllAsTouched();
       return;
     }
-    const result = this.form.getRawValue() as InputCreateResult; // { name, type }
+    const result = this.form.getRawValue() as InputCreateResult;
     this.isOpen = false;
     this.resolver?.(result);
     this.resolver = undefined;

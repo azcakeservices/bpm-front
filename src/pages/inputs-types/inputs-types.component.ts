@@ -39,7 +39,9 @@ export class InputsTypesComponent implements OnInit{
     { name: 'şəkil', type: 'image' },
     { name: 'rəqəm', type: 'number' },
     { name: 'telefon', type: 'tel' },
-    { name: 'mətn', type: 'text' }
+    { name: 'mətn', type: 'text' },
+    { name: 'seçim (hə/yox)', type: 'checkbox'},
+    { name: 'siyahı', type: 'select' }
   ];
   isOpen: boolean = false;
   inputNewValue: string = '';
@@ -124,26 +126,6 @@ export class InputsTypesComponent implements OnInit{
       cancelButtonText: cancelButtonText
     })
   }
-
-  openEditModal(inputId: string){
-    const input = this.inputs.find(x => x.id === inputId);
-    console.log(input);
-    this.selectedInput = {
-      id: input!.id,
-      isActive: input!.isActive,
-      label: input!.label,
-      createdDate: input!.createdDate,
-      createdBy: input!.createdBy,
-      type: input!.type,
-    };
-    this.isOpen = true;
-
-
-
-
-    // console.log(label)
-  }
-
 
   toggleStatus(id: string, isActive: boolean) {
     this.loader.show();
