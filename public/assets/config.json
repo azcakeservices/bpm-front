@@ -7,6 +7,7 @@
     "roleService": "http://10.0.100.100:5050/gateway/api/Roles",
     "userService": "http://10.0.100.100:5050/gateway/api/Users",
     "employeeFormService": "http://10.0.100.100:5050/gateway/api/Employees",
-    "inputsTypesService": "http://10.0.100.100:5050/gateway/api/InputsType"
+    "inputsTypesService": "http://10.0.100.100:5050/gateway/api/InputsType",
+    "questionService": "http://10.0.100.100:5050/gateway/api/Questions"
   }
 }
