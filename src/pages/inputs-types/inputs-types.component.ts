@@ -33,6 +33,7 @@ type InputType = {
 })
 export class InputsTypesComponent implements OnInit{
   inputs: IInputsTypes[] = [];
+  filteredInputs: IInputsTypes[] = [];
   readonly inputTypes: {name: string, type: string}[] = [
     { name: 'tarix', type: 'date' },
     { name: 'email', type: 'email' },
@@ -54,6 +55,7 @@ export class InputsTypesComponent implements OnInit{
     label: ''
   };
   @ViewChild('createModal') createModal!: NewInputComponent;
+  searchField: string = '';
 
   constructor(private service: InputsTypesService, private loader: LoaderService) {}
 
@@ -64,7 +66,7 @@ export class InputsTypesComponent implements OnInit{
     this.loader.show();
     try {
       const response = await firstValueFrom(this.service.create(this.buildCreateBody(res)));
-      this.inputs = await firstValueFrom(this.service.getAll());
+      this.filteredInputs = this.inputs = await firstValueFrom(this.service.getAll());
     } finally {
       this.loader.hide();
     }
@@ -73,7 +75,7 @@ export class InputsTypesComponent implements OnInit{
   ngOnInit(): void {
     this.loader.show();
     this.service.getAll().subscribe(response => {
-        this.inputs = response;
+        this.filteredInputs = this.inputs = response;
       this.loader.hide();
     })
   }
@@ -98,7 +100,7 @@ export class InputsTypesComponent implements OnInit{
           }, complete: () => {
 
             this.service.getAll().subscribe(response => {
-              this.inputs = response;
+              this.filteredInputs = this.inputs = response;
               this.loader.hide();
             })
           }
@@ -138,7 +140,7 @@ export class InputsTypesComponent implements OnInit{
       next: () => {
         this.service.getAll().subscribe({
           next: (response) => {
-            this.inputs = response;
+            this.filteredInputs = this.inputs = response;
             Swal.fire({
               icon: "success",
               title: `${isActive ? 'Deaktiv edildi!' : 'Aktiv edildi!'}`,
@@ -179,5 +181,13 @@ export class InputsTypesComponent implements OnInit{
   proceedEdit(inputName: InputType){
     console.error(inputName)
     const body = {};
+  }
+
+  search(){
+    const search = (this.searchField || '').toLowerCase().trim();
+
+    this.filteredInputs = search
+      ? this.inputs.filter(x => (x.label || '').toLowerCase().includes(search))
+      : this.inputs;
   }
 }

@@ -6,7 +6,7 @@ import {InputsTypesService} from "../../services/inputs-types.service";
 import Swal from 'sweetalert2';
 import {LoaderService} from "../../services/loader.service";
 import {IInputsTypes} from "../../interfaces/InputsTypes/IInputsTypes";
-import {DatePipe, NgClass, NgForOf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {QuestionType} from "../../interfaces/question/QuestionType";
 
 @Component({
@@ -18,6 +18,7 @@ import {QuestionType} from "../../interfaces/question/QuestionType";
     NgForOf,
     NgClass,
     DatePipe,
+    NgIf,
   ],
   standalone: true,
   templateUrl: './question.component.html',
