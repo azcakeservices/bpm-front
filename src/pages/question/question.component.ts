@@ -39,7 +39,15 @@ export class QuestionComponent implements OnInit {
       next: data => {
         this.inputs = data;
       },
-      error: error => {},
+      error: error => {
+        Swal.fire({
+          icon: 'error',
+          position: 'top-right',
+          showCancelButton: false,
+          timer: 800,
+          text: `Xəta baş verdi ${error}`
+        })
+      },
       complete: () => {
         this.loader.hide();
       }
@@ -57,14 +65,22 @@ export class QuestionComponent implements OnInit {
         this.loader.show();
         this.service.create(dto).subscribe({
           next: data => {
-            this.service.getAll().subscribe({
-              next: (response) => {
-                this.filteredQuestions = this.questions = response;
-              }
-            })
+            if (data){
+              this.service.getAll().subscribe({
+                next: (response) => {
+                  this.filteredQuestions = this.questions = response;
+                }
+              })
+            }
           },
           error: error => {
-
+            Swal.fire({
+              icon: 'error',
+              position: 'top-right',
+              showCancelButton: false,
+              timer: 800,
+              text: `Xəta baş verdi ${error}`
+            })
           },
           complete: () => {
             this.loader.hide();

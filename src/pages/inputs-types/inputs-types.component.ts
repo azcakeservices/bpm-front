@@ -65,7 +65,7 @@ export class InputsTypesComponent implements OnInit{
 
     this.loader.show();
     try {
-      const response = await firstValueFrom(this.service.create(this.buildCreateBody(res)));
+      await firstValueFrom(this.service.create(this.buildCreateBody(res)));
       this.filteredInputs = this.inputs = await firstValueFrom(this.service.getAll());
     } finally {
       this.loader.hide();
@@ -87,10 +87,12 @@ export class InputsTypesComponent implements OnInit{
         this.loader.show();
         this.service.delete(id).subscribe({
           next: response => {
-            Swal.fire({
-              title: 'Silindi',
-              icon: 'success'
-            })
+            if (response){
+              Swal.fire({
+                title: 'Silindi',
+                icon: 'success'
+              })
+            }
           },
           error: err => {
             Swal.fire({
@@ -180,7 +182,6 @@ export class InputsTypesComponent implements OnInit{
 
   proceedEdit(inputName: InputType){
     console.error(inputName)
-    const body = {};
   }
 
   search(){
