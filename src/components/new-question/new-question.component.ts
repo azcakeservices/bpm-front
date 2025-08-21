@@ -1,18 +1,8 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { QuestionAddDTO } from '../../interfaces/question/QuestionAddDTO';
 import {IInputsTypes} from "../../interfaces/InputsTypes/IInputsTypes";
-import {InputsTypesService} from "../../services/inputs-types.service";
 
 @Component({
   selector: 'app-new-question',
