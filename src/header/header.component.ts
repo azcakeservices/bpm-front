@@ -48,14 +48,15 @@ export class HeaderComponent implements OnInit {
       label: 'Kadrlar',
       roles: [],
       children: [
-        { label: 'Əməkdaş Anketi', link: '/hr/employee-form', roles: ['Admin', 'EmployeeFormViewer']}
+        { label: 'Əməkdaş Anketi', link: '/hr/employee-form', roles: ['Admin', 'EmployeeFormViewer']},
+        { label: 'Suallar', link: '/hr/questions', roles: ['Admin', 'QuestionViewer'] },
+        { label: 'Inputlar', link: '/hr/input-types', roles: ['Admin', 'InputTypesViewer', 'InputTypesEditor'] }
       ]
     },
     { label: 'İadələr', link: '/refund', roles: ['Admin', 'RefundViewer'] },
     {
       label: 'Admin', roles: [], children: [
-        { label: 'Suallar', link: '/admin/questions', roles: ['Admin', 'QuestionViewer'] },
-        { label: 'Inputlar', link: '/admin/input-types', roles: ['Admin', 'InputTypesViewer', 'InputTypesEditor'] }
+
       ]
     }
   ];
