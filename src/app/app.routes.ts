@@ -43,6 +43,8 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'home', pathMatch: 'full' },
           { path: 'employee-form', component: EmployeeFormComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'EmployeeFormViewer'] } },
+          { path: 'questions', component: QuestionComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'QuestionViewer'] } },
+          { path: 'input-types', component: InputsTypesComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'InputTypesViewer', 'InputTypesEditor'] } },
         ]
       },
       {
@@ -61,8 +63,6 @@ export const routes: Routes = [
         path: 'admin',
         children: [
           { path: '', redirectTo: '', pathMatch: 'full' },
-          { path: 'questions', component: QuestionComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'QuestionViewer'] } },
-          { path: 'input-types', component: InputsTypesComponent, canActivate: [RoleGuard], data: { roles: ['Admin', 'InputTypesViewer', 'InputTypesEditor'] } },
         ],
       }
     ]
