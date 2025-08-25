@@ -20,7 +20,8 @@ import {LoaderService} from "../../services/loader.service";
 export class LoginComponent {
   username: string = '';
   password: string = '';
-  errorMessage: string = ''
+  errorMessage: string = '';
+  showPassword: boolean = false;
 
   constructor(private authService: AuthService, private router: Router, private loader: LoaderService) {}
 
@@ -40,5 +41,9 @@ export class LoginComponent {
       error => {
         this.errorMessage = 'Invalid username or password';
       })
+  }
+
+  togglePassword(){
+    this.showPassword = !this.showPassword;
   }
 }
