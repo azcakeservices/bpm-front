@@ -1,0 +1,84 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4 shadow-xl">
+  <div class="overflow-x-auto">
+    <table class="table-auto min-w-[1000px] border-separate border-spacing-0 text-sm text-left text-slate-200 w-full">
+      <thead class="sticky top-0 z-10">
+      <tr class="bg-gradient-to-r from-indigo-600 to-violet-600 text-white">
+        <th
+          *ngFor="let col of (visibleColumns ?? []); trackBy: trackByKey"
+          class="px-5 py-3 font-semibold cursor-pointer select-none whitespace-nowrap"
+          [class.sticky]="!!col.sticky"
+          [style.left.px]="col.sticky ? stickyLeft(col) : undefined"
+          (click)="toggleSort(col)"
+        >
+          <div class="inline-flex items-center gap-1">
+            <span>{{ col.label }}</span>
+            <svg *ngIf="sort?.key === col.key && sort?.dir !== 0"
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="h-3 w-3"
+                 viewBox="0 0 20 20"
+                 fill="currentColor">
+              <path *ngIf="sort?.dir === 1" d="M3 12l7-8 7 8H3z"/>
+              <path *ngIf="sort?.dir === -1" d="M17 8l-7 8-7-8h14z"/>
+            </svg>
+          </div>
+        </th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let row of (sortedRows ?? []); trackBy: trackByRow"
+          class="odd:bg-slate-900/0 even:bg-slate-900/30 hover:bg-indigo-500/20 transition-colors">
+        <td *ngFor="let col of (visibleColumns ?? []); trackBy: trackByKey"
+            class="px-5 py-3 align-top"
+            [class.sticky]="!!col.sticky"
+            [style.left.px]="col.sticky ? stickyLeft(col) : undefined"
+            [class.bg-inherit]="col.sticky">
+
+          <ng-container [ngSwitch]="col.type || 'text'">
+
+            <ng-container *ngSwitchCase="'bool'">
+                <span class="inline-flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full"
+                        [class.bg-emerald-400]="row[col.key]"
+                        [class.bg-rose-400]="!row[col.key]"></span>
+                  {{ row[col.key] ? 'Bəli' : 'Xeyr' }}
+                </span>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'date'">
+              {{ row[col.key] | date:'dd.MM.yyyy' }}
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'number'">
+              {{ row[col.key] | number:'1.0-2' }}
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'badge'">
+                <span class="inline-block rounded-full bg-sky-500f/20 text-sky-200 px-2 py-0.5 text-xs">
+                  {{ row[col.key] }}
+                </span>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'image'">
+              <img *ngIf="row[col.key]" [src]="row[col.key]" class="h-8 w-8 rounded object-cover" alt="img"/>
+            </ng-container>
+
+            <ng-container *ngSwitchDefault>
+              {{ row[col.key] }}
+            </ng-container>
+
+          </ng-container>
+        </td>
+      </tr>
+      </tbody>
+
+      <tfoot>
+      <tr>
+        <td [attr.colspan]="(visibleColumns.length || 1)" class="px-5 py-2">
+          <div class="h-2 rounded-b-xl bg-gradient-to-r from-indigo-600/40 to-violet-600/40"></div>
+        </td>
+      </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

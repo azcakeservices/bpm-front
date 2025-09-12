@@ -14,7 +14,7 @@ export class QuestionService {
   }
 
   getAll(): Observable<any>{
-    return this.http.get<any>(`${this.api}`);
+    return  this.http.get<any>(`${this.api}`);
   }
 
   create(body: {}){

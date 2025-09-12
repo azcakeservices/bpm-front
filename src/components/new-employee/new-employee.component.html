@@ -1,16 +1,17 @@
+<!-- показываем модалку только когда isOpen === true -->
 <div *ngIf="isOpen"
      class="fixed inset-0 z-50"
-     (keydown.escape)="close()"
      role="dialog"
      aria-modal="true"
-     tabindex="-1">
+     tabindex="-1"
+     (keydown.escape)="close()">
 
   <!-- overlay -->
   <div class="absolute inset-0 bg-black/50" (click)="close()"></div>
 
   <!-- full-page padded container -->
   <div class="absolute inset-0 p-4 sm:p-6 md:p-10">
-    <!-- modal panel fills available area with padding & scroll -->
+    <!-- modal panel -->
     <div class="relative w-full h-full rounded-2xl shadow-2xl
                 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100
                 p-6 md:p-8 overflow-y-auto">
@@ -38,79 +39,87 @@
         </div>
 
         <!-- Dynamic Questions -->
-        <div class="pt-2">
+        <div class="pt-2" [formGroup]="form">
           <h3 class="text-sm font-semibold text-slate-500 mb-3">Suallar</h3>
 
-          <!-- один столбец на всех брейкпоинтах -->
-          <div formGroupName="answers" class="grid grid-cols-1 gap-4">
-            <div *ngFor="let q of questions;">
-              <label class="block text-sm">
+          <div formGroupName="answers" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div *ngFor="let q of questions" class="flex flex-col">
+              <label class="block text-sm mb-1">
                 {{ q.label }}
                 <span *ngIf="q.isRequired" class="text-rose-500">*</span>
               </label>
 
               <ng-container [ngSwitch]="uiType(q)">
-                <!-- text (default) -->
+
                 <input *ngSwitchCase="'text'"
                        [formControlName]="controlName(q)"
                        type="text"
                        [placeholder]="q.placeHolder || ''"
+                       autocomplete="off"
                        class="w-full rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-800
-                              focus:outline-none focus:ring-2 focus:ring-blue-500 border border-transparent" />
+                              border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-                <!-- number -->
                 <input *ngSwitchCase="'number'"
                        [formControlName]="controlName(q)"
-                       type="text"
+                       type="number"
                        [placeholder]="q.placeHolder || ''"
+                       inputmode="numeric"
                        class="w-full rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-800
-                              focus:outline-none focus:ring-2 focus:ring-blue-500 border border-transparent" />
+                              border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-                <!-- email -->
                 <input *ngSwitchCase="'email'"
                        [formControlName]="controlName(q)"
                        type="email"
                        [placeholder]="q.placeHolder || ''"
+                       autocomplete="email"
                        class="w-full rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-800
-                              focus:outline-none focus:ring-2 focus:ring-blue-500 border border-transparent" />
+                              border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-                <!-- tel -->
                 <input *ngSwitchCase="'tel'"
                        [formControlName]="controlName(q)"
                        type="tel"
                        [placeholder]="q.placeHolder || ''"
+                       autocomplete="tel"
                        class="w-full rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-800
-                              focus:outline-none focus:ring-2 focus:ring-blue-500 border border-transparent" />
+                              border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-                <!-- date -->
                 <input *ngSwitchCase="'date'"
                        [formControlName]="controlName(q)"
                        type="date"
                        class="w-full rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-800
-                              focus:outline-none focus:ring-2 focus:ring-blue-500 border border-transparent" />
+                              border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-                <!-- boolean -->
-                <label *ngSwitchCase="'boolean'" class="inline-flex items-center gap-2 select-none">
-                  <input type="checkbox" [formControlName]="controlName(q)"
+                <select *ngSwitchCase="'select'"
+                        [formControlName]="controlName(q)"
+                        class="w-full rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-800
+                               border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="" disabled hidden>
+                    {{ q.placeHolder || 'Seçin' }}
+                  </option>
+                  <option value="option-1">Option 1</option>
+                  <option value="option-2">Option 2</option>
+                </select>
+
+                <label *ngSwitchCase="'checkbox'" class="inline-flex items-center gap-2 select-none">
+                  <input type="checkbox"
+                         [formControlName]="controlName(q)"
                          class="h-4 w-4 rounded border-slate-300 accent-blue-600">
                   <span class="text-sm">{{ q.placeHolder || q.label }}</span>
                 </label>
 
-                <!-- image / unknown → text -->
                 <input *ngSwitchDefault
                        [formControlName]="controlName(q)"
                        type="text"
                        [placeholder]="q.placeHolder || ''"
                        class="w-full rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-800
-                              focus:outline-none focus:ring-2 focus:ring-blue-500 border border-transparent" />
+                              border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </ng-container>
 
-              <!-- errors -->
               <div class="text-xs text-rose-500 mt-1"
                    *ngIf="form.get('answers.' + controlName(q))?.touched && form.get('answers.' + controlName(q))?.invalid">
                 <ng-container *ngIf="form.get('answers.' + controlName(q))?.errors as e">
                   <span *ngIf="e['required']">Tələb olunur.</span>
-                  <span *ngIf="e['requiredTrue']">Qutu işарələnməlidir.</span>
+                  <span *ngIf="e['requiredTrue']">Qutu işarələnməlidir.</span>
                   <span *ngIf="e['email']">Email düzgün deyil.</span>
                   <span *ngIf="e['pattern']">Dəyər düzgün formatda deyil.</span>
                   <span *ngIf="e['maxlength']">Maksimum uzunluq keçildi.</span>

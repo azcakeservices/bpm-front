@@ -1,175 +1,128 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators, ValidatorFn, FormGroup } from '@angular/forms';
 
-import { QuestionType } from '../../interfaces/question/QuestionType';
-import { EmployeeAddDTO } from '../../interfaces/employee form/EmployeeAddDTO';
-import { IInputsTypes } from '../../interfaces/InputsTypes/IInputsTypes';
+type UiType = 'text' | 'email' | 'tel' | 'date' | 'checkbox' | 'number' | 'select' | 'image';
+
+// Простейший тип вопроса: важны id/label/isRequired/placeHolder и источник типа
+export interface QuestionLike {
+  id: string;
+  label: string;
+  isRequired: boolean;
+  placeHolder?: string;
+  // либо inputType?.type, либо просто type, либо только inputTypeId
+  inputType?: { type?: UiType } | null;
+  type?: UiType;
+  inputTypeId?: string;
+}
 
 @Component({
   selector: 'app-new-employee',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './new-employee.component.html',
-  styleUrls: ['./new-employee.component.css'],
+  styleUrls: ['./new-employee.component.css']
 })
-export class NewEmployeeComponent {
-  /** справочник типов (id -> type/label) */
-  @Input() inputs: IInputsTypes[] = [];
-  /** актуальные вопросы */
-  @Input() questions: QuestionType[] = [];
-  @Output() saved = new EventEmitter<EmployeeAddDTO>();
+export class NewEmployeeComponent implements OnInit, OnChanges {
+  @Input() questions: QuestionLike[] = [];
 
-  @ViewChild('firstInput') firstInput?: ElementRef<HTMLInputElement>;
   isOpen = false;
 
-  private fb = inject(FormBuilder);
-  private resolver?: (value: EmployeeAddDTO | undefined) => void;
-
-  /** кэш соответствия inputTypeId -> type (в нижнем регистре) */
-  private inputTypeMap = new Map<string, string>();
-
-  form = this.fb.nonNullable.group({
-    firstName: ['', [Validators.required, Validators.maxLength(300)]],
-    createdBy: [{ value: '', disabled: true }, [Validators.required]],
-    answers: this.fb.group({}) as FormGroup,
+  form = new FormGroup({
+    createdBy: new FormControl<string>('', []),
+    answers: new FormGroup<Record<string, FormControl<any>>>({})
   });
 
-  /** открыть модалку */
-  open(initial?: Partial<EmployeeAddDTO>): Promise<EmployeeAddDTO | undefined> {
-    // карта типов
-    this.rebuildTypeMap();
-
-    // сортировка и фильтр
-    const sorted = [...(this.questions || [])]
-      .filter(q => q.isActive !== false)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-    this.questions = sorted;
-
-    // построить/обновить контролы answers под текущие вопросы
-    const answersGroup = this.fb.group({});
-    for (const q of this.questions) {
-      const name = this.controlName(q);
-      const validators = this.validatorsFor(q);
-      const initialValue = this.initialValueFor(q);
-      answersGroup.addControl(name, this.fb.control(initial?.answers?.[q.id] ?? initialValue, validators));
+  ngOnInit(): void {
+    // на случай, если вопросы уже есть к моменту init
+    if (this.questions?.length) {
+      this.buildAnswersGroup(this.questions);
     }
-    this.form.setControl('answers', answersGroup);
-
-    // статические поля
-    this.form.patchValue({
-      firstName: initial?.firstName ?? '',
-      createdBy: this.getValueByKey('samAccountName'),
-    });
-
-    this.isOpen = true;
-    queueMicrotask(() => this.firstInput?.nativeElement?.focus());
-    return new Promise(resolve => (this.resolver = resolve));
   }
 
-  /** закрыть модалку */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['questions']) {
+      this.buildAnswersGroup(this.questions ?? []);
+    }
+  }
+
+  open(): void {
+    this.isOpen = true;
+    // можно фокус/скролл настроить при необходимости
+  }
+
   close(): void {
     this.isOpen = false;
-    this.resolver?.(undefined);
-    this.resolver = undefined;
   }
 
-  /** сохранить данные */
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
-    const raw = this.form.getRawValue();
-    const rawAnswers = (this.form.get('answers') as FormGroup).getRawValue() as Record<string, any>;
-
-    // преобразуем { q_<id>: value } -> { <id>: value }
-    const answers: Record<string, any> = {};
-    for (const [k, v] of Object.entries(rawAnswers)) {
-      answers[k.replace(/^q_/, '')] = v;
-    }
-
-    const dto: EmployeeAddDTO = {
-      firstName: (raw.firstName || '').trim(),
-      createdBy: raw.createdBy,
-      answers
-    };
-
-    this.isOpen = false;
-    this.resolver?.(dto);
-    this.resolver = undefined;
-    this.saved.emit(dto);
+    const payload = this.form.getRawValue();
+    console.log('NEW EMPLOYEE PAYLOAD', payload);
+    this.close();
   }
 
-  // -------- helpers --------
+  /** ===== helpers, которые используются в шаблоне ===== */
 
-  /** имя контрола внутри answers */
-  controlName(q: QuestionType): string {
-    return `q_${q.id}`;
+  controlName(q: QuestionLike): string {
+    return q.id;
   }
 
-  /** тип UI по справочнику inputs */
-  uiType(q: QuestionType): string {
-    // реальный тип по inputTypeId; по умолчанию text
-    return this.inputTypeMap.get(q.inputTypeId) || 'text';
+  uiType(q: QuestionLike): UiType {
+    // приоритет: inputType.type -> type -> эвристика по inputTypeId -> text
+    const t = q?.inputType?.type ?? q?.type;
+    if (t) return t as UiType;
+
+    // если в данных только inputTypeId, можно сопоставить известные id, если хочешь.
+    // временно — по умолчанию текст:
+    return 'text';
   }
 
-  private rebuildTypeMap(): void {
-    this.inputTypeMap.clear();
-    for (const it of this.inputs || []) {
-      this.inputTypeMap.set(it.id, (it.type || '').toLowerCase());
-    }
-  }
+  /** ===== внутренняя сборка FormGroup(answers) ===== */
 
-  private initialValueFor(q: QuestionType): any {
-    return this.uiType(q) === 'boolean' ? false : '';
-  }
+  private buildAnswersGroup(qs: QuestionLike[]): void {
+    const controls: Record<string, FormControl<any>> = {};
 
-  private validatorsFor(q: QuestionType): ValidatorFn[] {
-    const t = this.uiType(q);
-    const v: ValidatorFn[] = [];
+    qs.forEach(q => {
+      const name = this.controlName(q);
+      const type = this.uiType(q);
+      const validators = [];
 
-    if (q.isRequired) {
-      if (t === 'boolean') v.push(Validators.requiredTrue);
-      else v.push(Validators.required);
-    }
+      if (q.isRequired) {
+        if (type === 'checkbox') {
+          validators.push(Validators.requiredTrue);
+        } else {
+          validators.push(Validators.required);
+        }
+      }
+      if (type === 'email') {
+        validators.push(Validators.email);
+      }
+      // сюда можно добавить pattern/maxlength и т.п.
 
-    switch (t) {
-      case 'email':
-        v.push(Validators.email);
-        break;
-      case 'tel':
-        v.push(Validators.pattern(/^[\d+\-\s()]{6,}$/));
-        break;
-      case 'number':
-        v.push(Validators.pattern(/^-?\d+(\.\d+)?$/));
-        break;
-      case 'date':
-        // можно добавить проверку диапазона
-        break;
-      case 'image':
-        // часто будет file/base64 — оставляем только required при необходимости
-        break;
-      case 'boolean':
-        // requiredTrue уже добавлен
-        break;
-      default:
-        v.push(Validators.maxLength(2000));
-        break;
-    }
-    return v;
-  }
+      const initial =
+        type === 'checkbox' ? false :
+          type === 'date' ? null :
+            '';
 
-  /** достаёт поле из localStorage('user') */
-  private getValueByKey(key: string) {
-    const raw = localStorage.getItem('user');
-    if (!raw) return '';
-    try {
-      const obj = JSON.parse(raw);
-      return obj?.[key] ?? '';
-    } catch {
-      return '';
-    }
+      controls[name] = new FormControl<any>(initial, validators);
+    });
+
+    // Переустанавливаем целиком группу answers, чтобы Angular не ругался и не держал старые контролы
+    this.form.setControl('answers', new FormGroup(controls));
   }
 }

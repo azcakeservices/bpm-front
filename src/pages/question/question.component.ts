@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import {LoaderService} from "../../services/loader.service";
 import {IInputsTypes} from "../../interfaces/InputsTypes/IInputsTypes";
 import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
-import {QuestionType} from "../../interfaces/question/QuestionType";
+import {QuestionDto} from "../../interfaces/question/QuestionType";
 
 @Component({
   selector: 'app-question',
@@ -26,8 +26,8 @@ import {QuestionType} from "../../interfaces/question/QuestionType";
 })
 export class QuestionComponent implements OnInit {
   inputs: IInputsTypes[] = [];
-  questions: QuestionType[] = [];
-  filteredQuestions: QuestionType[] = [];
+  questions: QuestionDto[] = [];
+  filteredQuestions: QuestionDto[] = [];
   searchField: string = '';
   @ViewChild('createModal') createModal!: NewQuestionComponent;
 
@@ -55,6 +55,7 @@ export class QuestionComponent implements OnInit {
     this.service.getAll().subscribe({
       next: data => {
         this.filteredQuestions = this.questions = data;
+        console.log(data);
       }
     })
   }

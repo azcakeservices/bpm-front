@@ -1,36 +1,39 @@
-<div class="min-h-[calc(100vh-65px)] bg-gradient-to-br from-fuchsia-900 via-blue-900 to-teal-900 text-white">
-  <div class="mx-auto  px-4 py-6">
-    <!-- Title -->
+<div class="min-h-[calc(100vh-65px)] bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+  <div class="mx-auto px-4 py-6">
     <div class="text-center mb-6">
       <h1 class="font-extrabold text-3xl sm:text-4xl tracking-tight">Əməkdaşlar</h1>
       <p class="text-slate-300/80 text-sm mt-1">Əməkdaşların siyahısı və idarə edilməsi</p>
     </div>
-  </div>
 
-  <!-- Toolbar -->
-  <div class="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-3">
-    <div class="flex items-center gap-3">
-      <label for="search" class="text-sm text-slate-300">Axtarış etmək üçün:</label>
-      <input
-        id="search"
-        type="text"
-        placeholder="yazın..."
-        [(ngModel)]="searchField"
-        (input)="search()"
-        class="h-10 w-64 rounded-lg bg-white/90 px-3 text-sm text-slate-900 placeholder:text-slate-500 outline-none ring-1 ring-slate-300 focus:ring-2 focus:ring-blue-400"
-      />
+    <div class="mb-5 flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-3">
+      <div class="flex items-center gap-3">
+        <label for="search" class="text-sm text-slate-300">Axtarış etmək üçün:</label>
+        <input
+          id="search"
+          type="text"
+          placeholder="yazın..."
+          [(ngModel)]="searchField"
+          (input)="search()"
+          class="h-10 w-64 rounded-lg bg-white/90 px-3 text-sm text-slate-900 placeholder:text-slate-500 outline-none ring-1 ring-slate-300 focus:ring-2 focus:ring-violet-400"
+        />
+      </div>
+
+      <button
+        class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-black shadow-sm hover:bg-emerald-400 active:scale-[0.98] transition"
+        (click)="openCreateModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Yeni
+      </button>
     </div>
 
-    <button
-      class="inline-flex items-center gap-2 rounded-xl bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 active:scale-[0.98] transition"
-      (click)="openCreateModal()"
+    <app-dynamic-table
+      [data]="tableData"
+      [stickyDefaults]="{ keys: [] }"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 5v14M5 12h14"/>
-      </svg>
-      Yeni
-    </button>
-  </div>
+    </app-dynamic-table>
 
-  <app-new-employee #createModal [questions]="questions"></app-new-employee>
+    <app-new-employee #createModal [questions]="questions"></app-new-employee>
+  </div>
 </div>
