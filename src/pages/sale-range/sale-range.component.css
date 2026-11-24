@@ -1,3 +1,4 @@
+
 :host {
   display: block;
   margin-top: 60px;
@@ -8,9 +9,11 @@
   color: #ffffff;
   font-family: 'Segoe UI', sans-serif;
   min-height: calc(100vh - 60px);
+  box-sizing: border-box;
 }
 
 /* --------- FORM --------- */
+
 .form-container {
   display: flex;
   justify-content: space-between;
@@ -19,14 +22,14 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(4px);
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
 .form-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-grow: 1;
   flex-wrap: wrap;
 }
@@ -39,64 +42,99 @@
 
 .form-input {
   flex-grow: 1;
-  padding: 10px;
+  min-width: 150px;
+  padding: 10px 12px;
   font-size: 14px;
-  border: none;
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+  color-scheme: dark;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease,
+  border-color 0.2s ease;
 }
 
 .form-input:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #00c9a7;
 }
 
 /* --------- BUTTONS --------- */
+
 .submit-btn,
 .download-btn {
   background-color: #00c9a7;
-  color: black;
+  color: #071e1a;
   border: none;
-  padding: 10px 20px;
+  padding: 11px 22px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background-color 0.3s ease,
+  transform 0.2s ease,
+  box-shadow 0.2s ease;
 }
 
 .submit-btn:hover,
 .download-btn:hover {
   background-color: #00a58e;
+  box-shadow: 0 4px 12px rgba(0, 201, 167, 0.2);
+}
+
+.submit-btn:active,
+.download-btn:active {
+  transform: scale(0.98);
+}
+
+.download-btn {
+  margin-bottom: 10px;
 }
 
 /* --------- MESSAGES --------- */
+
 .error-message {
   color: #ffb3b3;
   background: rgba(255, 0, 0, 0.15);
   border: 1px solid #ff4d4f;
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
-  margin-bottom: 20px;
+  margin: 15px 0 20px;
   text-align: center;
 }
 
+/* --------- CATEGORY --------- */
+
+.category-section {
+  margin-top: 25px;
+  margin-bottom: 30px;
+  min-width: 0;
+}
+
+.category-title {
+  font-size: 1.3rem;
+  margin: 0 0 12px;
+  color: #00c9a7;
+  font-weight: 700;
+  padding-left: 12px;
+  border-left: 4px solid #00c9a7;
+  letter-spacing: 0.3px;
+}
+
 /* --------- TABLE WRAPPER --------- */
+
 .table-wrapper {
+  width: 100%;
+  min-width: 0;
   margin-bottom: 30px;
 }
 
-.table-wrapper h2 {
-  font-size: 1.2rem;
-  margin-bottom: 6px;
-  margin-top: 20px;
-  color: #00c9a7;
-  font-weight: bold;
-  padding-left: 4px;
-}
-
 /* --------- TABLE CONTAINER --------- */
+
 .table-container {
+  width: 100%;
   min-height: 180px;
   max-height: calc(100vh - 240px);
   overflow: auto;
@@ -104,25 +142,27 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(4px);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-  /*padding: 10px;*/
-  margin-top: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
 }
 
 /* --------- TABLE --------- */
+
 .sales-table {
-  width: auto;
+  width: 100%;
   min-width: 1000px;
-  border-collapse: collapse;
-  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
   color: #ffffff;
   font-size: 14px;
-  padding: 0;
 }
 
 .sales-table th,
 .sales-table td {
-  padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 16px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   white-space: nowrap;
   background-color: #121212;
 }
@@ -130,69 +170,211 @@
 .sales-table th {
   position: sticky;
   top: 0;
-  z-index: 2;
-  text-align: left;
+  z-index: 5;
+  text-align: center;
   font-weight: 600;
   background-color: #1a1a1a;
 }
 
-/* --------- STICKY COLUMN --------- */
-.sticky-column {
+.sales-table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.2s ease;
+}
+
+/* --------- STICKY DATE COLUMN --------- */
+
+.sales-table .sticky-column {
   position: sticky;
   left: 0;
   z-index: 6;
-  background-color: #1e1e2f;
-  background-clip: padding-box;
-  font-weight: 600;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-}
-
-.sales-table th.sticky-column,
-.sales-table td.sticky-column {
-  z-index: 8;
-  background-color: #2c2c3a !important;
+  min-width: 130px;
+  background-color: #2c2c3a;
   background-clip: padding-box;
   font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.5);
 }
 
-/* --------- HOVER + STRIPES --------- */
-.scrollable-body tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.03);
+.sales-table thead .sticky-column {
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background-color: #353545;
 }
 
-.scrollable-body tr:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  transition: background-color 0.3s ease;
+/* --------- STICKY TOTAL COLUMN --------- */
+
+.sales-table .total-column {
+  position: sticky;
+  right: 0;
+  z-index: 6;
+  min-width: 130px;
+  text-align: right;
+  font-weight: 700;
+  background-color: #12332f;
+  color: #00c9a7;
+  background-clip: padding-box;
+  border-left: 2px solid rgba(0, 201, 167, 0.4);
+  box-shadow: -3px 0 8px rgba(0, 0, 0, 0.4);
+}
+
+.sales-table thead .total-column {
+  top: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #164b43;
+  color: #ffffff;
+  text-align: center;
+}
+
+/* --------- ALTERNATING ROWS --------- */
+
+.scrollable-body tr:nth-child(even)
+td:not(.sticky-column):not(.total-column) {
+  background-color: #191919;
+}
+
+.scrollable-body tr:nth-child(even) .sticky-column {
+  background-color: #303040;
+}
+
+.scrollable-body tr:nth-child(even) .total-column {
+  background-color: #153c36;
+}
+
+/* --------- ROW HOVER --------- */
+
+.scrollable-body tr:hover
+td:not(.sticky-column):not(.total-column) {
+  background-color: #263a40;
+}
+
+.scrollable-body tr:hover .sticky-column {
+  background-color: #3b3b4d;
+}
+
+.scrollable-body tr:hover .total-column {
+  background-color: #1b4941;
 }
 
 /* --------- TABLE FOOTER --------- */
+
 .table-footer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 12px 20px;
-  background: rgba(0, 123, 255, 0.2);
-  color: #ffffff;
-  border-radius: 0 0 10px 10px;
-  font-weight: bold;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 24px;
+  margin-top: 20px;
+  background: rgba(0, 201, 167, 0.08);
+  border: 1px solid rgba(0, 201, 167, 0.25);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .total-label {
-  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #d4d4d4;
+}
+
+.total-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #00c9a7;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------- SCROLLBAR --------- */
+
+.table-container {
+  scrollbar-width: thin;
+  scrollbar-color: #3d6565 #17252c;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background-color: #17252c;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #3d6565;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #00c9a7;
+}
+
+.table-container::-webkit-scrollbar-corner {
+  background-color: #17252c;
 }
 
 /* --------- ANIMATION --------- */
+
 @keyframes gradientAnimation {
   0% {
     background-position: 0 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}
+
+/* --------- RESPONSIVE --------- */
+
+@media (max-width: 768px) {
+  :host {
+    padding: 12px;
+  }
+
+  .form-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-input,
+  .submit-btn {
+    width: 100%;
+  }
+
+  .download-btn {
+    width: 100%;
+  }
+
+  .sales-table th,
+  .sales-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .sales-table .sticky-column,
+  .sales-table .total-column {
+    min-width: 100px;
+  }
+
+  .table-footer {
+    padding: 15px;
+  }
+
+  .total-value {
+    font-size: 20px;
   }
 }

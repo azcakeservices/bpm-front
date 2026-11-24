@@ -25,7 +25,22 @@ export class SaleRangeComponent implements OnInit {
   endDate = '';
   sales: ISaleOfRentalDailyTotal | null = null;
   errorMessage: string = '';
+  totalByDate: Record<string, Record<string, number>> = {};
   protected preparedSale: IPreparedRangeSale[] = [];
+  private readonly categories = [
+    {
+      key: 'Kulinariya',
+      contractName: 'Azcake Kulinariya'
+    },
+    {
+      key: 'Şirniyyat',
+      contractName: 'ARENDA AZCAKE SHIRNIYYAT'
+    },
+    {
+      key: 'Təndir',
+      contractName: 'ARENDA AZCAKE TENDIR'
+    }
+  ];
 
   constructor(
     private saleService: SaleService,
@@ -40,6 +55,7 @@ export class SaleRangeComponent implements OnInit {
       .subscribe(response => {
         this.sales = response;
         this.prepareSales(response);
+        this.totalByDate = this.getTotalByDate();
         this.toastrService.success('Satışlar yükləndi');
         this.loaderService.hide();
       });
@@ -68,9 +84,9 @@ export class SaleRangeComponent implements OnInit {
     this.sales = null;
     this.saleService.getRangeSales(this.startDate, this.endDate).subscribe(
       response => {
-        console.log(response)
         this.sales = response;
         this.prepareSales(response);
+        this.totalByDate = this.getTotalByDate();
         this.toastrService.success('Satışlar yükləndi');
         this.loaderService.hide();
       },
@@ -85,13 +101,7 @@ export class SaleRangeComponent implements OnInit {
   private prepareSales(response: ISaleOfRentalDailyTotal) {
     this.preparedSale = [];
 
-    const categories = [
-      { key: 'Kulinariya', contractName: 'Azcake Kulinariya' },
-      { key: 'Şirniyyat', contractName: 'ARENDA AZCAKE SHIRNIYYAT' },
-      { key: 'Təndir', contractName: 'ARENDA AZCAKE TENDIR' }
-    ];
-
-    for (const { key, contractName } of categories) {
+    for (const { key, contractName } of this.categories) {
       const filtered = response.data
         .flatMap(s => s.sales)
         .filter(s => s.contractName === contractName);
@@ -141,6 +151,33 @@ export class SaleRangeComponent implements OnInit {
   getTotalByBranch(sales: { branchName: string; total: number }[], branch: string): number {
     const found = sales.find(s => s.branchName === branch);
     return found ? found.total : 0;
+  }
+
+  getTotalByDate(): Record<string, Record<string, number>> {
+    const result: Record<string, Record<string, number>> = {};
+
+    const sales = this.sales?.data.flatMap(item => item.sales) ?? [];
+
+    for (const sale of sales) {
+
+      const category = this.categories.find(
+        item => item.contractName === sale.contractName
+      )?.key;
+
+      if (!category) {
+        continue;
+      }
+
+      const date = this.formatDateToYyyyMmDd(sale.saleDate);
+
+      result[category] ??= {};
+
+      result[category][date] ??= 0;
+
+      result[category][date] += sale.total ?? 0;
+    }
+
+    return result;
   }
 
   formatDateToYyyyMmDd(dateString: string): string {
