@@ -1,47 +1,482 @@
+
+<!-- =====================================
+     HEADER
+===================================== -->
+
 <header class="app-header">
+
+  <!-- LEFT SECTION -->
+
   <div class="header-left">
-    <span class="app-title">AzCake BPM</span>
-    <div class="clock">
-      🕒 {{ currentDate }}
-    </div>
+
+    <!-- MENU BUTTON -->
+
+    <button
+      type="button"
+      class="hamburger"
+      (click)="toggleMenu()"
+      [class.menu-active]="menuOpen"
+      [attr.aria-expanded]="menuOpen"
+      aria-controls="main-navigation"
+      [attr.aria-label]="menuOpen ? 'Menyunu bağla' : 'Menyunu aç'">
+
+      <svg
+        *ngIf="!menuOpen"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round">
+
+        <path d="M4 6h16"/>
+        <path d="M4 12h16"/>
+        <path d="M4 18h16"/>
+
+      </svg>
+
+      <svg
+        *ngIf="menuOpen"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round">
+
+        <path d="m6 6 12 12"/>
+        <path d="M18 6 6 18"/>
+
+      </svg>
+
+    </button>
+
+    <div class="header-divider"></div>
+
+    <!-- BRAND -->
+
+    <a
+      class="brand"
+      routerLink="/home"
+      (click)="closeMenu()">
+
+      <div class="brand-emblem">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M3 3v18h18"/>
+          <path d="M7 16l5-6 4 3 5-8"/>
+          <path d="M16 5h5v5"/>
+
+        </svg>
+
+      </div>
+
+      <div class="brand-content">
+
+        <span class="brand-name">AZCAKE</span>
+
+        <span class="brand-subtitle">
+          BUSINESS MANAGEMENT
+        </span>
+
+      </div>
+
+    </a>
+
   </div>
+
+  <!-- RIGHT SECTION -->
 
   <div class="header-right">
-    <p class="welcome-message">Salam, {{ userName }}!</p>
-    <button class="hamburger" (click)="toggleMenu()">☰</button>
-    <button class="logout-button" (click)="signOut()">Çıx</button>
+
+    <!-- CLOCK -->
+
+    <div class="clock">
+
+      <svg
+        class="clock-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round">
+
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 7v5l3 2"/>
+
+      </svg>
+
+      <div class="clock-content">
+
+        <span class="clock-time">
+          {{ currentTime }}
+        </span>
+
+        <span class="clock-date">
+          {{ currentDate }}
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="header-divider user-divider"></div>
+
+    <!-- USER PROFILE -->
+
+    <div class="user-profile">
+
+      <div class="user-avatar">
+
+        {{ userInitials }}
+
+      </div>
+
+      <div class="user-info">
+
+        <span
+          class="user-name"
+          [title]="userName">
+
+          {{ userName || 'İstifadəçi' }}
+
+        </span>
+
+        <span
+          class="user-department"
+          [title]="department">
+
+          {{ department || 'İstifadəçi' }}
+
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- LOGOUT -->
+
+    <button
+      type="button"
+      class="logout-button"
+      (click)="signOut()"
+      title="Sistemdən çıx"
+      aria-label="Sistemdən çıx">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+
+        <path d="M10 17l5-5-5-5"/>
+        <path d="M15 12H3"/>
+        <path d="M12 3h7a2 2 0 0 1 2 2v14
+                 a2 2 0 0 1-2 2h-7"/>
+
+      </svg>
+
+      <span>Çıxış</span>
+
+    </button>
+
   </div>
+
 </header>
 
-<nav class="side-nav" [class.open]="menuOpen">
-  <ul>
-    <li *ngFor="let item of visibleMenuItems" class="menu-item">
-      <a *ngIf="item?.link"
-         [routerLink]="item.link"
-         routerLinkActive="active"
-         class="button"
-         (click)="toggleMenu()">
-        {{ item.label }}
-      </a>
+<!-- =====================================
+     SIDEBAR OVERLAY
+===================================== -->
 
-      <div *ngIf="!item?.link" class="menu-category">
-        <div (click)="toggleCategory(item.label)" class="category-title">
-          {{ item.label }}
-          <span class="arrow">{{ isCategoryOpened(item.label) ? '▼' : '▶' }}</span>
+<div
+  class="menu-overlay"
+  [class.visible]="menuOpen"
+  (click)="closeMenu()"
+  aria-hidden="true">
+</div>
+
+<!-- =====================================
+     SIDEBAR
+===================================== -->
+
+<nav
+  id="main-navigation"
+  class="side-nav"
+  [class.open]="menuOpen"
+  [attr.inert]="menuOpen ? null : ''"
+  [attr.aria-hidden]="!menuOpen"
+  aria-label="Əsas naviqasiya">
+
+  <!-- SIDEBAR HEADER -->
+
+  <div class="sidebar-heading">
+
+    <span class="sidebar-eyebrow">
+      AZCAKE BPM
+    </span>
+
+    <h2>İdarəetmə paneli</h2>
+
+    <p>Biznes idarəetmə sistemi</p>
+
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <!-- NAVIGATION -->
+
+  <div class="navigation-content">
+
+    <span class="navigation-label">
+      NAVİQASİYA
+    </span>
+
+    <ul class="menu-list">
+
+      <li
+        *ngFor="let item of visibleMenuItems"
+        class="menu-item">
+
+        <!-- DIRECT MENU LINK -->
+
+        <a
+          *ngIf="item.link"
+          [routerLink]="item.link"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ariaCurrentWhenActive="page"
+          class="button"
+          (click)="closeMenu()">
+
+          <ng-container
+            *ngTemplateOutlet="
+              menuIcon;
+              context: { $implicit: item.icon }
+            ">
+          </ng-container>
+
+          <span class="menu-label">
+            {{ item.label }}
+          </span>
+
+          <span class="active-indicator"></span>
+
+        </a>
+
+        <!-- MENU CATEGORY -->
+
+        <div
+          *ngIf="!item.link"
+          class="menu-category"
+          routerLinkActive="category-active">
+
+          <button
+            type="button"
+            class="category-title"
+            [class.category-open]="isCategoryOpened(item.label)"
+            [attr.aria-expanded]="isCategoryOpened(item.label)"
+            (click)="toggleCategory(item.label)">
+
+            <ng-container
+              *ngTemplateOutlet="
+                menuIcon;
+                context: { $implicit: item.icon }
+              ">
+            </ng-container>
+
+            <span class="menu-label">
+              {{ item.label }}
+            </span>
+
+            <svg
+              class="category-arrow"
+              [class.expanded]="isCategoryOpened(item.label)"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path d="m9 18 6-6-6-6"/>
+
+            </svg>
+
+          </button>
+
+          <!-- SUBMENU -->
+
+          <div
+            class="submenu-wrapper"
+            [class.expanded]="isCategoryOpened(item.label)"
+            [attr.inert]="isCategoryOpened(item.label) ? null : ''">
+
+            <ul class="submenu">
+
+              <li *ngFor="let child of item.children">
+
+                <a
+                  [routerLink]="child.link"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  ariaCurrentWhenActive="page"
+                  class="button submenu-button"
+                  (click)="closeMenu()">
+
+                  <span class="submenu-dot"></span>
+
+                  <span class="menu-label">
+                    {{ child.label }}
+                  </span>
+
+                  <span class="active-indicator"></span>
+
+                </a>
+
+              </li>
+
+            </ul>
+
+          </div>
+
         </div>
-        <ul *ngIf="isCategoryOpened(item.label)" class="submenu">
-          <li *ngFor="let child of item.children">
-            <a [routerLink]="child.link"
-               routerLinkActive="active"
-               class="button"
-               (click)="toggleMenu()">
-              {{ child.label }}
-            </a>
-          </li>
-        </ul>
+
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- SIDEBAR FOOTER -->
+
+  <div class="sidebar-footer">
+
+    <div class="sidebar-divider"></div>
+
+    <div class="system-brand">
+
+      <div class="system-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M12 22 4 18V5l8-3 8 3v13z"/>
+          <path d="m9 12 2 2 4-5"/>
+
+        </svg>
+
       </div>
-    </li>
-  </ul>
+
+      <div class="system-info">
+
+        <span>AZCAKE BPM</span>
+
+        <small>Korporativ sistem</small>
+
+      </div>
+
+    </div>
+
+    <div class="copyright">
+
+      © {{ currentYear }} AZCAKE
+
+    </div>
+
+  </div>
+
 </nav>
 
+<!-- =====================================
+     REUSABLE MENU ICONS
+===================================== -->
 
+<ng-template #menuIcon let-icon>
+
+  <svg
+    class="menu-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true">
+
+    <ng-container [ngSwitch]="icon">
+
+      <!-- HOME -->
+
+      <ng-container *ngSwitchCase="'home'">
+
+        <path d="m3 10 9-7 9 7"/>
+        <path d="M5 9v12h14V9"/>
+        <path d="M9 21v-8h6v8"/>
+
+      </ng-container>
+
+      <!-- STORE -->
+
+      <ng-container *ngSwitchCase="'store'">
+
+        <path d="M3 9l2-6h14l2 6"/>
+        <path d="M3 9h18v3H3z"/>
+        <path d="M5 12v9h14v-9"/>
+        <path d="M10 21v-6h4v6"/>
+
+      </ng-container>
+
+      <!-- SALES -->
+
+      <ng-container *ngSwitchCase="'chart'">
+
+        <path d="M3 3v18h18"/>
+        <path d="M7 16v-4"/>
+        <path d="M12 16V7"/>
+        <path d="M17 16V4"/>
+
+      </ng-container>
+
+      <!-- REFUNDS -->
+
+      <ng-container *ngSwitchCase="'refund'">
+
+        <path d="m9 5-6 6 6 6"/>
+        <path d="M3 11h12a6 6 0 0 1 6 6v2"/>
+
+      </ng-container>
+
+      <!-- ADMIN -->
+
+      <ng-container *ngSwitchCase="'shield'">
+
+        <path d="M12 22 4 18V5l8-3 8 3v13z"/>
+        <path d="m9 12 2 2 4-5"/>
+
+      </ng-container>
+
+      <!-- DEFAULT ICON -->
+
+      <ng-container *ngSwitchDefault>
+
+        <rect x="4" y="4" width="16" height="16" rx="3"/>
+
+      </ng-container>
+
+    </ng-container>
+
+  </svg>
+
+</ng-template>

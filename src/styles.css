@@ -13,3 +13,300 @@ ul {
 body {
   font-family: 'Segoe UI', sans-serif;
 }
+
+
+/* ========================================
+   AZCAKE PREMIUM TOASTR THEME
+======================================== */
+
+#toast-container {
+  --toast-gold: #c9a66b;
+  --toast-background: #1b1916;
+  --toast-text: #f1ede5;
+  --toast-secondary: #b5ad9f;
+  --toast-muted: #847b6b;
+
+  --toast-success: #69c99a;
+  --toast-error: #e58d8d;
+  --toast-warning: #e2c78e;
+  --toast-info: #8cafd5;
+
+  z-index: 11000;
+
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* ========================================
+   POSITION
+======================================== */
+
+#toast-container.toast-top-right {
+  top: 78px;
+  right: 24px;
+}
+
+/* ========================================
+   TOAST CONTAINER
+======================================== */
+
+#toast-container > .ngx-toastr {
+  --toast-accent: var(--toast-gold);
+
+  position: relative;
+
+  width: 370px;
+  min-height: 84px;
+
+  margin: 0 0 12px;
+
+  padding: 18px 36px 20px 65px;
+
+  background-color: var(--toast-background);
+
+  background-repeat: no-repeat;
+  background-position: 18px 22px;
+  background-size: 28px 28px;
+
+  color: var(--toast-text);
+
+  border: 1px solid rgba(201, 166, 107, 0.18);
+  border-left: 3px solid var(--toast-accent);
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+
+  box-sizing: border-box;
+
+  opacity: 1;
+
+  overflow: hidden;
+
+  cursor: default;
+}
+
+/* ========================================
+   HOVER
+======================================== */
+
+#toast-container > .ngx-toastr:hover {
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(201, 166, 107, 0.04);
+
+  opacity: 1;
+
+  cursor: default;
+}
+
+/* ========================================
+   TITLE
+======================================== */
+
+#toast-container .toast-title {
+  margin-bottom: 6px;
+
+  color: var(--toast-accent);
+
+  font-size: 14px;
+  font-weight: 600;
+
+  letter-spacing: 0.3px;
+}
+
+/* ========================================
+   MESSAGE
+======================================== */
+
+#toast-container .toast-message {
+  color: var(--toast-secondary);
+
+  font-size: 13px;
+  font-weight: 400;
+
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+}
+
+/* ========================================
+   SUCCESS
+======================================== */
+
+#toast-container > .toast-success {
+  --toast-accent: var(--toast-success);
+
+  background-color: #191d19;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2369c99a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m8 12 3 3 5-6'/%3E%3C/svg%3E") !important;
+}
+
+/* ========================================
+   ERROR
+======================================== */
+
+#toast-container > .toast-error {
+  --toast-accent: var(--toast-error);
+
+  background-color: #211919;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e58d8d' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m9 9 6 6m0-6-6 6'/%3E%3C/svg%3E") !important;
+}
+
+/* ========================================
+   WARNING
+======================================== */
+
+#toast-container > .toast-warning {
+  --toast-accent: var(--toast-warning);
+
+  background-color: #211e17;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e2c78e' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 4.5 2.7 18a1.8 1.8 0 0 0 1.6 2.7h15.4a1.8 1.8 0 0 0 1.6-2.7L13.7 4.5a2 2 0 0 0-3.4 0Z'/%3E%3Cpath d='M12 9v4m0 3h.01'/%3E%3C/svg%3E") !important;
+}
+
+/* ========================================
+   INFO
+======================================== */
+
+#toast-container > .toast-info {
+  --toast-accent: var(--toast-info);
+
+  background-color: #191c20;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd5' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5m0-8h.01'/%3E%3C/svg%3E") !important;
+}
+
+/* ========================================
+   CLOSE BUTTON
+======================================== */
+
+#toast-container .toast-close-button {
+  position: absolute;
+
+  top: 10px;
+  right: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  padding: 0;
+
+  background: transparent;
+
+  color: var(--toast-muted);
+
+  border: none;
+  border-radius: 5px;
+
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1;
+
+  text-shadow: none;
+
+  opacity: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+#toast-container .toast-close-button:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+
+  color: var(--toast-text);
+
+  opacity: 1;
+}
+
+#toast-container .toast-close-button:focus-visible {
+  outline: 1px solid var(--toast-accent);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   PROGRESS BAR
+======================================== */
+
+#toast-container .toast-progress {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  height: 3px;
+
+  background-color: var(--toast-accent);
+
+  opacity: 0.85;
+
+  border-radius: 0 2px 2px 0;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+
+  #toast-container.toast-top-right {
+    top: 72px;
+    right: 16px;
+    left: 16px;
+  }
+
+  #toast-container > .ngx-toastr {
+    width: 100%;
+    max-width: 370px;
+
+    margin-left: auto;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  #toast-container.toast-top-right {
+    right: 12px;
+    left: 12px;
+  }
+
+  #toast-container > .ngx-toastr {
+    max-width: none;
+
+    padding: 16px 32px 18px 56px;
+
+    background-position: 14px 19px;
+    background-size: 25px 25px;
+  }
+
+  #toast-container .toast-title {
+    font-size: 13px;
+  }
+
+  #toast-container .toast-message {
+    font-size: 12px;
+  }
+
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  #toast-container .toast-close-button {
+    transition: none;
+  }
+
+}

@@ -1,64 +1,726 @@
+
+/* ========================================
+   THEME VARIABLES
+======================================== */
+
 :host {
+  --gold-primary: #c9a66b;
+  --gold-light: #e2c78e;
+  --gold-dark: #a5834b;
+
+  --background-dark: #101010;
+  --background-card: #1b1916;
+
+  --text-primary: #f1ede5;
+  --text-secondary: #a99f8e;
+  --text-muted: #847b6b;
+
+  --border-gold: rgba(201, 166, 107, 0.22);
+
+  --header-height: 60px;
+
+  display: block;
+
+  min-height: calc(100vh - var(--header-height));
+
+  margin-top: var(--header-height);
+
+  background-color: var(--background-dark);
+
+  color: var(--text-primary);
+
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ========================================
+   PAGE CONTAINER
+======================================== */
+
+.notfound-container {
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 60px); /* учёт высоты header */
-  margin-top: 60px;
-  padding: 20px;
-  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
-  background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
-  color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
+
+  min-height: calc(100vh - var(--header-height));
+
+  padding: 40px 24px;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  background: radial-gradient(
+    ellipse at center,
+    #211c14 0%,
+    #141310 45%,
+    #101010 75%
+  );
 }
 
-.notfound-container {
-  text-align: center;
-  padding: 30px;
-  border: 2px dashed #90a4ae;
-  border-radius: 12px;
-  max-width: 500px;
+/* ========================================
+   BACKGROUND GLOW
+======================================== */
+
+.background-glow {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 650px;
+  height: 650px;
+
+  transform: translate(-50%, -50%);
+
+  background: radial-gradient(
+    circle,
+    rgba(201, 166, 107, 0.07),
+    transparent 65%
+  );
+
+  pointer-events: none;
+
+  z-index: -1;
+
+  animation: backgroundPulse
+  6s ease-in-out infinite;
+}
+
+/* ========================================
+   BACKGROUND GRID
+======================================== */
+
+.background-grid {
+  position: absolute;
+
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(201, 166, 107, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(201, 166, 107, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 45px 45px;
+
+  mask-image: radial-gradient(
+    ellipse at center,
+    black 10%,
+    transparent 75%
+  );
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+/* ========================================
+   ERROR CARD
+======================================== */
+
+.error-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  max-width: 560px;
+
+  padding: 48px 40px 32px;
+
+  text-align: center;
+
+  background: linear-gradient(
+    145deg,
+    #24211b,
+    #191815 50%,
+    #171614
+  );
+
+  border: 1px solid var(--border-gold);
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(226, 199, 142, 0.04);
+
+  animation: cardAppear
+  0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.notfound-container h1 {
-  color: #ffffff;
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+/* GOLDEN TOP ACCENT */
+
+.error-card::before {
+  content: '';
+
+  position: absolute;
+
+  top: -1px;
+  left: 20%;
+  right: 20%;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-light),
+    transparent
+  );
 }
 
-.notfound-container p {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  color: #cccccc;
+/* ========================================
+   BRAND LABEL
+======================================== */
+
+.brand-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  color: var(--text-secondary);
+
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
 }
 
-.notfound-container .btn {
-  padding: 10px 20px;
-  background-color: #00c9a7;
-  color: #000;
+.brand-line {
+  width: 24px;
+  height: 1px;
+
+  background-color: var(--gold-dark);
+
+  opacity: 0.6;
+}
+
+/* ========================================
+   ERROR CODE — 404
+======================================== */
+
+.error-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  margin: 26px 0 14px;
+
+  font-size: 150px;
+  font-weight: 300;
+  line-height: 1;
+
+  user-select: none;
+}
+
+.error-code > span {
+  display: block;
+
+  background: linear-gradient(
+    160deg,
+    #f0dba8 10%,
+    #c9a66b 45%,
+    #8f6d36 100%
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  color: transparent;
+
+  filter: drop-shadow(
+    0 4px 18px rgba(201, 166, 107, 0.12)
+  );
+}
+
+/* ========================================
+   DECORATIVE ZERO
+======================================== */
+
+.error-zero {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 106px;
+  height: 126px;
+
+  flex-shrink: 0;
+}
+
+/* OUTER ELLIPSE */
+
+.zero-outer-ring {
+  position: absolute;
+
+  inset: 0;
+
+  border: 1px solid
+  rgba(201, 166, 107, 0.22);
+
+  border-radius: 50%;
+
+  animation: ringPulse
+  3s ease-in-out infinite;
+}
+
+/* INNER ELLIPSE */
+
+.zero-inner-ring {
+  position: absolute;
+
+  inset: 8px;
+
+  border: 3px solid var(--gold-primary);
+
+  border-top-color: var(--gold-light);
+  border-bottom-color: var(--gold-dark);
+  border-right-color: rgba(201, 166, 107, 0.2);
+
+  border-radius: 50%;
+
+  box-shadow: 0 0 25px
+  rgba(201, 166, 107, 0.07);
+}
+
+/* SEARCH ICON */
+
+.search-icon {
+  width: 44px;
+  height: 44px;
+
+  color: var(--gold-light);
+
+  animation: searchFloat
+  4s ease-in-out infinite;
+}
+
+/* ========================================
+   ERROR LABEL
+======================================== */
+
+.error-label {
+  color: var(--gold-primary);
+
+  font-size: 12px;
+  font-weight: 500;
+
+  letter-spacing: 5px;
+
+  padding-left: 5px;
+}
+
+/* ========================================
+   DIVIDER
+======================================== */
+
+.error-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 30px 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 166, 107, 0.35),
+    transparent
+  );
+}
+
+/* ========================================
+   ERROR MESSAGE
+======================================== */
+
+.error-card h1 {
+  margin: 0 0 15px;
+
+  color: var(--text-primary);
+
+  font-size: 23px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  letter-spacing: -0.4px;
+}
+
+.error-description {
+  max-width: 380px;
+
+  margin: 0 0 30px;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* ========================================
+   HOME BUTTON
+======================================== */
+
+.btn-home {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  min-height: 48px;
+
+  padding: 13px 22px;
+
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    #e2c78e,
+    #c9a66b 55%,
+    #b18d52
+  );
+
+  color: #1b160e;
+
+  border: 1px solid
+  rgba(226, 199, 142, 0.4);
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
   text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-  transition: background-color 0.3s;
-  display: inline-block;
+
+  box-shadow: 0 4px 15px
+  rgba(201, 166, 107, 0.1);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
 }
 
-.notfound-container .btn:hover {
-  background-color: #00a58e;
+.btn-home:hover {
+  transform: translateY(-3px);
+
+  filter: brightness(1.08);
+
+  box-shadow: 0 8px 25px
+  rgba(201, 166, 107, 0.25);
 }
 
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0 50%;
+.btn-home:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-home:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 4px;
+}
+
+/* ========================================
+   BUTTON SHINE EFFECT
+======================================== */
+
+.btn-home::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 50%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
+
+  pointer-events: none;
+}
+
+.btn-home:hover::before {
+  left: 150%;
+}
+
+/* ========================================
+   BUTTON ICONS
+======================================== */
+
+.home-icon {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+}
+
+.arrow-icon {
+  width: 17px;
+  height: 17px;
+
+  margin-left: 5px;
+
+  flex-shrink: 0;
+
+  transition: transform 0.25s ease;
+}
+
+.btn-home:hover .arrow-icon {
+  transform: translateX(4px);
+}
+
+/* ========================================
+   ERROR FOOTER
+======================================== */
+
+.error-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 35px;
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+  font-weight: 500;
+
+  letter-spacing: 1.5px;
+}
+
+.footer-dot {
+  width: 4px;
+  height: 4px;
+
+  background-color: var(--gold-dark);
+
+  border-radius: 50%;
+}
+
+/* ========================================
+   CARD APPEARANCE
+======================================== */
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
   }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ========================================
+   BACKGROUND PULSE
+======================================== */
+
+@keyframes backgroundPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
   50% {
-    background-position: 100% 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
   }
-  100% {
-    background-position: 0 50%;
+}
+
+/* ========================================
+   RING PULSE
+======================================== */
+
+@keyframes ringPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
   }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* ========================================
+   SEARCH ICON ANIMATION
+======================================== */
+
+@keyframes searchFloat {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-3px, -3px);
+  }
+
+  75% {
+    transform: translate(3px, 3px);
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 768px) {
+
+  .error-card {
+    max-width: 480px;
+
+    padding: 36px 28px 28px;
+  }
+
+  .error-code {
+    font-size: 125px;
+  }
+
+  .error-zero {
+    width: 90px;
+    height: 106px;
+  }
+
+  .error-card h1 {
+    font-size: 21px;
+  }
+
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 480px) {
+
+  .notfound-container {
+    padding: 24px 16px;
+  }
+
+  .error-card {
+    padding: 30px 20px 24px;
+
+    border-radius: 15px;
+  }
+
+  .brand-label {
+    gap: 8px;
+
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  .brand-line {
+    width: 14px;
+  }
+
+  .error-code {
+    font-size: 100px;
+
+    margin: 24px 0 12px;
+  }
+
+  .error-zero {
+    width: 72px;
+    height: 86px;
+  }
+
+  .zero-inner-ring {
+    inset: 6px;
+
+    border-width: 2px;
+  }
+
+  .search-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .error-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .error-divider {
+    margin: 24px 0;
+  }
+
+  .error-card h1 {
+    font-size: 19px;
+  }
+
+  .error-description {
+    font-size: 13px;
+  }
+
+  .btn-home {
+    width: 100%;
+
+    padding: 12px 15px;
+
+    font-size: 13px;
+  }
+
+  .error-footer {
+    gap: 8px;
+
+    font-size: 8px;
+    letter-spacing: 0.8px;
+  }
+
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .background-glow,
+  .error-card,
+  .zero-outer-ring,
+  .search-icon {
+    animation: none;
+  }
+
+  .btn-home,
+  .btn-home::before,
+  .arrow-icon {
+    transition: none;
+  }
+
 }

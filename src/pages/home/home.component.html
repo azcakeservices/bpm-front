@@ -1,3 +1,571 @@
-<div class="home">
+<div class="home-container">
+
+  <!-- ======================================
+       WELCOME SECTION
+  ======================================= -->
+
+  <section class="welcome-section">
+
+    <div class="welcome-grid"></div>
+
+    <div class="welcome-glow"></div>
+
+    <div class="welcome-content">
+
+      <div class="welcome-eyebrow">
+
+        <span class="eyebrow-line"></span>
+
+        AZCAKE BUSINESS MANAGEMENT PLATFORM
+
+      </div>
+
+      <h1>Xoş gəlmisiniz!</h1>
+
+      <h2
+        *ngIf="userName"
+        class="welcome-user">
+
+        {{ userName }}
+
+      </h2>
+
+      <p class="welcome-description">
+
+        Biznes proseslərinizi vahid platformadan
+        idarə edin. Hesabatlara, satış məlumatlarına
+        və idarəetmə modullarına asanlıqla keçid edin.
+
+      </p>
+
+      <div class="welcome-date">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.6"
+             stroke-linecap="round">
+
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M7 3v4M17 3v4M3 10h18"/>
+
+        </svg>
+
+        {{ currentDate }}
+
+      </div>
+
+    </div>
+
+
+    <!-- DECORATIVE VISUAL -->
+
+    <div class="welcome-visual" aria-hidden="true">
+
+      <div class="visual-ring ring-outer"></div>
+
+      <div class="visual-ring ring-middle"></div>
+
+      <div class="visual-ring ring-inner"></div>
+
+      <div class="visual-emblem">
+
+        <svg viewBox="0 0 100 100" fill="none">
+
+          <rect x="15" y="57"
+                width="13" height="26"
+                rx="3"
+                fill="currentColor"
+                opacity=".4"/>
+
+          <rect x="34" y="43"
+                width="13" height="40"
+                rx="3"
+                fill="currentColor"
+                opacity=".6"/>
+
+          <rect x="53" y="51"
+                width="13" height="32"
+                rx="3"
+                fill="currentColor"
+                opacity=".8"/>
+
+          <rect x="72" y="25"
+                width="13" height="58"
+                rx="3"
+                fill="currentColor"/>
+
+          <path d="M12 44L37 23L56 32L85 8"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+          <path d="M71 8H85V22"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+          <path d="M10 90H90"
+                stroke="currentColor"
+                stroke-width="1.5"
+                opacity=".5"/>
+
+        </svg>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================================
+       USER STATISTICS
+  ======================================= -->
+
+  <section class="overview-grid">
+
+    <!-- AVAILABLE MODULES -->
+
+    <div class="overview-card">
+
+      <div class="overview-icon">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.6">
+
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+
+        </svg>
+
+      </div>
+
+      <div class="overview-content">
+
+        <span class="overview-label">
+          Əlçatan modullar
+        </span>
+
+        <strong class="overview-value gold-value">
+
+          {{ moduleCount }}
+
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- DEPARTMENT -->
+
+    <div class="overview-card">
+
+      <div class="overview-icon">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.6"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+          <rect x="5" y="3" width="14" height="18" rx="1"/>
+          <path d="M9 7h1M14 7h1M9 11h1M14 11h1"/>
+          <path d="M9 15h1M14 15h1M10 21v-3h4v3"/>
+
+        </svg>
+
+      </div>
+
+      <div class="overview-content">
+
+        <span class="overview-label">
+          Departament
+        </span>
+
+        <strong class="overview-value">
+
+          {{ department || 'Qeyd olunmayıb' }}
+
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- ACCESS LEVEL -->
+
+    <div class="overview-card">
+
+      <div class="overview-icon">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.6"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+          <path d="M12 3l8 3v6c0 5-8 9-8 9
+                   s-8-4-8-9V6l8-3Z"/>
+
+          <path d="m8 12 3 3 5-6"/>
+
+        </svg>
+
+      </div>
+
+      <div class="overview-content">
+
+        <span class="overview-label">
+          Giriş səviyyəsi
+        </span>
+
+        <strong
+          class="overview-value"
+          [class.gold-value]="isAdmin">
+
+          {{ accessLevel }}
+
+        </strong>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================================
+       MODULES HEADER
+  ======================================= -->
+
+  <div class="section-header">
+
+    <div>
+
+      <div class="section-eyebrow">
+
+        İDARƏETMƏ PANELİ
+
+      </div>
+
+      <h2>İdarəetmə modulları</h2>
+
+      <p>
+
+        Sizin üçün əlçatan olan sistem bölmələri
+
+      </p>
+
+    </div>
+
+    <div class="module-count">
+
+      <span class="module-count-value">
+
+        {{ moduleCount }}
+
+      </span>
+
+      <span>modul</span>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       MODULES GRID
+  ======================================= -->
+
+  <section
+    *ngIf="visibleModules.length > 0; else noModules"
+    class="modules-grid">
+
+    <a
+      *ngFor="
+        let module of visibleModules;
+        let i = index;
+        trackBy: trackByModule
+      "
+      [routerLink]="module.route"
+      [style.animation-delay.ms]="i * 70"
+      class="module-card">
+
+      <div class="module-card-top">
+
+        <div
+          class="module-icon"
+          [ngSwitch]="module.icon">
+
+          <!-- BRANCHES -->
+
+          <svg *ngSwitchCase="'store'"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="M3 9l2-5h14l2 5"/>
+
+            <path d="M3 9v2a3 3 0 0 0 6 0
+                     3 3 0 0 0 6 0
+                     3 3 0 0 0 6 0V9"/>
+
+            <path d="M5 14v7h14v-7"/>
+            <path d="M10 21v-6h4v6"/>
+
+          </svg>
+
+
+          <!-- DAILY SALES -->
+
+          <svg *ngSwitchCase="'daily-sales'"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="M3 3v18h18"/>
+
+            <rect x="7" y="12"
+                  width="3" height="6" rx=".5"/>
+
+            <rect x="12" y="8"
+                  width="3" height="10" rx=".5"/>
+
+            <rect x="17" y="4"
+                  width="3" height="14" rx=".5"/>
+
+          </svg>
+
+
+          <!-- RANGE SALES -->
+
+          <svg *ngSwitchCase="'range-sales'"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="M3 3v18h18"/>
+            <path d="m6 15 5-6 4 4 6-9"/>
+            <path d="M16 4h5v5"/>
+
+          </svg>
+
+
+          <!-- DETAILED SALES -->
+
+          <svg *ngSwitchCase="'detailed-sales'"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <rect x="3" y="3"
+                  width="18" height="18" rx="2"/>
+
+            <path d="M3 9h18M3 15h18M9 9v12M15 9v12"/>
+
+          </svg>
+
+
+          <!-- REFUNDS -->
+
+          <svg *ngSwitchCase="'refund'"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="m9 5-6 6 6 6"/>
+
+            <path d="M3 11h11a5 5 0 0 1 0 10h-3"/>
+
+          </svg>
+
+
+          <!-- ADMIN -->
+
+          <svg *ngSwitchCase="'admin'"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="M12 3l8 3v6c0 5-8 9-8 9
+                     s-8-4-8-9V6l8-3Z"/>
+
+            <path d="m8 12 3 3 5-6"/>
+
+          </svg>
+
+        </div>
+
+        <span class="module-number">
+
+          {{ module.id }}
+
+        </span>
+
+      </div>
+
+
+      <!-- MODULE DESCRIPTION -->
+
+      <div class="module-content">
+
+        <h3>{{ module.title }}</h3>
+
+        <p>{{ module.description }}</p>
+
+      </div>
+
+
+      <!-- MODULE FOOTER -->
+
+      <div class="module-footer">
+
+        <span>Modula keç</span>
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.6"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+          <path d="M4 12h15M13 6l6 6-6 6"/>
+
+        </svg>
+
+      </div>
+
+    </a>
+
+  </section>
+
+
+  <!-- ======================================
+       NO AVAILABLE MODULES
+  ======================================= -->
+
+  <ng-template #noModules>
+
+    <section class="empty-state">
+
+      <div class="empty-icon">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.5"
+             stroke-linecap="round">
+
+          <rect x="5" y="10"
+                width="14" height="11" rx="2"/>
+
+          <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          <path d="M12 14v3"/>
+
+        </svg>
+
+      </div>
+
+      <h3>Əlçatan modul yoxdur</h3>
+
+      <p>
+
+        Giriş hüquqlarının əldə edilməsi üçün
+        sistem administratoruna müraciət edin.
+
+      </p>
+
+    </section>
+
+  </ng-template>
+
+
+  <!-- ======================================
+       PLATFORM INFORMATION
+  ======================================= -->
+
+  <section class="platform-info">
+
+    <div class="platform-icon">
+
+      <svg viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="1.6"
+           stroke-linecap="round"
+           stroke-linejoin="round">
+
+        <path d="M12 3l8 3v6c0 5-8 9-8 9
+                 s-8-4-8-9V6l8-3Z"/>
+
+        <path d="m8 12 3 3 5-6"/>
+
+      </svg>
+
+    </div>
+
+    <div class="platform-content">
+
+      <h3>AZCAKE Business Management System</h3>
+
+      <p>
+
+        Vahid biznes idarəetmə platforması
+
+      </p>
+
+    </div>
+
+    <div class="platform-brand">
+
+      AZCAKE BPM
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================================
+       FOOTER
+  ======================================= -->
+
+  <footer class="home-footer">
+
+    <span>© {{ currentYear }} AZCAKE</span>
+
+    <span class="footer-dot"></span>
+
+    <span>Business Management Platform</span>
+
+  </footer>
 
 </div>

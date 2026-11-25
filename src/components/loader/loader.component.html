@@ -1,3 +1,86 @@
-<div class="loader" *ngIf="isLoading$ | async">
-  <div class="spinner"></div>
+
+<div
+  *ngIf="isLoading$ | async"
+  class="loader-overlay">
+
+  <div
+    class="loader"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true">
+
+    <!-- ANIMATED EMBLEM -->
+
+    <div class="loader-animation" aria-hidden="true">
+
+      <div class="outer-ring"></div>
+
+      <div class="inner-ring"></div>
+
+      <div class="loader-emblem">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M3 3v18h18"/>
+
+          <path d="M7 16l5-6 4 3 5-8"/>
+
+          <path d="M16 5h5v5"/>
+
+        </svg>
+
+      </div>
+
+    </div>
+
+    <!-- BRAND -->
+
+    <div class="loader-brand">
+      AZCAKE
+    </div>
+
+    <div class="loader-subtitle">
+      BUSINESS MANAGEMENT
+    </div>
+
+    <!-- DIVIDER -->
+
+    <div class="loader-divider"></div>
+
+    <!-- LOADING MESSAGE -->
+
+    <div class="loading-text">
+
+      Məlumatlar yüklənir
+
+      <span class="loading-dots" aria-hidden="true">
+
+        <span>.</span>
+        <span>.</span>
+        <span>.</span>
+
+      </span>
+
+    </div>
+
+    <div class="loading-description">
+      Zəhmət olmasa, gözləyin
+    </div>
+
+    <!-- PROGRESS ANIMATION -->
+
+    <div class="progress-track" aria-hidden="true">
+
+      <div class="progress-indicator"></div>
+
+    </div>
+
+  </div>
+
 </div>

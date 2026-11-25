@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import {RouterLink} from "@angular/router";
-import {RolesService} from "../../services/admin-panel/roles.service";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-unauthorized',

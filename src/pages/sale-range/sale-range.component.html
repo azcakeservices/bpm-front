@@ -1,114 +1,817 @@
 
-<form (ngSubmit)="onSubmit()" class="form-container">
-  <div class="form-group">
+<div class="page-container">
 
-    <label for="startDate" class="form-label">
-      Başlama tarixi
-    </label>
+  <!-- PAGE HEADER -->
 
-    <input
-      type="date"
-      id="startDate"
-      [(ngModel)]="startDate"
-      name="startDate"
-      required
-      class="form-input">
+  <div class="page-header">
 
-    <label for="endDate" class="form-label">
-      Bitmə tarixi
-    </label>
+    <div class="breadcrumb">
 
-    <input
-      type="date"
-      id="endDate"
-      [(ngModel)]="endDate"
-      name="endDate"
-      required
-      class="form-input">
-
-    <button type="submit" class="submit-btn">
-      Yüklə
-    </button>
-
-  </div>
-</form>
-
-<button
-  class="button download-btn"
-  *ngIf="sales"
-  (click)="downloadExcel()">
-  Excel olaraq yüklə
-</button>
-
-<div *ngIf="errorMessage" class="error-message">
-  {{ errorMessage }}
-</div>
-
-<div
-  *ngFor="let category of ['Şirniyyat', 'Təndir', 'Kulinariya']"
-  class="category-section">
-
-  <h2 class="category-title">
-    {{ category }}
-  </h2>
-
-  <div class="table-wrapper">
-    <div class="table-container">
-
-      <table class="sales-table">
-
-        <thead>
-        <tr>
-
-          <th class="sticky-column">
-            Satış tarixi
-          </th>
-
-          <th *ngFor="let branch of getBranchesByCategory(category)">
-            {{ branch }}
-          </th>
-
-          <th class="total-column">
-            Cəmi
-          </th>
-
-        </tr>
-        </thead>
-
-        <tbody class="scrollable-body">
-
-        <tr *ngFor="let item of getSaleByCategory(category)">
-
-          <td class="sticky-column">
-            {{ item.date }}
-          </td>
-
-          <td *ngFor="let branch of getBranchesByCategory(category)">
-            {{ getTotalByBranch(item.sales, branch) | number: '1.2-2' }}
-          </td>
-
-          <td class="total-column">
-            {{ (totalByDate[category]?.[item.date] ?? 0) | number: '1.2-2' }}
-          </td>
-
-        </tr>
-
-        </tbody>
-
-      </table>
+      AZCAKE BPM
+      <span>/</span>
+      SATIŞLAR
+      <span>/</span>
+      TARİX ARALIĞI
 
     </div>
+
+    <div class="page-heading">
+
+      <div class="page-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M3 3v18h18"/>
+          <path d="M7 16v-5M12 16V7M17 16V4"/>
+
+        </svg>
+
+      </div>
+
+      <div>
+
+        <h1>Aralıq satışlar</h1>
+
+        <p>Filiallar üzrə satışların müqayisəli hesabatı</p>
+
+      </div>
+
+    </div>
+
   </div>
-</div>
 
-<div class="table-footer" *ngIf="preparedSale.length > 0">
+  <!-- FILTER PANEL -->
 
-  <span class="total-label">
-    Cəmi məbləğ:
-  </span>
+  <section class="filter-card">
 
-  <span class="total-value">
-    {{ getTotalForAllCategories() | number: '1.2-2' }} ₼
-  </span>
+    <div class="section-heading">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M16 3v4M8 3v4M3 10h18"/>
+        <path d="M7 14h10M7 17h6"/>
+
+      </svg>
+
+      <div>
+
+        <h2>Hesabat dövrü</h2>
+
+        <p>Satış məlumatları üçün tarix aralığını seçin</p>
+
+      </div>
+
+    </div>
+
+    <form
+      (ngSubmit)="onSubmit()"
+      class="form-container">
+
+      <div class="form-group">
+
+        <label for="startDate" class="form-label">
+          Başlama tarixi
+        </label>
+
+        <input
+          type="date"
+          id="startDate"
+          name="startDate"
+          [(ngModel)]="startDate"
+          [max]="endDate || today"
+          [disabled]="isLoading || isDownloading"
+          required
+          class="form-input">
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="endDate" class="form-label">
+          Bitmə tarixi
+        </label>
+
+        <input
+          type="date"
+          id="endDate"
+          name="endDate"
+          [(ngModel)]="endDate"
+          [min]="startDate"
+          [max]="today"
+          [disabled]="isLoading || isDownloading"
+          required
+          class="form-input">
+
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="isLoading || isDownloading">
+
+        <svg
+          *ngIf="!isLoading"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round">
+
+          <circle cx="10.5" cy="10.5" r="6.5"/>
+          <path d="m16 16 5 5"/>
+
+        </svg>
+
+        <span
+          *ngIf="isLoading"
+          class="button-spinner">
+        </span>
+
+        {{ isLoading ? 'Yüklənir...' : 'Hesabatı yüklə' }}
+
+      </button>
+
+      <div class="form-spacer"></div>
+
+      <button
+        *ngIf="sales"
+        type="button"
+        class="btn-excel"
+        [disabled]="isLoading || isDownloading"
+        (click)="downloadExcel()">
+
+        <svg
+          *ngIf="!isDownloading"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M14 2H6a2 2 0 0 0-2 2v16
+                   a2 2 0 0 0 2 2h12
+                   a2 2 0 0 0 2-2V8z"/>
+
+          <path d="M14 2v6h6"/>
+          <path d="M8 13h8M8 17h8M12 13v4"/>
+
+        </svg>
+
+        <span
+          *ngIf="isDownloading"
+          class="button-spinner">
+        </span>
+
+        {{ isDownloading
+        ? 'Hazırlanır...'
+        : 'Excel olaraq yüklə' }}
+
+      </button>
+
+    </form>
+
+  </section>
+
+  <!-- ERROR MESSAGE -->
+
+  <div
+    *ngIf="errorMessage"
+    class="error-message"
+    role="alert">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.7"
+      stroke-linecap="round">
+
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v6M12 17h.01"/>
+
+    </svg>
+
+    {{ errorMessage }}
+
+  </div>
+
+  <!-- REPORT CONTENT -->
+
+  <div *ngIf="sales" class="report-content">
+
+    <div class="report-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          HESABAT NƏTİCƏLƏRİ
+        </span>
+
+        <h2>Ümumi göstəricilər</h2>
+
+      </div>
+
+      <div class="period-label">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5">
+
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M16 3v4M8 3v4M3 10h18"/>
+
+        </svg>
+
+        {{ loadedStartDate }}
+        —
+        {{ loadedEndDate }}
+
+      </div>
+
+    </div>
+
+    <!-- GRAND TOTAL CARD -->
+
+    <section class="grand-total-card">
+
+      <div class="grand-total-top">
+
+        <div>
+
+          <span class="grand-total-label">
+            DÖVR ÜZRƏ ÜMUMİ SATIŞ MƏBLƏĞİ
+          </span>
+
+          <div class="grand-total-value">
+
+            {{ totalAmount | number:'1.2-2' }}
+
+            <span>₼</span>
+
+          </div>
+
+        </div>
+
+        <div class="grand-total-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <rect x="3" y="5" width="18" height="15" rx="2"/>
+            <path d="M3 10h18M7 15h3"/>
+            <circle cx="17" cy="15" r="1"/>
+
+          </svg>
+
+        </div>
+
+      </div>
+
+      <div class="grand-total-meta">
+
+        <span>{{ totalDays }} gün</span>
+
+        <span class="meta-dot"></span>
+
+        <span>{{ totalBranches }} filial</span>
+
+        <span class="meta-dot"></span>
+
+        <span>{{ categoryReports.length }} kateqoriya</span>
+
+      </div>
+
+      <!-- DISTRIBUTION BAR -->
+
+      <div
+        *ngIf="totalAmount > 0"
+        class="distribution-bar">
+
+        <div
+          *ngFor="let category of categoryReports; let i = index"
+          class="distribution-segment"
+          [ngClass]="'segment-' + i"
+          [style.width.%]="category.percentage > 0
+            ? category.percentage
+            : 0"
+          [title]="category.name + ': ' +
+            (category.percentage | number:'1.1-1') + '%'">
+
+        </div>
+
+      </div>
+
+      <div class="distribution-legend">
+
+        <div
+          *ngFor="let category of categoryReports; let i = index"
+          class="legend-item">
+
+          <span
+            class="legend-dot"
+            [ngClass]="'segment-' + i">
+          </span>
+
+          {{ category.name }}
+
+          <strong>
+            {{ category.percentage | number:'1.1-1' }}%
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CATEGORY STATISTICS -->
+
+    <div class="statistics-grid">
+
+      <button
+        type="button"
+        *ngFor="let category of categoryReports; let i = index"
+        class="stat-card"
+        [class.selected]="selectedCategory === category.name"
+        [attr.aria-pressed]="selectedCategory === category.name"
+        (click)="toggleCategory(category.name)">
+
+        <div class="stat-top">
+
+          <div class="stat-icon">
+
+            <ng-container [ngSwitch]="category.name">
+
+              <!-- SHIRNIYYAT -->
+
+              <svg
+                *ngSwitchCase="'Şirniyyat'"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <rect x="3" y="11" width="18" height="10" rx="2"/>
+                <path d="M3 16h18M8 11V7M12 11V7M16 11V7"/>
+                <path d="M8 3v1M12 3v1M16 3v1"/>
+
+              </svg>
+
+              <!-- TANDIR -->
+
+              <svg
+                *ngSwitchCase="'Təndir'"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <path d="M4 10a8 8 0 0 1 16 0
+                         c2 1 2 4 0 5v4
+                         a2 2 0 0 1-2 2H6
+                         a2 2 0 0 1-2-2v-4
+                         c-2-1-2-4 0-5z"/>
+
+                <path d="m9 8 2 3M13 7l2 3"/>
+
+              </svg>
+
+              <!-- KULINARIYA -->
+
+              <svg
+                *ngSwitchCase="'Kulinariya'"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <path d="M4 3v6a3 3 0 0 0 6 0V3"/>
+                <path d="M7 3v18"/>
+                <path d="M20 3c-4 3-5 7-5 11h5"/>
+                <path d="M20 3v18"/>
+
+              </svg>
+
+            </ng-container>
+
+          </div>
+
+          <span class="stat-index">
+            0{{ i + 1 }}
+          </span>
+
+        </div>
+
+        <span class="stat-label">
+          {{ category.name }}
+        </span>
+
+        <div class="stat-value">
+
+          {{ category.total | number:'1.2-2' }}
+
+          <span class="currency">₼</span>
+
+        </div>
+
+        <div class="stat-bottom">
+
+          <span>
+            {{ category.branches.length }} filial
+          </span>
+
+          <strong>
+            {{ category.percentage | number:'1.1-1' }}%
+          </strong>
+
+        </div>
+
+        <div class="stat-progress">
+
+          <div
+            [style.width.%]="category.percentage > 0
+              ? category.percentage
+              : 0">
+          </div>
+
+        </div>
+
+      </button>
+
+    </div>
+
+    <!-- CATEGORY FILTER -->
+
+    <div class="category-filter">
+
+      <span class="filter-label">
+        Kateqoriya üzrə filtr
+      </span>
+
+      <div class="filter-buttons">
+
+        <button
+          type="button"
+          [class.active]="selectedCategory === 'ALL'"
+          [attr.aria-pressed]="selectedCategory === 'ALL'"
+          (click)="selectCategory('ALL')">
+
+          Hamısı
+
+        </button>
+
+        <button
+          type="button"
+          *ngFor="let category of categoryReports"
+          [class.active]="selectedCategory === category.name"
+          [attr.aria-pressed]="selectedCategory === category.name"
+          (click)="selectCategory(category.name)">
+
+          {{ category.name }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- CATEGORY TABLES -->
+
+    <section
+      *ngFor="
+        let category of visibleCategories;
+        trackBy: trackByCategory
+      "
+      class="category-section">
+
+      <div class="table-heading">
+
+        <div class="category-info">
+
+          <div class="category-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+
+            </svg>
+
+          </div>
+
+          <div>
+
+            <h3>{{ category.name }}</h3>
+
+            <span>Filiallar üzrə satışlar</span>
+
+          </div>
+
+        </div>
+
+        <div class="record-count">
+
+          <span class="record-dot"></span>
+
+          {{ category.branches.length }} filial
+
+          <span class="record-separator">·</span>
+
+          {{ category.rows.length }} satış günü
+
+        </div>
+
+      </div>
+
+      <!-- SALES TABLE -->
+
+      <div
+        *ngIf="category.rows.length > 0; else emptyCategory"
+        class="table-container"
+        tabindex="0"
+        [attr.aria-label]="category.name + ' satış cədvəli'">
+
+        <table class="sales-table">
+
+          <thead>
+
+          <tr>
+
+            <th scope="col" class="sticky-column">
+
+              Satış tarixi
+
+            </th>
+
+            <th
+              scope="col"
+              *ngFor="
+                  let branch of category.branches;
+                  trackBy: trackByBranch
+                ">
+
+              {{ branch }}
+
+            </th>
+
+            <th scope="col" class="total-column">
+
+              Cəmi
+
+            </th>
+
+          </tr>
+
+          </thead>
+
+          <tbody>
+
+          <tr
+            *ngFor="
+                let row of category.rows;
+                trackBy: trackByDate
+              ">
+
+            <td class="sticky-column">
+
+              {{ row.date }}
+
+            </td>
+
+            <td
+              *ngFor="
+                  let branch of category.branches;
+                  trackBy: trackByBranch
+                "
+              [class.zero-value]="!row.branchTotals[branch]">
+
+              {{ getBranchAmount(row.branchTotals, branch)
+              | number:'1.2-2' }}
+
+            </td>
+
+            <td class="total-column">
+
+              {{ row.total | number:'1.2-2' }}
+
+            </td>
+
+          </tr>
+
+          </tbody>
+
+          <!-- BRANCH TOTALS -->
+
+          <tfoot>
+
+          <tr>
+
+            <th scope="row" class="sticky-column">
+
+              Cəmi
+
+            </th>
+
+            <td
+              *ngFor="
+                  let branch of category.branches;
+                  trackBy: trackByBranch
+                ">
+
+              {{ getBranchAmount(category.branchTotals, branch)
+              | number:'1.2-2' }}
+
+            </td>
+
+            <td class="total-column">
+
+              {{ category.total | number:'1.2-2' }}
+
+            </td>
+
+          </tr>
+
+          </tfoot>
+
+        </table>
+
+      </div>
+
+      <!-- EMPTY CATEGORY -->
+
+      <ng-template #emptyCategory>
+
+        <div class="empty-category">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round">
+
+            <rect x="4" y="3" width="16" height="18" rx="2"/>
+            <path d="M8 12h8"/>
+
+          </svg>
+
+          <h4>Satış məlumatları tapılmadı</h4>
+
+          <p>
+            Seçilmiş tarix aralığında bu kateqoriya
+            üzrə satış qeydi mövcud deyil.
+          </p>
+
+        </div>
+
+      </ng-template>
+
+      <!-- CATEGORY TOTAL -->
+
+      <div class="category-total">
+
+        <div class="summary-caption">
+
+          <span class="summary-line"></span>
+
+          KATEQORİYA ÜZRƏ YEKUN
+
+        </div>
+
+        <div class="summary-value">
+
+          <span class="total-label">
+            Cəmi məbləğ
+          </span>
+
+          <strong>
+
+            {{ category.total | number:'1.2-2' }}
+
+            <small>₼</small>
+
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- GRAND TOTAL FOOTER -->
+
+    <div class="table-footer">
+
+      <div class="footer-info">
+
+        <div class="footer-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M7 8h10M7 12h10M7 16h4"/>
+
+          </svg>
+
+        </div>
+
+        <div>
+
+          <span class="eyebrow">
+            YEKUN HESABAT
+          </span>
+
+          <p>Bütün kateqoriyalar üzrə cəmi</p>
+
+        </div>
+
+      </div>
+
+      <div class="footer-total">
+
+        {{ totalAmount | number:'1.2-2' }}
+
+        <span>₼</span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- INITIAL EMPTY STATE -->
+
+  <div
+    *ngIf="!sales && !isLoading && !errorMessage"
+    class="empty-state">
+
+    <div class="empty-state-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.4"
+        stroke-linecap="round">
+
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M16 3v4M8 3v4M3 10h18"/>
+        <path d="M7 14h10M7 17h6"/>
+
+      </svg>
+
+    </div>
+
+    <span class="eyebrow">AZCAKE BPM</span>
+
+    <h2>Hesabat dövrünü seçin</h2>
+
+    <p>
+      Satış məlumatlarını əldə etmək üçün
+      tarix aralığını qeyd edin.
+    </p>
+
+  </div>
 
 </div>

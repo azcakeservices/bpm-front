@@ -1,30 +1,515 @@
-.loader {
+
+/* ========================================
+   THEME VARIABLES
+======================================== */
+
+:host {
+  --gold-primary: #c9a66b;
+  --gold-light: #e2c78e;
+  --gold-dark: #a5834b;
+
+  --background-dark: #101010;
+  --background-card: #1b1916;
+
+  --text-primary: #f1ede5;
+  --text-secondary: #a99f8e;
+  --text-muted: #847b6b;
+
+  --border-gold: rgba(201, 166, 107, 0.22);
+
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ========================================
+   FULLSCREEN OVERLAY
+======================================== */
+
+.loader-overlay {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
+  inset: 0;
+
   z-index: 9999;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+
+  padding: 20px;
+
+  background-color: rgba(8, 7, 6, 0.70);
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  animation: overlayAppear 0.25s ease-out;
 }
 
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(255, 255, 255, 0.2);
-  border-top-color: #00c9a7;
+/* ========================================
+   LOADER CARD
+======================================== */
+
+.loader {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 320px;
+  max-width: 100%;
+
+  padding: 36px 30px 30px;
+
+  background: linear-gradient(
+    145deg,
+    #24211b,
+    #191815 65%,
+    #171614
+  );
+
+  border: 1px solid var(--border-gold);
+  border-radius: 18px;
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(226, 199, 142, 0.05);
+
+  animation: loaderAppear 0.35s
+  cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ========================================
+   GOLDEN TOP ACCENT
+======================================== */
+
+.loader::before {
+  content: '';
+
+  position: absolute;
+
+  top: -1px;
+  left: 20%;
+  right: 20%;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-light),
+    transparent
+  );
+
+  opacity: 0.8;
+}
+
+/* ========================================
+   LOADER ANIMATION CONTAINER
+======================================== */
+
+.loader-animation {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100px;
+  height: 100px;
+
+  margin-bottom: 26px;
+}
+
+/* ========================================
+   OUTER RING
+======================================== */
+
+.outer-ring {
+  position: absolute;
+
+  inset: 0;
+
+  border: 2px solid
+  rgba(201, 166, 107, 0.10);
+
+  border-top-color: var(--gold-light);
+  border-right-color: var(--gold-dark);
+
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+
+  animation: rotateClockwise
+  1.3s linear infinite;
 }
 
-@keyframes spin {
+/* ========================================
+   INNER RING
+======================================== */
+
+.inner-ring {
+  position: absolute;
+
+  inset: 9px;
+
+  border: 1px solid
+  rgba(201, 166, 107, 0.08);
+
+  border-bottom-color: var(--gold-primary);
+  border-left-color: var(--gold-dark);
+
+  border-radius: 50%;
+
+  animation: rotateCounterClockwise
+  1.9s linear infinite;
+}
+
+/* ========================================
+   CENTRAL EMBLEM
+======================================== */
+
+.loader-emblem {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 62px;
+  height: 62px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(201, 166, 107, 0.12),
+    rgba(201, 166, 107, 0.02)
+  );
+
+  color: var(--gold-light);
+
+  border: 1px solid
+  rgba(201, 166, 107, 0.25);
+
+  border-radius: 17px;
+
+  animation: emblemPulse
+  2.5s ease-in-out infinite;
+}
+
+.loader-emblem svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* ========================================
+   BRAND
+======================================== */
+
+.loader-brand {
+  color: var(--gold-light);
+
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 6px;
+
+  line-height: 1.2;
+
+  /* Compensate for letter spacing */
+  padding-left: 6px;
+}
+
+.loader-subtitle {
+  margin-top: 7px;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+
+  text-align: center;
+}
+
+/* ========================================
+   DIVIDER
+======================================== */
+
+.loader-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 23px 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 166, 107, 0.30),
+    transparent
+  );
+}
+
+/* ========================================
+   LOADING TEXT
+======================================== */
+
+.loading-text {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+
+  color: var(--text-primary);
+
+  font-size: 15px;
+  font-weight: 500;
+
+  text-align: center;
+}
+
+.loading-description {
+  margin-top: 9px;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+  font-weight: 400;
+
+  text-align: center;
+}
+
+/* ========================================
+   ANIMATED DOTS
+======================================== */
+
+.loading-dots {
+  display: inline-flex;
+
+  width: 18px;
+
+  color: var(--gold-primary);
+}
+
+.loading-dots span {
+  animation: dotPulse 1.4s
+  ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ========================================
+   PROGRESS TRACK
+======================================== */
+
+.progress-track {
+  position: relative;
+
+  width: 100%;
+  height: 3px;
+
+  margin-top: 28px;
+
+  background-color:
+    rgba(201, 166, 107, 0.12);
+
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+/* ========================================
+   PROGRESS INDICATOR
+======================================== */
+
+.progress-indicator {
+  width: 40%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-primary),
+    var(--gold-light),
+    transparent
+  );
+
+  border-radius: 10px;
+
+  animation: loadingProgress
+  1.6s ease-in-out infinite;
+}
+
+/* ========================================
+   OVERLAY APPEARANCE
+======================================== */
+
+@keyframes overlayAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   CARD APPEARANCE
+======================================== */
+
+@keyframes loaderAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ========================================
+   CLOCKWISE ROTATION
+======================================== */
+
+@keyframes rotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   COUNTERCLOCKWISE ROTATION
+======================================== */
+
+@keyframes rotateCounterClockwise {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+/* ========================================
+   EMBLEM PULSE
+======================================== */
+
+@keyframes emblemPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px
+    rgba(201, 166, 107, 0.05);
+  }
+
+  50% {
+    box-shadow: 0 0 25px
+    rgba(201, 166, 107, 0.20);
+  }
+}
+
+/* ========================================
+   DOT ANIMATION
+======================================== */
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    opacity: 0.25;
+  }
+
+  40% {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   PROGRESS ANIMATION
+======================================== */
+
+@keyframes loadingProgress {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 480px) {
+
+  .loader {
+    width: 280px;
+
+    padding: 28px 24px 24px;
+
+    border-radius: 14px;
+  }
+
+  .loader-animation {
+    width: 85px;
+    height: 85px;
+
+    margin-bottom: 22px;
+  }
+
+  .loader-emblem {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 14px;
+  }
+
+  .loader-emblem svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .loader-brand {
+    font-size: 19px;
+  }
+
+  .loading-text {
+    font-size: 14px;
+  }
+
+  .loading-description {
+    font-size: 11px;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .loader-overlay,
+  .loader,
+  .outer-ring,
+  .inner-ring,
+  .loader-emblem,
+  .loading-dots span,
+  .progress-indicator {
+    animation: none;
   }
 }

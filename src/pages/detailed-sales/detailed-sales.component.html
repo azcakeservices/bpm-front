@@ -1,88 +1,848 @@
-<form (submit)="onSubmit()" class="form-container">
-  <label for="date" class="form-label">Tarix</label>
-  <input type="date" id="date" [(ngModel)]="date" name="date" required class="date-input">
+<div class="page-container">
 
-  <label for="sales-select" class="form-label">Seçilmiş filial üzrə axtarış et:</label>
-  <select id="sales-select" [(ngModel)]="selectedBranchCode" name="sales-select" class="form-select">
-    <option value="">Filialı seç</option>
-    <option *ngFor="let sale of allBranches" [value]="sale.branchCode">{{ sale.branchName }}</option>
-  </select>
+  <!-- ======================================
+       PAGE HEADER
+  ======================================= -->
 
-  <button type="submit" class="btn">Yüklə</button>
-  <button class="btn" *ngIf="filteredSales.length > 0" (click)="downloadExcel()">Excel olaraq yüklə</button>
-</form>
+  <header class="page-header">
 
-<div class="filters-wrapper" *ngIf="filteredSales.length > 0">
-  <h2>Filterlər</h2>
-  <div class="filters">
-    <div class="filters__item">
-      <ng-multiselect-dropdown [placeholder]="'Filialı seç'" [data]="filteredBranches"
-                               [settings]="dropdownSettings" [(ngModel)]="filters.branchName" (ngModelChange)="applyFilters()" >
-      </ng-multiselect-dropdown>
+    <div class="page-icon">
+
+      <svg viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="1.6"
+           stroke-linecap="round"
+           stroke-linejoin="round">
+
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <path d="M3 9h18M3 15h18M9 9v12M15 9v12"/>
+
+      </svg>
+
     </div>
 
-    <div class="filters__item">
-      <ng-multiselect-dropdown [placeholder]="'Məhsulu seç'" [data]="filteredProducts"
-                               [settings]="dropdownSettings" [(ngModel)]="filters.productName" (ngModelChange)="applyFilters()">
-      </ng-multiselect-dropdown>
+    <div class="page-heading">
+
+      <div class="breadcrumb">
+        AZCAKE BPM
+        <span>/</span>
+        SATIŞLAR
+        <span>/</span>
+        HESABATLAR
+      </div>
+
+      <h1>Detallı satışlar</h1>
+
+      <p>
+        Məhsullar və filiallar üzrə ətraflı satış hesabatı
+      </p>
+
     </div>
 
-    <div class="filters__item">
-      <ng-multiselect-dropdown [placeholder]="'Barkodu seç'" [data]="filteredBarcodes"
-                               [settings]="dropdownSettings" [(ngModel)]="filters.barcode" (ngModelChange)="applyFilters()">
-      </ng-multiselect-dropdown>
+  </header>
+
+
+  <!-- ======================================
+       STATISTICS
+  ======================================= -->
+
+  <section class="statistics-grid">
+
+    <!-- TOTAL AMOUNT -->
+
+    <div class="stat-card primary-stat">
+
+      <div class="stat-top">
+
+        <div class="stat-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <rect x="3" y="5" width="18" height="15" rx="2"/>
+            <path d="M3 9h18"/>
+            <path d="M16 13h5v4h-5a2 2 0 0 1 0-4Z"/>
+
+          </svg>
+
+        </div>
+
+        <span class="stat-index">01</span>
+
+      </div>
+
+      <div class="stat-label">
+        Cəmi satış məbləği
+      </div>
+
+      <div class="stat-value">
+
+        {{ totalAmount | number:'1.2-2' }}
+
+        <span class="currency">₼</span>
+
+      </div>
+
+      <div class="stat-description">
+        Seçilmiş satışların ümumi məbləği
+      </div>
+
     </div>
 
-    <div class="filters__item">
-      <ng-multiselect-dropdown [placeholder]="'Carini seç'" [data]="filteredContracts"
-                               [settings]="dropdownSettings" [(ngModel)]="filters.contracts" (ngModelChange)="applyFilters()">
-      </ng-multiselect-dropdown>
+
+    <!-- TOTAL QUANTITY -->
+
+    <div class="stat-card">
+
+      <div class="stat-top">
+
+        <div class="stat-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="M3 3h2l3 13h11l3-9H6"/>
+            <circle cx="9" cy="20" r="1"/>
+            <circle cx="19" cy="20" r="1"/>
+
+          </svg>
+
+        </div>
+
+        <span class="stat-index">02</span>
+
+      </div>
+
+      <div class="stat-label">
+        Satış sayı
+      </div>
+
+      <div class="stat-value">
+        {{ totalQuantity | number:'1.0-3' }}
+      </div>
+
+      <div class="stat-description">
+        Satılmış məhsulların ümumi miqdarı
+      </div>
+
     </div>
+
+
+    <!-- UNIQUE PRODUCTS -->
+
+    <div class="stat-card">
+
+      <div class="stat-top">
+
+        <div class="stat-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="m12 3 9 5v8l-9 5-9-5V8l9-5Z"/>
+            <path d="m3 8 9 5 9-5M12 13v8"/>
+            <path d="m7.5 5.5 9 5"/>
+
+          </svg>
+
+        </div>
+
+        <span class="stat-index">03</span>
+
+      </div>
+
+      <div class="stat-label">
+        Məhsul sayı
+      </div>
+
+      <div class="stat-value">
+        {{ uniqueProductCount | number:'1.0-0' }}
+      </div>
+
+      <div class="stat-description">
+        Unikal məhsulların sayı
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================================
+       REPORT PARAMETERS
+  ======================================= -->
+
+  <section class="panel parameters-panel">
+
+    <div class="panel-heading">
+
+      <div class="panel-heading-icon">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.6"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M7 3v4M17 3v4M3 10h18"/>
+
+        </svg>
+
+      </div>
+
+      <div>
+
+        <h2>Hesabat parametrləri</h2>
+
+        <p>Tarixi və filialı seçin</p>
+
+      </div>
+
+    </div>
+
+
+    <form class="report-form"
+          (ngSubmit)="onSubmit()">
+
+      <!-- DATE -->
+
+      <div class="form-field date-field">
+
+        <label for="saleDate">
+          Satış tarixi
+        </label>
+
+        <input
+          id="saleDate"
+          type="date"
+          name="saleDate"
+          [(ngModel)]="date"
+          [max]="today"
+          [disabled]="isLoading || isExporting"
+          required>
+
+      </div>
+
+
+      <!-- BRANCH -->
+
+      <div class="form-field branch-field">
+
+        <label for="branch">
+          Filial
+        </label>
+
+        <select
+          id="branch"
+          name="branch"
+          [(ngModel)]="selectedBranchCode"
+          [disabled]="
+            isLoading ||
+            isExporting ||
+            isBranchesLoading
+          ">
+
+          <option value="">
+            Bütün filiallar
+          </option>
+
+          <option
+            *ngFor="let branch of allBranches"
+            [value]="branch.branchCode">
+
+            {{ branch.branchName }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isLoading || isExporting">
+
+          <span
+            *ngIf="isLoading; else searchIcon"
+            class="button-spinner">
+          </span>
+
+          <ng-template #searchIcon>
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round">
+
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m16 16 5 5"/>
+
+            </svg>
+
+          </ng-template>
+
+          {{ isLoading ? 'Yüklənir...' : 'Hesabatı yüklə' }}
+
+        </button>
+
+
+        <button
+          *ngIf="filteredSales.length > 0"
+          type="button"
+          class="btn btn-excel"
+          [disabled]="isLoading || isExporting"
+          (click)="downloadExcel()">
+
+          <span
+            *ngIf="isExporting; else excelIcon"
+            class="button-spinner">
+          </span>
+
+          <ng-template #excelIcon>
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.6"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+
+              <path d="M14 3H5v18h14V8l-5-5Z"/>
+              <path d="M14 3v5h5"/>
+              <path d="m8 12 6 6m0-6-6 6"/>
+
+            </svg>
+
+          </ng-template>
+
+          {{ isExporting
+          ? 'Hazırlanır...'
+          : 'Excel olaraq yüklə' }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+
+  <!-- ======================================
+       ERROR MESSAGE
+  ======================================= -->
+
+  <div
+    *ngIf="errorMessage"
+    class="error-panel"
+    role="alert">
+
+    <svg viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="1.7"
+         stroke-linecap="round">
+
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v6M12 17h.01"/>
+
+    </svg>
+
+    <span>{{ errorMessage }}</span>
+
   </div>
-</div>
 
-<div class="table-container">
-  <div class="table-wrapper-scrollable">
-    <table class="sales-table sales-table-header">
-      <thead>
-      <tr>
-        <th (click)="sortData('branchName')">Mağaza {{ getSortIndicator('branchName') }}</th>
-        <th (click)="sortData('saleDate')">Tarix {{ getSortIndicator('saleDate') }}</th>
-        <th (click)="sortData('productName')">Məhsul adı {{ getSortIndicator('productName') }}</th>
-        <th (click)="sortData('barcode')">Barkodu {{ getSortIndicator('barcode') }}</th>
-        <th (click)="sortData('price')">Bir məhsulun qiyməti {{ getSortIndicator('price') }}</th>
-        <th (click)="sortData('quantity')">Toplam satış sayı {{ getSortIndicator('quantity') }}</th>
-        <th (click)="sortData('total')">Toplam məbləği {{ getSortIndicator('total') }}</th>
-      </tr>
-      </thead>
-    </table>
 
-    <div class="scrollable-body-wrapper">
-      <table class="sales-table sales-table-body">
-        <tbody>
-        <tr *ngFor="let sale of filteredSales">
-          <td>{{ sale.branchName }}</td>
-          <td>{{ sale.saleDate | date: 'dd.MM.yyyy' }}</td>
-          <td>{{ sale.productName }}</td>
-          <td>{{ sale.barcode }}</td>
-          <td>{{ sale.price | number: '1.2-2' }}</td>
-          <td>{{ sale.quantity }}</td>
-          <td>{{ sale.total | number: '1.2-2' }}</td>
+  <!-- ======================================
+       FILTERS
+  ======================================= -->
+
+  <section
+    *ngIf="sales && allSales.length > 0"
+    class="panel detailed-sales-filters">
+
+    <div class="filters-header">
+
+      <div class="panel-heading">
+
+        <div class="panel-heading-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <path d="M3 5h18l-7 8v5l-4 2v-7L3 5Z"/>
+
+          </svg>
+
+        </div>
+
+        <div>
+
+          <h2>Filterlər</h2>
+
+          <p>Satış məlumatlarını dəqiqləşdirin</p>
+
+        </div>
+
+        <span
+          *ngIf="hasActiveFilters"
+          class="filter-count">
+
+          {{ activeFilterCount }}
+
+        </span>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="btn btn-reset"
+        [disabled]="!hasActiveFilters || isExporting"
+        (click)="clearFilters()">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.6"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+          <path d="M3 11a9 9 0 1 1 3 8"/>
+          <path d="M3 4v7h7"/>
+
+        </svg>
+
+        Filterləri sıfırla
+
+      </button>
+
+    </div>
+
+
+    <div class="filters-grid">
+
+      <!-- BRANCH FILTER -->
+
+      <div class="filter-field">
+
+        <label>Filial</label>
+
+        <ng-multiselect-dropdown
+          [placeholder]="'Bütün filiallar'"
+          [settings]="dropdownSettings"
+          [data]="filteredBranches"
+          [disabled]="isExporting"
+          [(ngModel)]="filters.branchName"
+          (ngModelChange)="applyFilters()">
+
+        </ng-multiselect-dropdown>
+
+      </div>
+
+
+      <!-- PRODUCT FILTER -->
+
+      <div class="filter-field">
+
+        <label>Məhsul</label>
+
+        <ng-multiselect-dropdown
+          [placeholder]="'Bütün məhsullar'"
+          [settings]="dropdownSettings"
+          [data]="filteredProducts"
+          [disabled]="isExporting"
+          [(ngModel)]="filters.productName"
+          (ngModelChange)="applyFilters()">
+
+        </ng-multiselect-dropdown>
+
+      </div>
+
+
+      <!-- BARCODE FILTER -->
+
+      <div class="filter-field">
+
+        <label>Barkod</label>
+
+        <ng-multiselect-dropdown
+          [placeholder]="'Bütün barkodlar'"
+          [settings]="dropdownSettings"
+          [data]="filteredBarcodes"
+          [disabled]="isExporting"
+          [(ngModel)]="filters.barcode"
+          (ngModelChange)="applyFilters()">
+
+        </ng-multiselect-dropdown>
+
+      </div>
+
+
+      <!-- CONTRACT FILTER -->
+
+      <div class="filter-field">
+
+        <label>Müqavilə</label>
+
+        <ng-multiselect-dropdown
+          [placeholder]="'Bütün müqavilələr'"
+          [settings]="dropdownSettings"
+          [data]="filteredContracts"
+          [disabled]="isExporting"
+          [(ngModel)]="filters.contracts"
+          (ngModelChange)="applyFilters()">
+
+        </ng-multiselect-dropdown>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================================
+       SALES TABLE
+  ======================================= -->
+
+  <section
+    *ngIf="sales"
+    class="table-panel">
+
+    <div class="table-header">
+
+      <div class="table-heading">
+
+        <div class="panel-heading-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.6"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M3 9h18M3 15h18M9 9v12"/>
+
+          </svg>
+
+        </div>
+
+        <div>
+
+          <h2>Satış məlumatları</h2>
+
+          <div class="report-meta">
+
+            <span>{{ loadedDate | date:'dd.MM.yyyy' }}</span>
+
+            <span class="meta-dot"></span>
+
+            <span>{{ loadedBranchName }}</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="record-count">
+
+        <span class="record-count-value">
+          {{ totalRecords | number:'1.0-0' }}
+        </span>
+
+        <span>qeyd</span>
+
+      </div>
+
+    </div>
+
+
+    <!-- TABLE CONTENT -->
+
+    <div
+      *ngIf="filteredSales.length > 0; else noSales"
+      class="table-scroll">
+
+      <table class="sales-table">
+
+        <thead>
+
+        <tr>
+
+          <th
+            *ngFor="let column of columns"
+            [class.numeric]="column.numeric"
+            [class.active-sort]="sortColumn === column.key"
+            [attr.aria-sort]="getAriaSort(column.key)">
+
+            <button
+              type="button"
+              class="sort-button"
+              (click)="sortData(column.key)">
+
+              <span>{{ column.label }}</span>
+
+              <span
+                class="sort-indicator"
+                [class.selected]="sortColumn === column.key">
+
+                  {{ getSortIndicator(column.key) }}
+
+                </span>
+
+            </button>
+
+          </th>
+
         </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        <tr
+          *ngFor="
+              let sale of filteredSales;
+              trackBy: trackBySale
+            ">
+
+          <!-- 1. BRANCH NAME -->
+
+          <td class="branch-cell">
+
+            {{ sale.branchName }}
+
+          </td>
+
+
+          <!-- 2. SALE DATE -->
+
+          <td class="date-cell">
+
+            {{ sale.saleDate | date:'dd.MM.yyyy' }}
+
+          </td>
+
+
+          <!-- 3. PRODUCT NAME -->
+
+          <td class="product-cell">
+
+            {{ sale.productName }}
+
+          </td>
+
+
+          <!-- 4. BARCODE -->
+
+          <td class="barcode-cell">
+
+            {{ sale.barcode }}
+
+          </td>
+
+
+          <!-- 5. PRICE -->
+
+          <td class="numeric price-cell">
+
+            {{ sale.price | number:'1.2-2' }}
+
+          </td>
+
+
+          <!-- 6. QUANTITY -->
+
+          <td class="numeric quantity-cell">
+
+            {{ sale.quantity | number:'1.0-3' }}
+
+          </td>
+
+
+          <!-- 7. TOTAL -->
+
+          <td class="numeric total-cell">
+
+            {{ sale.total | number:'1.2-2' }}
+
+          </td>
+
+        </tr>
+
         </tbody>
+
       </table>
+
     </div>
-  </div>
 
-  <div class="table-summary">Cəmi məbləğ: {{ getTotal(filteredSales) | number: '1.2-2' }}</div>
-</div>
 
-<ng-template #noSales>
-  <div class="no_sales">
-    {{ emptySales }}
-  </div>
-</ng-template>
+    <!-- NO SALES -->
 
-<div *ngIf="errorMessage" class="error-message">
-  {{ errorMessage }}
+    <ng-template #noSales>
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.5"
+               stroke-linecap="round">
+
+            <circle cx="10" cy="10" r="6"/>
+            <path d="m15 15 5 5M7 10h6"/>
+
+          </svg>
+
+        </div>
+
+        <h3>Satış məlumatları tapılmadı</h3>
+
+        <p *ngIf="hasActiveFilters">
+
+          Seçilmiş filterlərə uyğun nəticə yoxdur.
+          Filterləri dəyişdirin və ya sıfırlayın.
+
+        </p>
+
+        <p *ngIf="!hasActiveFilters">
+
+          Seçilmiş tarix və filial üzrə satış
+          məlumatları mövcud deyil.
+
+        </p>
+
+        <button
+          *ngIf="hasActiveFilters"
+          type="button"
+          class="btn btn-reset"
+          (click)="clearFilters()">
+
+          Filterləri sıfırla
+
+        </button>
+
+      </div>
+
+    </ng-template>
+
+
+    <!-- TABLE FOOTER -->
+
+    <div class="table-footer">
+
+      <div class="footer-information">
+
+        <span class="footer-label">
+          HESABAT YEKUNU
+        </span>
+
+        <span class="footer-records">
+
+          {{ filteredSales.length | number:'1.0-0' }}
+
+          /
+
+          {{ allSales.length | number:'1.0-0' }}
+
+          qeyd
+
+        </span>
+
+      </div>
+
+
+      <div class="footer-total">
+
+        <span>Cəmi məbləğ</span>
+
+        <strong>
+
+          {{ totalAmount | number:'1.2-2' }}
+
+          <span>₼</span>
+
+        </strong>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================================
+       INITIAL EMPTY STATE
+  ======================================= -->
+
+  <section
+    *ngIf="!sales && !isLoading && !errorMessage"
+    class="panel initial-empty-state">
+
+    <div class="empty-state">
+
+      <div class="empty-icon">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.5"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M7 3v4M17 3v4M3 10h18"/>
+          <path d="M12 13v5M9.5 15.5h5"/>
+
+        </svg>
+
+      </div>
+
+      <h3>Hesabat üçün tarix seçin</h3>
+
+      <p>
+
+        Satış məlumatlarını əldə etmək üçün
+        hesabat parametrlərini seçin.
+
+      </p>
+
+    </div>
+
+  </section>
+
 </div>

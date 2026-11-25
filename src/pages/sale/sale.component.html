@@ -1,46 +1,717 @@
-<form (ngSubmit)="onSubmit()" class="form-container">
-  <div class="form-group">
-    <label for="date" class="form-label">Tarix</label>
-    <input type="date" id="date" [(ngModel)]="date" name="date" required class="form-input" />
-    <button type="submit" class="btn submit-btn">Yüklə</button>
-  </div>
-</form>
-<button class="button download-btn" *ngIf="sales" (click)="downloadExcel()">Excel olaraq yüklə</button>
 
-<div *ngIf="errorMessage" class="error-message">
-  {{ errorMessage }}
-</div>
+<div class="page-container">
 
-<div class="table-wrapper" *ngFor="let sales of [filteredSales1, filteredSales2, filteredSales3]; let i = index">
-  <h2 class="table-title">{{ ['Kulinariya', 'Şirniyyat', 'Təndir'][i] }}</h2>
-  <div class="table-container">
-    <table class="sales-table">
-      <thead>
-      <tr>
-        <th>Filial</th>
-        <th>Məhsul kodu</th>
-        <th>Məhsul adı</th>
-        <th>Barkodu</th>
-        <th>Say</th>
-        <th>Qiymət</th>
-        <th>Toplam</th>
-      </tr>
-      </thead>
-      <tbody class="scrollable-body">
-      <tr *ngFor="let dailySale of sales">
-        <td>{{ dailySale.branchName }}</td>
-        <td>{{ dailySale.productCode }}</td>
-        <td>{{ dailySale.productName }}</td>
-        <td>{{ dailySale.barcode }}</td>
-        <td>{{ dailySale.quantity }}</td>
-        <td>{{ dailySale.price | number: '1.2-2' }}</td>
-        <td>{{ dailySale.total | number: '1.2-2' }}</td>
-      </tr>
-      </tbody>
-    </table>
+  <!-- PAGE HEADER -->
+
+  <div class="page-header">
+
+    <div class="breadcrumb">
+
+      AZCAKE BPM
+      <span>/</span>
+      SATIŞLAR
+      <span>/</span>
+      GÜNDƏLİK
+
+    </div>
+
+    <div class="page-heading">
+
+      <div class="page-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M3 3v18h18"/>
+          <path d="m7 14 5-5 4 4 5-7"/>
+          <path d="M16 6h5v5"/>
+
+        </svg>
+
+      </div>
+
+      <div>
+
+        <h1>Gündəlik satışlar</h1>
+
+        <p>Məhsullar üzrə gündəlik satış hesabatı</p>
+
+      </div>
+
+    </div>
+
   </div>
-  <div class="table-total">
-    <span class="total-label">Cəmi məbləğ:</span>
-    <span class="total-value">{{ getTotal(sales) | number: '1.2-2' }}</span>
+
+  <!-- FILTER PANEL -->
+
+  <section class="filter-card">
+
+    <div class="section-heading">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M16 3v4M8 3v4M3 10h18"/>
+
+      </svg>
+
+      <div>
+
+        <h2>Hesabat tarixi</h2>
+
+        <p>Satış məlumatları üçün tarix seçin</p>
+
+      </div>
+
+    </div>
+
+    <form
+      (ngSubmit)="onSubmit()"
+      class="form-container">
+
+      <div class="form-group">
+
+        <label for="date" class="form-label">
+          Tarix
+        </label>
+
+        <input
+          type="date"
+          id="date"
+          name="date"
+          [(ngModel)]="date"
+          [max]="today"
+          [disabled]="isLoading || isDownloading"
+          required
+          class="form-input">
+
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="isLoading || isDownloading">
+
+        <svg
+          *ngIf="!isLoading"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round">
+
+          <circle cx="10.5" cy="10.5" r="6.5"/>
+          <path d="m16 16 5 5"/>
+
+        </svg>
+
+        <span
+          *ngIf="isLoading"
+          class="button-spinner">
+        </span>
+
+        {{ isLoading ? 'Yüklənir...' : 'Hesabatı yüklə' }}
+
+      </button>
+
+      <div class="form-spacer"></div>
+
+      <button
+        *ngIf="sales"
+        type="button"
+        class="btn-excel"
+        [disabled]="isDownloading || isLoading"
+        (click)="downloadExcel()">
+
+        <svg
+          *ngIf="!isDownloading"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M14 2H6a2 2 0 0 0-2 2v16
+                   a2 2 0 0 0 2 2h12
+                   a2 2 0 0 0 2-2V8z"/>
+
+          <path d="M14 2v6h6"/>
+          <path d="M8 13h8M8 17h8M12 13v4"/>
+
+        </svg>
+
+        <span
+          *ngIf="isDownloading"
+          class="button-spinner">
+        </span>
+
+        {{ isDownloading ? 'Hazırlanır...' : 'Excel olaraq yüklə' }}
+
+      </button>
+
+    </form>
+
+  </section>
+
+  <!-- ERROR MESSAGE -->
+
+  <div
+    *ngIf="errorMessage"
+    class="error-message"
+    role="alert">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.7"
+      stroke-linecap="round">
+
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v6M12 17h.01"/>
+
+    </svg>
+
+    {{ errorMessage }}
+
   </div>
+
+  <!-- REPORT CONTENT -->
+
+  <div *ngIf="sales" class="report-content">
+
+    <div class="report-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          HESABAT NƏTİCƏLƏRİ
+        </span>
+
+        <h2>Ümumi göstəricilər</h2>
+
+      </div>
+
+      <div class="period-label">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5">
+
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M16 3v4M8 3v4M3 10h18"/>
+
+        </svg>
+
+        {{ loadedDate }}
+
+      </div>
+
+    </div>
+
+    <!-- GRAND TOTAL CARD -->
+
+    <section class="grand-total-card">
+
+      <div class="grand-total-top">
+
+        <div>
+
+          <span class="grand-total-label">
+            ÜMUMİ SATIŞ MƏBLƏĞİ
+          </span>
+
+          <div class="grand-total-value">
+
+            {{ totalAmount | number:'1.2-2' }}
+
+            <span>₼</span>
+
+          </div>
+
+        </div>
+
+        <div class="grand-total-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <rect x="3" y="5" width="18" height="15" rx="2"/>
+            <path d="M3 10h18M7 15h3"/>
+            <circle cx="17" cy="15" r="1"/>
+
+          </svg>
+
+        </div>
+
+      </div>
+
+      <div class="grand-total-meta">
+
+        <span>
+          {{ categories.length }} kateqoriya
+        </span>
+
+        <span class="meta-dot"></span>
+
+        <span>
+          {{ totalRecords | number:'1.0-0' }} satış qeydi
+        </span>
+
+      </div>
+
+      <!-- SALES DISTRIBUTION -->
+
+      <div
+        *ngIf="totalAmount > 0"
+        class="distribution-bar">
+
+        <div
+          *ngFor="let category of categories; let i = index"
+          class="distribution-segment"
+          [ngClass]="'segment-' + i"
+          [style.width.%]="category.percentage > 0 ? category.percentage : 0"
+          [title]="category.name + ': ' +
+                   (category.percentage | number:'1.1-1') + '%'">
+
+        </div>
+
+      </div>
+
+      <div class="distribution-legend">
+
+        <div
+          *ngFor="let category of categories; let i = index"
+          class="legend-item">
+
+          <span
+            class="legend-dot"
+            [ngClass]="'segment-' + i">
+          </span>
+
+          {{ category.name }}
+
+          <strong>
+            {{ category.percentage | number:'1.1-1' }}%
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CATEGORY CARDS -->
+
+    <div class="statistics-grid">
+
+      <button
+        type="button"
+        *ngFor="let category of categories; let i = index"
+        class="stat-card"
+        [class.selected]="selectedCategory === category.name"
+        [attr.aria-pressed]="selectedCategory === category.name"
+        (click)="toggleCategory(category.name)">
+
+        <div class="stat-top">
+
+          <div class="stat-icon">
+
+            <ng-container [ngSwitch]="category.name">
+
+              <!-- KULINARIYA -->
+
+              <svg
+                *ngSwitchCase="'Kulinariya'"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <path d="M4 3v6a3 3 0 0 0 6 0V3"/>
+                <path d="M7 3v18"/>
+                <path d="M20 3c-4 3-5 7-5 11h5"/>
+                <path d="M20 3v18"/>
+
+              </svg>
+
+              <!-- SHIRNIYYAT -->
+
+              <svg
+                *ngSwitchCase="'Şirniyyat'"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <rect x="3" y="11" width="18" height="10" rx="2"/>
+                <path d="M3 16h18M8 11V7M12 11V7M16 11V7"/>
+                <path d="M8 3v1M12 3v1M16 3v1"/>
+
+              </svg>
+
+              <!-- TANDIR -->
+
+              <svg
+                *ngSwitchCase="'Təndir'"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <path d="M4 10a8 8 0 0 1 16 0
+                         c2 1 2 4 0 5v4
+                         a2 2 0 0 1-2 2H6
+                         a2 2 0 0 1-2-2v-4
+                         c-2-1-2-4 0-5z"/>
+
+                <path d="m9 8 2 3M13 7l2 3"/>
+
+              </svg>
+
+            </ng-container>
+
+          </div>
+
+          <span class="stat-index">
+            0{{ i + 1 }}
+          </span>
+
+        </div>
+
+        <span class="stat-label">
+          {{ category.name }}
+        </span>
+
+        <div class="stat-value">
+
+          {{ category.total | number:'1.2-2' }}
+
+          <span class="currency">₼</span>
+
+        </div>
+
+        <div class="stat-bottom">
+
+          <span>
+            {{ category.sales.length | number }} qeyd
+          </span>
+
+          <strong>
+            {{ category.percentage | number:'1.1-1' }}%
+          </strong>
+
+        </div>
+
+        <div class="stat-progress">
+
+          <div
+            [style.width.%]="category.percentage > 0
+              ? category.percentage
+              : 0">
+          </div>
+
+        </div>
+
+      </button>
+
+    </div>
+
+    <!-- CATEGORY FILTER -->
+
+    <div class="category-filter">
+
+      <span class="filter-label">
+        Kateqoriya üzrə filtr
+      </span>
+
+      <div class="filter-buttons">
+
+        <button
+          type="button"
+          [class.active]="selectedCategory === 'ALL'"
+          [attr.aria-pressed]="selectedCategory === 'ALL'"
+          (click)="selectCategory('ALL')">
+
+          Hamısı
+
+        </button>
+
+        <button
+          type="button"
+          *ngFor="let category of categories"
+          [class.active]="selectedCategory === category.name"
+          [attr.aria-pressed]="selectedCategory === category.name"
+          (click)="selectCategory(category.name)">
+
+          {{ category.name }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- CATEGORY TABLES -->
+
+    <section
+      *ngFor="
+        let category of visibleCategories;
+        trackBy: trackByCategory
+      "
+      class="table-wrapper">
+
+      <div class="table-heading">
+
+        <div class="category-info">
+
+          <div class="category-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+
+            </svg>
+
+          </div>
+
+          <div>
+
+            <h3>{{ category.name }}</h3>
+
+            <span>Gündəlik satış hesabatı</span>
+
+          </div>
+
+        </div>
+
+        <div class="record-count">
+
+          <span class="record-dot"></span>
+
+          {{ category.sales.length | number }} qeyd
+
+        </div>
+
+      </div>
+
+      <!-- SALES TABLE -->
+
+      <div
+        *ngIf="category.sales.length > 0; else emptyCategory"
+        class="table-container"
+        tabindex="0"
+        [attr.aria-label]="category.name + ' satış cədvəli'">
+
+        <table class="sales-table">
+
+          <thead>
+
+          <tr>
+
+            <th class="sticky-branch">Filial</th>
+
+            <th>Məhsul kodu</th>
+
+            <th>Məhsul adı</th>
+
+            <th>Barkodu</th>
+
+            <th class="numeric">Say</th>
+
+            <th class="numeric">Qiymət</th>
+
+            <th class="sticky-total numeric">Toplam</th>
+
+          </tr>
+
+          </thead>
+
+          <tbody>
+
+          <tr *ngFor="let dailySale of category.sales">
+
+            <td class="sticky-branch branch-cell">
+
+              {{ dailySale.branchName }}
+
+            </td>
+
+            <td class="code-cell">
+
+              {{ dailySale.productCode }}
+
+            </td>
+
+            <td class="product-cell">
+
+              {{ dailySale.productName }}
+
+            </td>
+
+            <td class="code-cell">
+
+              {{ dailySale.barcode }}
+
+            </td>
+
+            <td class="numeric">
+
+              {{ dailySale.quantity | number:'1.0-3' }}
+
+            </td>
+
+            <td class="numeric">
+
+              {{ dailySale.price | number:'1.2-2' }}
+
+            </td>
+
+            <td class="sticky-total numeric total-cell">
+
+              {{ dailySale.total | number:'1.2-2' }}
+
+              <span class="table-currency">₼</span>
+
+            </td>
+
+          </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- EMPTY CATEGORY -->
+
+      <ng-template #emptyCategory>
+
+        <div class="empty-category">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round">
+
+            <rect x="4" y="3" width="16" height="18" rx="2"/>
+            <path d="M8 12h8"/>
+
+          </svg>
+
+          <h4>Satış məlumatları tapılmadı</h4>
+
+          <p>
+            Seçilmiş tarixdə bu kateqoriya üzrə
+            satış qeydi mövcud deyil.
+          </p>
+
+        </div>
+
+      </ng-template>
+
+      <!-- TABLE TOTAL -->
+
+      <div class="table-total">
+
+        <div class="summary-caption">
+
+          <span class="summary-line"></span>
+
+          HESABAT YEKUNU
+
+        </div>
+
+        <div class="summary-value">
+
+          <span class="total-label">
+            Cəmi məbləğ
+          </span>
+
+          <strong>
+
+            {{ category.total | number:'1.2-2' }}
+
+            <small>₼</small>
+
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- INITIAL EMPTY STATE -->
+
+  <div
+    *ngIf="!sales && !isLoading && !errorMessage"
+    class="empty-state">
+
+    <div class="empty-state-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.3"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+
+        <path d="M3 3v18h18"/>
+        <path d="M7 16v-4M12 16V7M17 16V4"/>
+
+      </svg>
+
+    </div>
+
+    <span class="eyebrow">AZCAKE BPM</span>
+
+    <h2>Hesabat üçün tarix seçin</h2>
+
+    <p>
+      Gündəlik satış məlumatlarını əldə etmək
+      üçün hesabat tarixini qeyd edin.
+    </p>
+
+  </div>
+
 </div>
