@@ -59,7 +59,7 @@ export class LoginComponent {
       )
       .subscribe({
 
-        next: response => {
+        next: (response: any) => {
 
           if (response.status === 'Success') {
 
@@ -78,7 +78,7 @@ export class LoginComponent {
               JSON.stringify(response.roles)
             );
 
-            this.router.navigate(['/branches']);
+            this.router.navigate(['/home']);
 
           } else {
 

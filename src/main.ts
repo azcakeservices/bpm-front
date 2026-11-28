@@ -8,6 +8,7 @@ import { ConfigService } from "./services/config.service";
 import { APP_INITIALIZER, importProvidersFrom } from "@angular/core";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { ToastrModule } from "ngx-toastr";
+import {ErrorInterceptor} from "./guard/error.interceptor";
 
 function intializeApp(config: ConfigService){
   return () => config.loadConfig()
@@ -16,7 +17,7 @@ function intializeApp(config: ConfigService){
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([AuthInterceptor])),
+    provideHttpClient(withInterceptors([AuthInterceptor, ErrorInterceptor])),
     importProvidersFrom(ToastrModule.forRoot({
       timeOut: 3000,
       preventDuplicates: true,
